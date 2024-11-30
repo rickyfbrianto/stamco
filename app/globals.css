@@ -1,21 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+:root{
+    --tinggi1: 3rem;
+    --tinggi2: 3.5rem;
+    --tinggi3: 4rem;
+    --tinggi4: 4.51rem;
+    --tinggi5: 5rem;
+    --tinggi6: 5.5rem;
+    --tinggi7: 6rem;
+    --tinggi8: 6.5rem;
+    --tinggi9: 7rem;
+    --tinggi10: 7.5rem;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    --warna-primary:#C9D5B5;
+    --warna-orange:#FB8B24;
+    --warna-army:#475841;
+    --warna-vanilla:#D7D9B1;
+    --warna-violet:#827191;
+    --warna-red:#CC2936;
+    --warna-blue:#048BA8;
+    --warna-green:#136F63;
+
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    @apply md:max-w-[1200px] max-w-[600px] px-4 md:px-10 m-auto;
+}
+
+.cart-item-qty {
+    @apply absolute text-[12px] top-[-5px] right-[-5px] bg-red-500 text-white text-center w-[18px] h-[18px] rounded-full;
+}
+
+.product-detail-section{
+    @apply w-full md:py-10;
+}
+
+.product-detail-container{
+    @apply flex relative m-auto max-w-[600px] md:max-w-[1200px] px-4 md:px-0 gap-4;
+}
+
+.small-images-container{
+    @apply flex items-center justify-center  bg-slate-200 py-4;
+}
+
+.quantity-desc{
+    @apply p-[6px] flex border border-black;
+}
+
+.quantity-desc span{
+    @apply text-[16px] cursor-pointer;
+    padding: 6px 12px;
+}
+
+.quantity-desc .num{
+    @apply text-[18px];
+}
+
+.quantity-desc .plus{
+    @apply text-[--warna-green];
+}
+.quantity-desc .minus{
+    @apply text-[--warna-red];
+}
+
+.btn{
+    @apply  text-black md:w-1/2 p-5 text-xl font-bold w-full border border-4 border-black;
+}
+
+.add-to-cart{
+    @apply hover:bg-black  hover:text-white;
+}
+
+.cart-wrapper{
+    @apply w-[100vw] bg-slate-800 bg-opacity-50  fixed right-0 top-0 z-10;
+}
+
+.cart-container{
+    @apply border h-[100vh]  w-[600px] bg-white  float-right px-[40px] py-[50px] relative;
+}
+
+.cart-heading{
+    @apply  flex items-center text-[18px] font-[500] cursor-pointer gap-[2px] ml-[10px] border-none bg-[transparent];
+}
+
+.cart-heading .heading{
+    margin-left: 10px;
+}
+
+.cart-num-items{
+    margin-left: 10px;
+    color: #f02d34;
+}
+
+@layer base {
+  :root {
+        --background: 0 0% 100%;
+        --foreground: 0 0% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 3.9%;
+        --primary: 0 0% 9%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 0 0% 96.1%;
+        --secondary-foreground: 0 0% 9%;
+        --muted: 0 0% 96.1%;
+        --muted-foreground: 0 0% 45.1%;
+        --accent: 0 0% 96.1%;
+        --accent-foreground: 0 0% 9%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 89.8%;
+        --input: 0 0% 89.8%;
+        --ring: 0 0% 3.9%;
+        --chart-1: 12 76% 61%;
+        --chart-2: 173 58% 39%;
+        --chart-3: 197 37% 24%;
+        --chart-4: 43 74% 66%;
+        --chart-5: 27 87% 67%;
+        --radius: 0.5rem;
+    }
+  .dark {
+        --background: 0 0% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 14.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 14.9%;
+        --muted-foreground: 0 0% 63.9%;
+        --accent: 0 0% 14.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 14.9%;
+        --input: 0 0% 14.9%;
+        --ring: 0 0% 83.1%;
+        --chart-1: 220 70% 50%;
+        --chart-2: 160 60% 45%;
+        --chart-3: 30 80% 55%;
+        --chart-4: 280 65% 60%;
+        --chart-5: 340 75% 55%;
+    }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
 }
