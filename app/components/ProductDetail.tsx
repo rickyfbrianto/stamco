@@ -61,24 +61,25 @@ export default function ProductDetail({ product }: { product: any }) {
 
     return (
         <div className='product-detail-section font-urbanist'>
-            <div className="product-detail-container">
+            {/* <div className="product-detail-container"> */}
+            <div className="flex flex-col md:flex-row relative m-auto max-w-[600px] md:max-w-[1200px] px-4 md:px-0 gap-4">
                 {/* Gambar Kiri */}
                 <div className='border min-w-[400px] pt-2 rounded-xl self-start sticky top-[--tinggi6]'>
                     {/* Gambar atas */}
                     <div className='h-[400px] flex items-center'>
-                        <Image className='object-cover mx-auto' priority={true} quality={100} src={urlFor(image).url()}
-                            width={450} height={450} alt='Images Product'
+                        <Image className='object-cover mx-auto h-full w-[400px]' priority={true} quality={100} src={urlFor(image).url()}
+                            width={400} height={400} alt='Images Product'
                         />
                     </div>
 
                     {/* gambar bawah */}
                     <div className='small-images-container'>
-                        <Carousel opts={{ align: "start" }} className="max-w-xs select-none">
+                        <Carousel opts={{ align: "start" }} className="select-none gap-2">
                             <CarouselContent>
                                 {product.images.map((val: any, index: number) => {
                                     return (
-                                        <CarouselItem className="sm:basis-1/2 md:basis-1/4" key={val._key}>
-                                            <Image className={`object-cover rounded-xl cursor-pointer border ${val._key == image._key ? "border-green-500 border-[3px] shadow-xl" : ""}`}
+                                        <CarouselItem className="flex justify-center items-center basis-1/4" key={val._key}>
+                                            <Image className={`h-[80px] w-[80px] object-cover rounded-xl cursor-pointer border ${val._key == image._key ? "border-green-500 border-[3px] shadow-xl" : ""}`}
                                                 width={100} height={100} alt={`Images Product ${index}`}
                                                 src={urlFor(product.images[index]).url()}
                                                 onClick={() => setImage(product.images[index])}

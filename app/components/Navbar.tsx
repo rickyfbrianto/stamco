@@ -21,17 +21,17 @@ export default function Navbar() {
 
     return (
         <div>
-            <div className='w-full h-[--tinggi5] bg-[--warna-primary] border-b sticky top-0 z-[10]'>
+            <div className='w-full h-[--tinggi8] bg-[--warna-mint] border-b sticky top-0 z-[10]'>
                 <div className="container flex items-center gap-8 w-full h-full">
                     <Link href={'/'} className="font-urbanist relative">
                         <h1 className='font-bold text-xl'>Stamco</h1>
                         <div className="flex gap-2 items-center mt-[-10px]">
-                            <FaOilWell size={20} />
+                            <FaOilWell size={20} className="hover:text-green-500" />
                             <span className="font-bold text-2xl">oil</span>
                         </div>
                     </Link>
 
-                    <Form action={'/search'} className="flex flex-1 items-center border pe-2">
+                    <Form action={'/search'} className="flex flex-1 items-center border pe-2 rounded-lg">
                         <Input className="flex-1 border-none focus-visible:ring-0" name="query" type="search" placeholder="Search..." />
                         <FaSearch />
                     </Form>
