@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import Navbar from "./components/Navbar";
+import "../globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
-import LayoutProvider from "./components/LayoutProvider";
+import Navbar from "../components/Navbar";
+import LayoutProvider from "../components/LayoutProvider";
+import { SanityLive } from "@/sanity/lib/live";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -13,10 +15,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     return (
         <LayoutProvider>
             <html lang="en">
-                <body className={`antialiased`}>
+                <body>
                     <Toaster />
                     <Navbar />
                     {children}
+                    <SanityLive />
                 </body>
             </html>
         </LayoutProvider>
