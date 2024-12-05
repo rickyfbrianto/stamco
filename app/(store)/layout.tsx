@@ -3,8 +3,8 @@ import "../globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import Navbar from "../components/Navbar";
-import LayoutProvider from "../components/LayoutProvider";
 import { SanityLive } from "@/sanity/lib/live";
+import LayoutProvider from "@/components/LayoutProvider";
 
 export const metadata: Metadata = {
     title: "Create Next App",

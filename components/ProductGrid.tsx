@@ -1,7 +1,6 @@
 import { Product } from '@/sanity.types'
 import React from 'react'
 import ProductThumbnail from './ProductThumbnail'
-import { AnimatePresence, motion } from "framer-motion";
 
 function ProductGrid({ products }: { products: Product[] }) {
     return (
@@ -9,7 +8,7 @@ function ProductGrid({ products }: { products: Product[] }) {
             {products.map(product => (
                 <ProductThumbnail product={product} key={product._id} />
                 // <AnimatePresence key={product._id}>
-                //     <motion.div layout key={product._id} initial={{ opacity: 0.2 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex justify-center">
+                //     <motion.div layout initial={{ opacity: 0.2 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex justify-center">
                 //     </motion.div>
                 // </AnimatePresence>
             ))}

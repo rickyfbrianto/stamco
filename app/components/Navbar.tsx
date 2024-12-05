@@ -31,9 +31,11 @@ export default function Navbar() {
                         </div>
                     </Link>
 
-                    <Form action={'/search'} className="flex flex-1 items-center border pe-2 rounded-lg">
+                    <Form action={'/search'} className="flex flex-1 items-center border rounded-lg">
                         <Input className="flex-1 border-none focus-visible:ring-0" name="query" type="search" placeholder="Search..." />
-                        <FaSearch />
+                        <Button variant={"outline"} className="ring-0 border-none">
+                            <FaSearch />
+                        </Button>
                     </Form>
                     <div className="flex gap-4 items-center">
                         <ClerkLoaded>
