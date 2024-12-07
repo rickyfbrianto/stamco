@@ -1,8 +1,6 @@
 'use client'
 
-import { useStore } from "@/store/store";
 import { CiShoppingCart } from "react-icons/ci";
-import Cart from './Cart';
 import { ClerkLoaded, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Form from "next/form";
@@ -15,9 +13,9 @@ import { FaOilWell } from "react-icons/fa6";
 export default function Navbar() {
     const { user } = useUser();
 
-    const zusCart = useStore(state => state.zusCart)
-    const zusControl = useStore(state => state.zusControl)
-    const setZusControl = useStore(state => state.setZusControl)
+    // const zusCart = useStore(state => state.zusCart)
+    // const zusControl = useStore(state => state.zusControl)
+    // const setZusControl = useStore(state => state.setZusControl)
 
     return (
         <div>
@@ -41,13 +39,12 @@ export default function Navbar() {
                         <ClerkLoaded>
                             {user && (
                                 <>
-                                    <button className='relative' onClick={() => setZusControl({ showCart: true })}>
+                                    {/* <button className='relative' onClick={() => setZusControl({ showCart: true })}>
                                         <CiShoppingCart size={26} />
                                         <span className='cart-item-qty'>{zusCart.length}</span>
-                                    </button>
+                                    </button> */}
                                     <Link href={'/orders'}>
                                         <PiPackageThin size={26} />
-                                        {/* <span>My Orders</span> */}
                                     </Link>
                                 </>
                             )}
@@ -65,7 +62,7 @@ export default function Navbar() {
                     </div>
                 </div>
             </div>
-            {zusControl.showCart && <Cart />}
+            {/* {zusControl.showCart && <Cart />} */}
         </div>
     )
 }

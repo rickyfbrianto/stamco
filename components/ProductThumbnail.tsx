@@ -6,7 +6,6 @@ import React from 'react'
 
 function ProductThumbnail({ product }: { product: Product }) {
     const isOutOfStock = product.stock != null && product.stock <= 0
-    console.log(product)
 
     return (
         <Link href={`/product/${product.slug?.current}`}

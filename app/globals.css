@@ -6,7 +6,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
+:root {
     --tinggi1: 3rem;
     --tinggi2: 3.5rem;
     --tinggi3: 4rem;
@@ -23,15 +23,17 @@
     --tinggi14: 9.5rem;
     --tinggi15: 10rem;
 
-    --warna-primary:#C9D5B5;
-    --warna-mint:#FDFFFC;
-    --warna-orange:#FB8B24;
-    --warna-army:#475841;
-    --warna-vanilla:#D7D9B1;
-    --warna-violet:#827191;
-    --warna-red:#CC2936;
-    --warna-blue:#048BA8;
-    --warna-green:#136F63;
+    --warna-primary: #C9D5B5;
+    /* --warna-light-blue: #9FC2CC; */
+    --warna-light-blue: #B4D2E7;
+    --warna-mint: #FDFFFC;
+    --warna-orange: #FB8B24;
+    --warna-army: #475841;
+    --warna-vanilla: #D7D9B1;
+    --warna-violet: #827191;
+    --warna-red: #CC2936;
+    --warna-blue: #048BA8;
+    --warna-green: #419D78;
 
 }
 
@@ -47,69 +49,70 @@ body {
     @apply absolute text-[12px] top-[-5px] right-[-5px] bg-red-500 text-white text-center w-[18px] h-[18px] rounded-full;
 }
 
-.product-detail-section{
+.product-detail-section {
     @apply w-full md:py-10;
 }
 
-.product-detail-container{
+.product-detail-container {
     @apply flex relative m-auto max-w-[600px] md:max-w-[1200px] px-4 md:px-0 gap-4;
 }
 
-.small-images-container{
-    @apply flex items-center justify-center  bg-slate-200 py-4;
+.small-images-container {
+    @apply flex items-center justify-center bg-slate-200 py-4;
 }
 
-.quantity-desc{
+.quantity-desc {
     @apply p-[6px] flex border border-black;
 }
 
-.quantity-desc span{
+.quantity-desc span {
     @apply text-[16px] cursor-pointer;
     padding: 6px 12px;
 }
 
-.quantity-desc .num{
+.quantity-desc .num {
     @apply text-[18px];
 }
 
-.quantity-desc .plus{
+.quantity-desc .plus {
     @apply text-[--warna-green];
 }
-.quantity-desc .minus{
+
+.quantity-desc .minus {
     @apply text-[--warna-red];
 }
 
-.btn{
-    @apply  text-black md:w-1/2 p-5 text-xl font-bold w-full border border-4 border-black;
+.btn {
+    @apply text-black md:w-1/2 p-5 text-xl font-bold w-full border border-4 border-black;
 }
 
-.add-to-cart{
-    @apply hover:bg-black  hover:text-white;
+.add-to-cart {
+    @apply hover:bg-black hover:text-white;
 }
 
-.cart-wrapper{
-    @apply w-[100vw] bg-slate-800 bg-opacity-50  fixed right-0 top-0 z-10;
+.cart-wrapper {
+    @apply w-[100vw] bg-slate-800 bg-opacity-50 fixed right-0 top-0 z-10;
 }
 
-.cart-container{
-    @apply border h-[100vh]  w-[600px] bg-white  float-right px-[40px] py-[50px] relative;
+.cart-container {
+    @apply border h-[100vh] w-[600px] bg-white float-right px-[40px] py-[50px] relative;
 }
 
-.cart-heading{
-    @apply  flex items-center text-[18px] font-[500] cursor-pointer gap-[2px] ml-[10px] border-none bg-[transparent];
+.cart-heading {
+    @apply flex items-center text-[18px] font-[500] cursor-pointer gap-[2px] ml-[10px] border-none bg-[transparent];
 }
 
-.cart-heading .heading{
+.cart-heading .heading {
     margin-left: 10px;
 }
 
-.cart-num-items{
+.cart-num-items {
     margin-left: 10px;
     color: #f02d34;
 }
 
 @layer base {
-  :root {
+    :root {
         --background: 0 0% 100%;
         --foreground: 0 0% 3.9%;
         --card: 0 0% 100%;
@@ -136,7 +139,8 @@ body {
         --chart-5: 27 87% 67%;
         --radius: 0.5rem;
     }
-  .dark {
+
+    .dark {
         --background: 0 0% 3.9%;
         --foreground: 0 0% 98%;
         --card: 0 0% 3.9%;
@@ -165,10 +169,11 @@ body {
 }
 
 @layer base {
-  * {
-    @apply border-border;
+    * {
+        @apply border-border;
     }
-  body {
-    @apply bg-background text-foreground;
+
+    body {
+        @apply bg-background text-foreground;
     }
 }

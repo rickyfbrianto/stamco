@@ -32,14 +32,14 @@ export const CategorySelector = ({ categories }: CategoryProps) => {
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button variant="outline" role="combobox" aria-expanded={open} className="w-[200px] justify-between">
+                <Button variant="lightblue" role="combobox" aria-expanded={open} className="w-[200px] justify-between font-urbanist">
                     {value
                         ? categories.find((category) => category._id === value)?.title
                         : "Filter by Category"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="w-[200px] p-0 font-urbanist">
                 <Command>
                     <CommandEmpty>No Category Found.</CommandEmpty>
                     <CommandInput placeholder="Search Category..." className="h-9"

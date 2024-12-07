@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
-import Navbar from "../components/Navbar";
 import { SanityLive } from "@/sanity/lib/live";
 import LayoutProvider from "@/components/LayoutProvider";
+import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -16,10 +17,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <LayoutProvider>
             <html lang="en">
                 <body>
-                    <Toaster />
-                    <Navbar />
+                    <Header />
                     {children}
                     <SanityLive />
+                    <Toaster />
                 </body>
             </html>
         </LayoutProvider>

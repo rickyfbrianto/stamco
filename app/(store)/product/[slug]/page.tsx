@@ -1,5 +1,10 @@
+import AddToBasketButton from '@/components/AddToBasketButton';
+import AddToBasketProduct from '@/components/AddToBasketProduct';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { urlFor } from '@/sanity/lib/image';
 import { getProductBySlug } from '@/sanity/lib/products/getProductBySlug';
+import { TriangleAlert } from 'lucide-react';
 import { PortableText } from 'next-sanity';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -27,15 +32,25 @@ export default async function page({ params }: { params: Promise<{ slug: string 
                     )}
                 </div>
 
-                <div className="flex flex-col justify-between">
+                <div className="flex flex-col">
                     <div>
                         <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
                         <div className="text-xl font-semibold mb-4">{product.price?.toFixed(2)}</div>
+                        {(product?.stock ?? 0) <= 10 &&
+                            <span className='flex gap-2 mt-4 font-bold text-[--warna-red] text-[.8rem]'><TriangleAlert size={16} className='text-[--warna-red]' strokeWidth={1.5} /> Stok tersisa {product.stock}!</span>
+                        }
+                        <AddToBasketProduct product={product} disabled={isOutOfStock} />
+                    </div>
+                    <Separator className='my-4' />
+                    <div className="">
+                        {/* <AddToBasketButton product={product} disabled={isOutOfStock} /> */}
                         <div className="prose max-w-none mb-6">
+                            <span className="font-urbanist font-bold">Description</span>
                             {Array.isArray(product.description) && (
                                 <PortableText value={product.description} />
                             )}
                         </div>
+
                     </div>
                 </div>
             </div>
