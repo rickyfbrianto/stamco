@@ -6,6 +6,7 @@ import { SanityLive } from "@/sanity/lib/live";
 import LayoutProvider from "@/components/LayoutProvider";
 import Navbar from "@/components/Navbar";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <body>
                     <Header />
                     {children}
+                    <Footer />
                     <SanityLive />
                     <Toaster />
                 </body>

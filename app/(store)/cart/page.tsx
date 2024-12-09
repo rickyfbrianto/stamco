@@ -69,14 +69,14 @@ function CartPage() {
                     <h1 className="text-3xl font-bold">Your Cart</h1>
                 </div>
             </div>
-            <div className="container p-4 max-w-6xl flex flex-col lg:flex-row gap-8">
+            <div className="container mx-auto py-4 flex flex-col lg:flex-row gap-8 min-h-[50vh]">
                 <div className="flex flex-col lg:flex-row gap-8 w-full">
                     <div className="flex-grow">
                         {groupedItems.map((item) => (
                             <div key={item.product._id} className='mb-4 border rounded-md flex flex-col font-urbanist'>
                                 <div className="flex items-center justify-between hover:bg-slate-100 transition-colors duration-500">
                                     <Link className="flex cursor-pointer flex-1 p-4 min-w-0" href={`/product/${item.product.slug?.current}`}>
-                                        <div className="w-20 h-20 sm:w-24sm:h-24 flex-shrink-0 mr-4">
+                                        <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 mr-4">
                                             {item.product.image && (
                                                 <Image src={urlFor(item.product.image).url()}
                                                     alt={item.product.name ?? "Product image"}
@@ -108,7 +108,7 @@ function CartPage() {
                     </div>
                 </div>
 
-                <div className="w-full lg:w-80 lg:sticky lg:top-4 h-fit bg-white p-6 border rounded order-first lg:order-last fixed bottom-0 left-0 lg:left-auto">
+                <div className="w-full lg:w-[35rem] lg:sticky lg:top-[--tinggi10] h-fit bg-white p-6 border rounded order-first lg:order-last fixed bottom-0 left-0">
                     <h3 className="text-xl font-semibold">Order Summary</h3>
                     <div className="mt-4 space-y-2">
                         <p className="flex justify-between">

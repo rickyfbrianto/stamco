@@ -18,9 +18,7 @@ function ProductsView({ products, categories }: ProductsViewProps) {
 
             {/* Products */}
             <div className='flex-1'>
-                <div>
-                    <ProductGrid products={products} />
-                </div>
+                <ProductGrid products={products} />
             </div>
         </div>
     )

@@ -1,4 +1,5 @@
 import Banner from '@/components/Banner'
+import Footer from '@/components/Footer'
 import ProductsView from '@/components/ProductsView'
 import { getAllCategories } from '@/sanity/lib/products/getAllCategories'
 import { getAllProducts } from '@/sanity/lib/products/getAllProducts'
@@ -14,7 +15,7 @@ export default async function page() {
             <div className="flex h-[60vh] bg-gradient-to-tr from-slate-400 to-teal-500 mb-10">
 
             </div>
-            <div className="container">
+            <div className="container mx-auto">
                 <Banner />
 
                 <div className="flex flex-col items-center justify-top h-screen mt-4">

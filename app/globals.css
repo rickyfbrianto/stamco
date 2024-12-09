@@ -10,7 +10,7 @@
     --tinggi1: 3rem;
     --tinggi2: 3.5rem;
     --tinggi3: 4rem;
-    --tinggi4: 4.51rem;
+    --tinggi4: 4.5rem;
     --tinggi5: 5rem;
     --tinggi6: 5.5rem;
     --tinggi7: 6rem;
@@ -41,7 +41,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.container {
+/* .container {
     @apply md:max-w-[1200px] max-w-[600px] px-4 md:px-10 m-auto;
 }
 
@@ -109,7 +109,7 @@ body {
 .cart-num-items {
     margin-left: 10px;
     color: #f02d34;
-}
+} */
 
 @layer base {
     :root {

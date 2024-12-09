@@ -5,9 +5,14 @@ import { Separator } from '@/components/ui/separator';
 import { urlFor } from '@/sanity/lib/image';
 import { getProductBySlug } from '@/sanity/lib/products/getProductBySlug';
 import { TriangleAlert } from 'lucide-react';
+import { Metadata } from 'next';
 import { PortableText } from 'next-sanity';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+
+export const metadata: Metadata = {
+    title: ""
+}
 
 export default async function page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
@@ -16,14 +21,15 @@ export default async function page({ params }: { params: Promise<{ slug: string 
     if (!product) return notFound()
 
     const isOutOfStock = product.stock != null && product.stock <= 0
+    metadata.title = `Product Detail | ${product.name}`
 
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className={`relative aspect-square overflow-hidden rounded-lg shadow-lg ${isOutOfStock ? "opacity-50" : ""}`}>
+                <div className={`relative w-[500px] h-[500px] aspect-square overflow-hidden rounded-lg shadow-lg ${isOutOfStock ? "opacity-50" : ""}`}>
                     {product.image && (
                         <Image src={urlFor(product.image).url()} alt={product?.name ?? "Product Image"}
-                            fill className='object-contain transition-transform duration-300 hover:scale-105' />
+                            fill className='object-contain h-[10rem] w-[10rem] transition-transform duration-300 hover:scale-105' />
                     )}
                     {isOutOfStock && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
