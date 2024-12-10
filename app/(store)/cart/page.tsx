@@ -1,16 +1,13 @@
 'use client'
 
-import { createCheckoutSession, Metadata } from '@/action/createCheckoutSession'
 import AddToBasketButton from '@/components/AddToBasketButton'
 import Loader from '@/components/Loader'
 import { urlFor } from '@/sanity/lib/image'
 import { useBasketStore } from '@/store/store'
 import { SignInButton, useAuth, useUser } from '@clerk/nextjs'
-import { group } from 'console'
 import { ShoppingCart, Truck } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 function CartPage() {
@@ -18,7 +15,6 @@ function CartPage() {
     const totalPrice = useBasketStore((state) => state.getTotalPrice())
     const { isSignedIn } = useAuth()
     const { user } = useUser()
-    const router = useRouter()
 
     const [isClient, setIsClient] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -43,12 +39,12 @@ function CartPage() {
         setIsLoading(true)
 
         try {
-            const metadata: Metadata = {
-                orderNumber: crypto.randomUUID(),
-                customerName: user?.fullName ?? "Unknown",
-                customerEmail: user?.emailAddresses[0].emailAddress ?? "Unknown",
-                clerkUserId: user!.id
-            }
+            // const metadata: Metadata = {
+            //     orderNumber: crypto.randomUUID(),
+            //     customerName: user?.fullName ?? "Unknown",
+            //     customerEmail: user?.emailAddresses[0].emailAddress ?? "Unknown",
+            //     clerkUserId: user!.id
+            // }
 
             // const checkoutUrl = await createCheckoutSession(groupedItems, metadata)
             // if (checkoutUrl) {
