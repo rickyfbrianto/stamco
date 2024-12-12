@@ -18,7 +18,6 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
                 </h1>
                 <ProductsView products={products} categories={categories} />
             </div>
-            Category page {slug}
         </div>
     )
 }
