@@ -6,36 +6,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    --tinggi1: 3rem;
-    --tinggi2: 3.5rem;
-    --tinggi3: 4rem;
-    --tinggi4: 4.5rem;
-    --tinggi5: 5rem;
-    --tinggi6: 5.5rem;
-    --tinggi7: 6rem;
-    --tinggi8: 6.5rem;
-    --tinggi9: 7rem;
-    --tinggi10: 7.5rem;
-    --tinggi11: 8rem;
-    --tinggi12: 8.5rem;
-    --tinggi13: 9rem;
-    --tinggi14: 9.5rem;
-    --tinggi15: 10rem;
 
-    --warna-primary: #C9D5B5;
-    /* --warna-light-blue: #9FC2CC; */
-    --warna-light-blue: #B4D2E7;
-    --warna-mint: #FDFFFC;
-    --warna-orange: #FB8B24;
-    --warna-army: #475841;
-    --warna-vanilla: #D7D9B1;
-    --warna-violet: #827191;
-    --warna-red: #CC2936;
-    --warna-blue: #048BA8;
-    --warna-green: #419D78;
-
-}
 
 body {
     font-family: Arial, Helvetica, sans-serif;
@@ -176,4 +147,35 @@ body {
     body {
         @apply bg-background text-foreground;
     }
+}
+
+:root {
+    --tinggi1: 3rem;
+    --tinggi2: 3.5rem;
+    --tinggi3: 4rem;
+    --tinggi4: 4.5rem;
+    --tinggi5: 5rem;
+    --tinggi6: 5.5rem;
+    --tinggi7: 6rem;
+    --tinggi8: 6.5rem;
+    --tinggi9: 7rem;
+    --tinggi10: 7.5rem;
+    --tinggi11: 8rem;
+    --tinggi12: 8.5rem;
+    --tinggi13: 9rem;
+    --tinggi14: 9.5rem;
+    --tinggi15: 10rem;
+
+    --warna-primary: #C9D5B5;
+    /* --warna-light-blue: #9FC2CC; */
+    --warna-light-blue: #B4D2E7;
+    --warna-mint: #FDFFFC;
+    --warna-orange: #FB8B24;
+    --warna-army: #475841;
+    --warna-vanilla: #D7D9B1;
+    --warna-violet: #827191;
+    --warna-red: #CC2936;
+    --warna-blue: #048BA8;
+    --warna-green: #419D78;
+
 }

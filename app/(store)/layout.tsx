@@ -18,11 +18,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <LayoutProvider>
             <html lang="en">
                 <body>
+                    <Toaster />
                     <Header />
                     {children}
                     <Footer />
                     <SanityLive />
-                    <Toaster />
                 </body>
             </html>
         </LayoutProvider>

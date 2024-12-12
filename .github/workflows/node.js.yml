@@ -2,13 +2,12 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   #pull_request:
   #  branches: [ "main" ]
 
 jobs:
   build:
-
     runs-on: self-hosted
 
     strategy:
@@ -23,13 +22,15 @@ jobs:
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}}
       CLERK_SECRET_KEY: ${{secrets.CLERK_SECRET_KEY}}
       SANITY_API_TOKEN: ${{secrets.SANITY_API_TOKEN}}
-      SANITY_API_READ_TOKEN: ${{secrets.SANITY_API_READ_TOKEN}}      
+      SANITY_API_READ_TOKEN: ${{secrets.SANITY_API_READ_TOKEN}}
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: cd /home/ricky/actions-runner/_work/stamco/stamco
+      - run: pm2 restart 0
