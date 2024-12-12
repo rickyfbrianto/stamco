@@ -1,0 +1,15 @@
+version: '3'
+services:
+  stamco:
+    build: .
+    container_name: stamco
+  
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./stamco.conf:/etc/nginx/conf.d/stamco.conf
+    depends_on:
+      - stamco
