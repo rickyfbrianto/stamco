@@ -18,6 +18,8 @@ export default async function page() {
             <div className="container mx-auto">
                 {/* <Banner /> */}
 
+                <span>tes</span>
+
                 <div className="flex flex-col items-center justify-top h-screen mt-4">
                     <ProductsView products={products} categories={categories} />
                 </div>
