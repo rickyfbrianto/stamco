@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
             hostname: 'cdn.sanity.io',
         }]
     },
-    output: "standalone"
+    // output: "standalone"
 };
 
 export default nextConfig;
