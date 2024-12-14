@@ -18,6 +18,6 @@ jobs:
           script: |
             cd /var/www/html/stamco
             git pull origin main
-            npm install --only=prod
+            npm install
             npm run build
             pm2 restart stamco
