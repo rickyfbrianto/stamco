@@ -13,12 +13,10 @@ export default async function page() {
     return (
         <div className='flex flex-col'>
             {/* <BannerHome /> */}
-            <Image className="object-cover w-full h-screen" sizes='100vw 50vh' width={0} height={0} src={"/pic1.jpg"} alt='Gambar' />
+            <Image className="object-cover w-full h-[60vh]" sizes='100vw' width={0} height={0} src={"/pic1.jpg"} alt='Gambar' />
 
             <div className="container mx-auto">
                 {/* <Banner /> */}
-
-                <span>tes</span>
 
                 <div className="flex flex-col items-center justify-top h-screen mt-4">
                     <ProductsView products={products} categories={categories} />
