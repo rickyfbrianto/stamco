@@ -9,7 +9,8 @@ export interface BasketItem {
 
 interface BasketState {
     items: BasketItem[],
-    addItem: (product: Product) => void;
+    // addItemFromProduct: (product: Product, qty: number) => void;
+    addItem: (product: Product, qty: number) => void;
     removeItem: (productId: string) => void;
     clearBasket: () => void;
     getTotalPrice: () => number;
@@ -20,18 +21,18 @@ interface BasketState {
 const useBasketStore = create<BasketState>()(
     persist((set, get) => ({
         items: [],
-        addItem: (product) => set((state) => {
+        addItem: (product, qty) => set((state) => {
             const existingItem = state.items.find((item) => item.product._id === product._id)
             if (existingItem) {
                 return {
                     items: state.items.map(item =>
                         item.product._id === product._id
-                            ? { ...item, quantity: item.quantity + 1 }
+                            ? { ...item, quantity: item.quantity + qty }
                             : item
                     )
                 }
             } else {
-                return { items: [...state.items, { product, quantity: 1 }] }
+                return { items: [...state.items, { product, quantity: qty }] }
             }
         }),
         removeItem: productId => set((state) => ({

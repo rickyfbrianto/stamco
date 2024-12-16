@@ -6,6 +6,7 @@ import { urlFor } from '@/sanity/lib/image'
 import { useBasketStore } from '@/store/store'
 import { SignInButton, useAuth, useUser } from '@clerk/nextjs'
 import { ShoppingCart, Truck } from 'lucide-react'
+import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
@@ -57,15 +58,19 @@ function CartPage() {
         }
     }
 
+    // useEffect(() => {
+    //     document.title = "Cart"
+    // }, [])
+
     return (
         <div className="w-full">
             <div className="flex items-center bg-[--warna-primary] h-[--tinggi8]">
                 <div className="container flex items-center mx-auto gap-4">
-                    <ShoppingCart size={32} color="#2d4e3d" strokeWidth={1.5} />
-                    <h1 className="text-3xl font-bold">Your Cart</h1>
+                    <ShoppingCart size={30} color="#2d4e3d" strokeWidth={1.5} />
+                    <h1 className="text-2xl font-bold">Your Cart</h1>
                 </div>
             </div>
-            <div className="container mx-auto py-4 flex flex-col lg:flex-row gap-8 min-h-[50vh]">
+            <div className="container mx-auto py-4 flex flex-col lg:flex-row gap-6 min-h-[50vh] px-4">
                 <div className="flex flex-col lg:flex-row gap-8 w-full">
                     <div className="flex-grow">
                         {groupedItems.map((item) => (
@@ -104,7 +109,7 @@ function CartPage() {
                     </div>
                 </div>
 
-                <div className="w-full lg:w-[35rem] lg:sticky lg:top-[--tinggi10] h-fit bg-white p-6 border rounded order-first lg:order-last fixed bottom-0 left-0">
+                <div className="w-full lg:w-[25rem] lg:sticky lg:top-[--tinggi11] h-fit bg-white p-6 border rounded order-first lg:order-last fixed bottom-0 left-0">
                     <h3 className="text-xl font-semibold">Order Summary</h3>
                     <div className="mt-4 space-y-2">
                         <p className="flex justify-between">
@@ -130,7 +135,6 @@ function CartPage() {
                         </SignInButton>
                     )}
                 </div>
-
             </div>
         </div>
     )

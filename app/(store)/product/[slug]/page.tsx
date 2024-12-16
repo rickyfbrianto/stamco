@@ -1,6 +1,4 @@
-import AddToBasketButton from '@/components/AddToBasketButton';
 import AddToBasketProduct from '@/components/AddToBasketProduct';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { urlFor } from '@/sanity/lib/image';
 import { getProductBySlug } from '@/sanity/lib/products/getProductBySlug';
@@ -24,9 +22,10 @@ export default async function page({ params }: { params: Promise<{ slug: string 
     metadata.title = `Product Detail | ${product.name}`
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className={`relative w-[500px] h-[500px] aspect-square overflow-hidden rounded-lg shadow-lg ${isOutOfStock ? "opacity-50" : ""}`}>
+        <div className="container mx-auto py-8 px-8 md:px-0">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-8"> */}
+            <div className="flex flex-col md:flex-row gap-10">
+                <div className={`relative min-w-full md:min-w-[25rem] h-[25rem] aspect-square overflow-hidden rounded-lg shadow-lg ${isOutOfStock ? "opacity-50" : ""}`}>
                     {product.image && (
                         <Image src={urlFor(product.image).url()} alt={product?.name ?? "Product Image"}
                             fill className='object-contain h-[10rem] w-[10rem] transition-transform duration-300 hover:scale-105' />
@@ -38,25 +37,25 @@ export default async function page({ params }: { params: Promise<{ slug: string 
                     )}
                 </div>
 
-                <div className="flex flex-col">
+                <div className="flex flex-col min-h-[70vh]">
                     <div>
                         <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
                         <div className="text-xl font-semibold mb-4">{product.price?.toFixed(2)}</div>
                         {(product?.stock ?? 0) <= 10 &&
-                            <span className='flex gap-2 mt-4 font-bold text-[--warna-red] text-[.8rem]'><TriangleAlert size={16} className='text-[--warna-red]' strokeWidth={1.5} /> Stok tersisa {product.stock}!</span>
+                            <div className='text-[.8rem]'>
+                                <span className='flex gap-2 mt-4 font-bold text-[--warna-red]'><TriangleAlert size={16} className='text-[--warna-red]' strokeWidth={1.5} /> Stok tersisa {product.stock}!</span>
+                                <span>Checkout sekarang sebelum kehabisan</span>
+                            </div>
                         }
                         <AddToBasketProduct product={product} disabled={isOutOfStock} />
+                        <span className='text-[.9rem] text-gray-500'>Stok {product.stock}</span>
                     </div>
                     <Separator className='my-4' />
-                    <div className="">
-                        {/* <AddToBasketButton product={product} disabled={isOutOfStock} /> */}
-                        <div className="prose max-w-none mb-6">
-                            <span className="font-urbanist font-bold">Description</span>
-                            {Array.isArray(product.description) && (
-                                <PortableText value={product.description} />
-                            )}
-                        </div>
-
+                    <div className="prose max-w-none mb-6">
+                        <h2 className="font-urbanist font-bold">Description</h2>
+                        {Array.isArray(product.description) && (
+                            <PortableText value={product.description} />
+                        )}
                     </div>
                 </div>
             </div>

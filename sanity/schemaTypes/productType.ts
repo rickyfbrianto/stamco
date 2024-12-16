@@ -55,6 +55,12 @@ export const productType = defineType({
             type: "number",
             validation: Rule => Rule.required().min(0)
         }),
+        defineField({
+            name: "featured",
+            title: "Featured Products",
+            type: "boolean",
+            description: "Featured product that showed in first product",
+        }),
     ],
     preview: {
         select: {
