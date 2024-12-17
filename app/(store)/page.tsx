@@ -12,8 +12,6 @@ export default async function page() {
     const categories = await getAllCategories()
     const featured_product = await getAllFeaturedProducts()
 
-    console.log("tes", featured_product)
-
     return (
         <div className='flex flex-col'>
             {/* <BannerHome /> */}

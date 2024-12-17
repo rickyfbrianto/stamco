@@ -15,7 +15,6 @@ function CartPage() {
     const groupedItems = useBasketStore((state) => state.getGroupedItems())
     const totalPrice = useBasketStore((state) => state.getTotalPrice())
     const { isSignedIn } = useAuth()
-    const { user } = useUser()
 
     const [isClient, setIsClient] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -58,12 +57,8 @@ function CartPage() {
         }
     }
 
-    // useEffect(() => {
-    //     document.title = "Cart"
-    // }, [])
-
     return (
-        <div className="w-full">
+        <div className="w-full bg-slate-100">
             <div className="flex items-center bg-[--warna-primary] h-[--tinggi8]">
                 <div className="container flex items-center mx-auto gap-4">
                     <ShoppingCart size={30} color="#2d4e3d" strokeWidth={1.5} />
@@ -74,8 +69,8 @@ function CartPage() {
                 <div className="flex flex-col lg:flex-row gap-8 w-full">
                     <div className="flex-grow">
                         {groupedItems.map((item) => (
-                            <div key={item.product._id} className='mb-4 border rounded-md flex flex-col font-urbanist'>
-                                <div className="flex items-center justify-between hover:bg-slate-100 transition-colors duration-500">
+                            <div key={item.product._id} className='mb-4 border rounded-md flex flex-col font-urbanist bg-white'>
+                                <div className="flex items-center justify-between transition-colors duration-500">
                                     <Link className="flex cursor-pointer flex-1 p-4 min-w-0" href={`/product/${item.product.slug?.current}`}>
                                         <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 mr-4">
                                             {item.product.image && (
@@ -85,18 +80,19 @@ function CartPage() {
                                                     width={96} height={96} />
                                             )}
                                         </div>
-                                        <div className="min-w-0">
+                                        <div className="flex flex-col min-w-0">
                                             <h2 className="text-lg sm:text-xl font-semibold truncate">{item.product.name}</h2>
                                             <p className="text-sm sm:text-base">${(item.product.price ?? 0)}</p>
+                                            <div className="flex gap-2 px-2 py-1 border rounded-lg self-start">
+                                                <span className='text-[.8rem] font-extrabold'>Total</span>
+                                                <p className="text-sm sm:text-base">${((item.product.price ?? 0) * item.quantity)}</p>
+                                            </div>
                                         </div>
                                     </Link>
 
                                     <div className="flex flex-col items-center flex-shrink-0 p-4 gap-2">
                                         <AddToBasketButton product={item.product} />
-                                        <div className="flex gap-2 py-2 w-full justify-center border rounded-lg">
-                                            <span className='text-[.8rem] font-extrabold'>Total</span>
-                                            <p className="text-sm sm:text-base">${((item.product.price ?? 0) * item.quantity)}</p>
-                                        </div>
+
                                     </div>
                                 </div>
                                 <div className="flex px-4 py-2 gap-4 border-t">
