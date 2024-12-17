@@ -1021,6 +1021,13 @@
           "type": "number"
         },
         "optional": true
+      },
+      "featured": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
       }
     }
   },

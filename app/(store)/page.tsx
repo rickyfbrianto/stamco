@@ -2,6 +2,7 @@ import Banner from '@/components/Banner'
 import BannerHome from '@/components/BannerHome'
 import ProductsView from '@/components/ProductsView'
 import { getAllCategories } from '@/sanity/lib/products/getAllCategories'
+import { getAllFeaturedProducts } from '@/sanity/lib/products/getAllFeaturedProducts'
 import { getAllProducts } from '@/sanity/lib/products/getAllProducts'
 import Image from 'next/image'
 import React from 'react'
@@ -9,6 +10,7 @@ import React from 'react'
 export default async function page() {
     const products = await getAllProducts()
     const categories = await getAllCategories()
+    const featured_product = await getAllFeaturedProducts()
 
     return (
         <div className='flex flex-col'>

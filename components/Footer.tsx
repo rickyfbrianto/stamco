@@ -3,7 +3,7 @@ import React from 'react'
 
 async function Footer() {
     return (
-        <div className='flex min-h-[30rem] w-full bg-[--warna-primary] mt-10'>
+        <div className='flex min-h-[30rem] w-full bg-[--warna-primary]'>
             <div className="container mx-auto !px-0 flex flex-col h-full sm:!px-10">
                 <div className="flex flex-col md:flex-row md:items-end py-14 justify-between">
                     <div className="w-[60%] grid grid-cols-3 justify-start gap-x-4 gap-y-4">

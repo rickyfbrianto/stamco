@@ -9,29 +9,31 @@ export interface BasketItem {
 
 interface BasketState {
     items: BasketItem[],
-    addItem: (product: Product) => void;
+    // addItemFromProduct: (product: Product, qty: number) => void;
+    addItem: (product: Product, qty: number) => void;
     removeItem: (productId: string) => void;
     clearBasket: () => void;
     getTotalPrice: () => number;
     getItemCount: (productId: string) => number;
     getGroupedItems: () => BasketItem[];
+    removeFromCart: (product: Product) => void
 }
 
 const useBasketStore = create<BasketState>()(
     persist((set, get) => ({
         items: [],
-        addItem: (product) => set((state) => {
+        addItem: (product, qty) => set((state) => {
             const existingItem = state.items.find((item) => item.product._id === product._id)
             if (existingItem) {
                 return {
                     items: state.items.map(item =>
                         item.product._id === product._id
-                            ? { ...item, quantity: item.quantity + 1 }
+                            ? { ...item, quantity: item.quantity + qty }
                             : item
                     )
                 }
             } else {
-                return { items: [...state.items, { product, quantity: 1 }] }
+                return { items: [...state.items, { product, quantity: qty }] }
             }
         }),
         removeItem: productId => set((state) => ({
@@ -54,7 +56,11 @@ const useBasketStore = create<BasketState>()(
             const item = get().items.find(item => item.product._id === productId)
             return item ? item.quantity : 0
         },
-        getGroupedItems: () => get().items
+        getGroupedItems: () => get().items,
+        removeFromCart: (product) => set((state) => {
+            const baru = state.items.filter((item) => item.product._id !== product._id)
+            return { items: [...baru] }
+        })
     }),
         {
             name: "basket-store"
