@@ -1,4 +1,7 @@
 import ProductsView from '@/components/ProductsView'
+import SaveTes from '@/components/SaveTes'
+import { Button } from '@/components/ui/button'
+import { client } from '@/sanity/lib/client'
 import { getAllCategories } from '@/sanity/lib/products/getAllCategories'
 import { getAllProducts } from '@/sanity/lib/products/getAllProducts'
 import { Metadata } from 'next'
@@ -18,6 +21,7 @@ async function page() {
                 <span>Product</span>
                 <ProductsView products={products} categories={categories} />
             </div>
+            <SaveTes />
         </div>
     )
 }

@@ -1,15 +1,13 @@
 export const apiVersion =
-    process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-12-17'
+    process.env.NEXT_PUBLIC_SANITY_API_VERSION
 
 export const dataset = assertValue(
-    // process.env.NEXT_PUBLIC_SANITY_DATASET,
-    "production",
+    process.env.NEXT_PUBLIC_SANITY_DATASET,
     'Missing environment variable: NEXT_PUBLIC_SANITY_DATASET'
 )
 
 export const projectId = assertValue(
-    //   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    "aso4ec73",
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
     'Missing environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID'
 )
 
