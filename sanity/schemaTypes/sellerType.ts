@@ -14,19 +14,47 @@ export const sellerType = defineType({
             validation: Rule => Rule.required()
         }),
         defineField({
+            name: 'slug',
+            title: "Slug",
+            type: 'slug',
+            options: {
+                source: "name",
+                maxLength: 100
+            },
+            validation: Rule => Rule.required()
+        }),
+        defineField({
             name: 'email',
             title: 'Email',
             type: 'string',
             validation: (Rule) => Rule.required().email(),
         }),
         defineField({
+            name: 'city',
+            title: 'City',
+            type: 'string',
+            validation: Rule => Rule.required()
+        }),
+        defineField({
+            name: 'province',
+            title: 'Province',
+            type: 'string',
+            validation: Rule => Rule.required()
+        }),
+        defineField({
+            name: 'country',
+            title: 'Country',
+            type: 'string',
+            validation: Rule => Rule.required()
+        }),
+        defineField({
             name: 'image',
             title: 'Seller Image',
             type: 'image',
-            validation: Rule => Rule.required(),
             options: {
                 hotspot: true
-            }
+            },
+            validation: Rule => Rule.required(),
         }),
         defineField({
             name: 'description',

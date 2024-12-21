@@ -19,7 +19,7 @@ export const productType = defineType({
             type: 'slug',
             options: {
                 source: "name",
-                maxLength: 96
+                maxLength: 100
             },
             validation: Rule => Rule.required()
         }),

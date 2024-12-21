@@ -8,6 +8,10 @@ export default {
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     theme: {
+        // screens: {
+        //     'xxs': "360px",
+        //     'xs': "480px",
+        // },
         extend: {
             fontFamily: {
                 'urbanist': ['Urbanist', 'sans-serif'],

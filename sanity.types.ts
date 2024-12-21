@@ -186,7 +186,11 @@ export type Seller = {
   _updatedAt: string;
   _rev: string;
   name?: string;
+  slug?: Slug;
   email?: string;
+  city?: string;
+  province?: string;
+  country?: string;
   image?: {
     asset?: {
       _ref: string;
@@ -405,7 +409,7 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
 
 // Source: ./sanity/lib/products/getProductBySlug.ts
 // Variable: PRODUCTS_BY_SLUG
-// Query: *[_type == "product" && slug.current == $slug]{            ...,             categories[]->{                title,            },            seller->{                name, image            }        } | order(name asc)[0]
+// Query: *[_type == "product" && slug.current == $slug]{            ...,             categories[]->{                title,            },            seller->{name, image}        } | order(name asc)[0]
 export type PRODUCTS_BY_SLUGResult = {
   _id: string;
   _type: "product";
@@ -533,7 +537,11 @@ export type SELLER_BY_NAMEResult = {
   _updatedAt: string;
   _rev: string;
   name?: string;
+  slug?: Slug;
   email?: string;
+  city?: string;
+  province?: string;
+  country?: string;
   image?: {
     asset?: {
       _ref: string;
@@ -638,7 +646,7 @@ declare module "@sanity/client" {
     "*[_type == \"category\"] | order(name asc)": ALL_CATEGORIES_QUERYResult;
     "*[_type == \"product\" && featured == true] | order(name asc)": ALL_FEATURE_PRODUCTS_QUERYResult;
     "*[_type == \"product\"] | order(name asc)": ALL_PRODUCTS_QUERYResult;
-    "\n        *[_type == \"product\" && slug.current == $slug]{\n            ..., \n            categories[]->{\n                title,\n            },\n            seller->{\n                name, image\n            }\n        } | order(name asc)[0]\n    ": PRODUCTS_BY_SLUGResult;
+    "\n        *[_type == \"product\" && slug.current == $slug]{\n            ..., \n            categories[]->{\n                title,\n            },\n            seller->{name, image}\n        } | order(name asc)[0]\n    ": PRODUCTS_BY_SLUGResult;
     "\n        *[_type == \"product\" \n        && references(*[_type == 'category' && slug.current == $categorySlug]._id)\n        ] | order(name asc)\n    ": PRODUCTS_BY_CATEGORY_QUERYResult;
     "\n        *[_type == \"seller\" && name == $slug] | order(name asc)[0]\n    ": SELLER_BY_NAMEResult;
     "*[_type == \"product\" && name match $searchParam] | order(name asc)": PRODUCT_SEARCH_QUERYResult;
