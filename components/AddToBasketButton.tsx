@@ -60,10 +60,12 @@ function AddToBasketButton({ product, disabled }: AddToBasketButtonProps) {
                         Are you sure you want to delete this item from your basket?
                     </DialogDescription>
                     <DialogFooter>
-                        <Button type='button' variant={'destructive'} onClick={() => removeFromCart(product)}>Delete</Button>
-                        <DialogClose asChild>
-                            <Button type='button'>Cancel</Button>
-                        </DialogClose>
+                        <div className="flex justify-end w-full gap-2">
+                            <Button type='button' variant={'destructive'} onClick={() => removeFromCart(product)}>Delete</Button>
+                            <DialogClose asChild>
+                                <Button type='button'>Cancel</Button>
+                            </DialogClose>
+                        </div>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

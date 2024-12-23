@@ -1,12 +1,12 @@
 import { defineQuery } from "next-sanity"
 import { sanityFetch } from "../live"
 
-export const getProductBySlug = async (slug: string) => {
+export const GetProductBySlug = async (slug: string) => {
     const PRODUCTS_BY_SLUG = defineQuery(`
         *[_type == "product" && slug.current == $slug]{
             ..., 
             categories[]->{
-                title,
+                title, _id
             },
             seller->{name, image}
         } | order(name asc)[0]

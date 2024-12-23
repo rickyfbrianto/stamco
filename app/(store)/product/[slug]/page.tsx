@@ -1,7 +1,6 @@
 import AddToBasketProduct from '@/components/AddToBasketProduct';
 import { Separator } from '@/components/ui/separator';
 import { urlFor } from '@/sanity/lib/image';
-import { getProductBySlug } from '@/sanity/lib/products/getProductBySlug';
 import { TriangleAlert } from 'lucide-react';
 import { Metadata } from 'next';
 import { PortableText } from 'next-sanity';
@@ -11,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from '@/components/ui/badge';
 import { Category } from '@/sanity.types';
 import Link from 'next/link';
+import { GetProductBySlug } from '@/sanity/lib/products/getProductBySlug';
 
 export const metadata: Metadata = {
     title: ""
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
-    const product = await getProductBySlug(slug)
+    const product = await GetProductBySlug(slug)
     const { seller } = product || {}
 
     if (!product) return notFound()
@@ -26,15 +26,23 @@ export default async function page({ params }: { params: Promise<{ slug: string 
     const isOutOfStock = product.stock != null && product.stock <= 0
     metadata.title = `Product Detail | ${product.name}`
 
+    const imageStyle = {
+        border: '1px solid #fff',
+    }
+
     return (
         <div className="container mx-auto py-8 px-8 md:px-0">
             <div className="flex flex-col md:flex-row gap-x-8 gap-y-10">
                 {/* section untuk gambar produk */}
-                <div className={`relative min-w-full md:min-w-[25rem] max-h-[25rem] h-[25rem] aspect-square overflow-hidden rounded-lg shadow-lg ${isOutOfStock ? "opacity-50" : ""}
+                <div className={`relative min-w-full md:min-w-[20rem] h-[20rem] max-h-[20rem] aspect-square overflow-hidden rounded-lg shadow-lg ${isOutOfStock ? "opacity-50" : ""}
                     lg:sticky lg:top-[--tinggi11] lg:left-0`}>
                     {product.image && (
-                        <Image src={urlFor(product.image).url()} alt={product?.name ?? "Product Image"}
-                            fill className='object-contain h-[20rem] w-[20rem] transition-transform duration-300 hover:scale-105' />
+                        // <Image priority src={urlFor(product.image).url()} alt={product?.name ?? "Product Image"} width={300} height={300}
+                        //     className='object-contain transition-transform duration-300 hover:scale-105' />
+                        <Image src={urlFor(product.image).url()} alt={product?.name ?? "Product Image"} fill priority quality={100} sizes='100%'
+                            className='object-contain transition-transform duration-300 hover:scale-105' />
+                        // <div className="relative">
+                        // </div>
                     )}
                     {isOutOfStock && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -49,7 +57,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
                         <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
                         <p className="text-xl font-semibold mb-4">{product.price?.toFixed(2)}</p>
                         {(product?.stock ?? 0) > 10
-                            ? <p className='text-[.9rem] text-gray-500'>Stok {product.stock}</p>
+                            ? (product?.stock ?? 0) <= 50 && <p className='text-[.9rem] text-gray-500'>Stok {product.stock}</p>
                             : <div className='text-[.8rem] mb-4'>
                                 <span className='flex gap-2  font-bold text-[--warna-red]'><TriangleAlert size={16} className='text-[--warna-red]' strokeWidth={1.5} /> Stok tersisa {product.stock}!</span>
                                 <span>Checkout sekarang sebelum kehabisan</span>
