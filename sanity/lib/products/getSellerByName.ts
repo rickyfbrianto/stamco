@@ -6,7 +6,7 @@ export const GetSellerByName = async (slug: string) => {
         *[_type == "seller" && name == $slug]{
             ...,
             products[]->{
-                _id, slug, name, image, price, stock
+                _id, slug, name, image, price, stock,
             }
         } | order(name asc)[0]
     `)

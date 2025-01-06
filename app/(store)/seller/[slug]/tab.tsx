@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { Seller } from '@/sanity.types';
+import { Product, Seller } from '@/sanity.types';
 import Image from 'next/image';
 import { urlFor } from '@/sanity/lib/image';
 import Link from 'next/link';
@@ -63,18 +63,20 @@ function TabSeller({ seller }: { seller: Seller }) {
             </Box>
             <CustomTabPanel value={value} index={0}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {seller.products?.map((product) => (
-                        <Link key={product._id} href={`/product/${product.slug.current}`}
-                            className='flex flex-col bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden '>
-                            {/* {product.image && (
-                                <Image className='w-[100%] h-[100%] object-contain transition-transform duration-300 '
-                                    src={urlFor(product.image).url()}
-                                    alt={product.name || "Product Image"}
-                                    fill />
+                    {seller.products?.map((product) => {
+                        return (
+                            <Link key={product._id} href={`/product/${product.slug?.current}`}
+                                className='flex flex-col bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden p-2'>
+                                {/* {product.image && (
+                            <Image className='w-[100px]  transition-transform duration-300 '
+                                src={urlFor(product.image).url()}
+                                alt={product.name || "Product Image"}
+                                fill />
                             )} */}
-                            {product.name}
-                        </Link>
-                    ))}
+                                {product.name}
+                            </Link>
+                        )
+                    })}
                 </div>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>

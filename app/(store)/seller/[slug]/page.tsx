@@ -10,9 +10,9 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import React from 'react'
 
-
 import 'react-tabs/style/react-tabs.css';
 import TabSeller from './tab'
+import Head from 'next/head'
 
 export const metadata: Metadata = {
     title: ""
@@ -22,12 +22,16 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
     const seller = await GetSellerByName(slug)
 
-    if (!seller) return notFound()
+    metadata.title = `Seller ${seller.name}`
 
+    if (!seller) return notFound()
     console.log(seller)
 
     return (
         <div className="container mx-auto p-8 md:px-0 min-h-[60vh]">
+            <Head>
+                <title>{metadata.title}</title>
+            </Head>
             {/* <div className="flex flex-col md:flex-row gap-x-8 gap-y-10"> */}
             <div className="flex flex-col gap-y-10">
                 <div className="flex flex-col lg:flex-row lg:items-center gap-4 border px-4 py-2 rounded-xl overflow-hidden">

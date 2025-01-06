@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from '@/components/ui/badge';
 import { Category } from '@/sanity.types';
 import Link from 'next/link';
-import { GetProductBySlug } from '@/sanity/lib/products/getProductBySlug';
+import { GetProductBySlug } from '@/sanity/lib/products/GetProductBySlug';
 
 export const metadata: Metadata = {
     title: ""
@@ -63,8 +63,8 @@ export default async function page({ params }: { params: Promise<{ slug: string 
                                 <span>Checkout sekarang sebelum kehabisan</span>
                             </div>
                         }
-                        {/* <AddToBasketProduct product={product} disabled={isOutOfStock} /> */}
-                        <div className="flex gap-x-2 mt-4 pt-2 border-t-[2px]">
+                        <Separator className='my-4' />
+                        <div className="flex gap-x-2">
                             <Image src={urlFor(seller.image).url()} width={50} height={50} alt='Seller Image' className='rounded-full p-[2px] bg-slate-500 min-w-[50px] min-h-[50px]' />
                             <div className="flex flex-col justify-center">
                                 <Link href={`/seller/${seller.name}`}>
