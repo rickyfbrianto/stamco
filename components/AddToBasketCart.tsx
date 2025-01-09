@@ -6,23 +6,23 @@ import React, { useEffect, useState } from 'react'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Trash } from 'lucide-react';
 import { Button } from './ui/button';
+import { useAuth } from '@clerk/nextjs';
 
-interface AddToBasketButtonProps {
+interface AddToBasketCartProps {
     product: Product;
     disabled?: boolean;
 }
 
-function AddToBasketButton({ product, disabled }: AddToBasketButtonProps) {
+function AddToBasketCart({ product, disabled }: AddToBasketCartProps) {
     const { addItem, removeItem, getItemCount, removeFromCart } = useBasketStore()
     const [openAlert, setOpenAlert] = useState(false)
     const itemCount = getItemCount(product._id)
     const maxStock = product.stock
+    const { userId } = useAuth()
 
     const [isClient, setIsClient] = useState(false)
 
-    useEffect(() => {
-        setIsClient(true)
-    }, [])
+    useEffect(() => setIsClient(true), [])
 
     if (!isClient) return null
 
@@ -34,20 +34,20 @@ function AddToBasketButton({ product, disabled }: AddToBasketButtonProps) {
     }
 
     return (
-        <div className="flex flex-col gap-y-4 font-sans">
-            <div className='flex items-center justify-center gap-x-1'>
+        <div className="flex flex-col self-center gap-y-4">
+            <div className="flex items-center gap-x-2 font-urbanist">
                 <button onClick={() => removeItem(product._id)} disabled={itemCount === 1 || disabled}
-                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-200 
+                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-200 text-white
                     ${itemCount == 1 ? "bg-gray-400 cursor-not-allowed" : "bg-red-400 hover:bg-red-300"}`}
                 >
-                    <span className={`font-bold text-white `}>-</span>
+                    <span className={`text-md font-bold`}>-</span>
                 </button>
                 <span className="min-w-[2rem]  text-center font-semibold">{itemCount}</span>
-                <button onClick={() => addItem(product, 1)} disabled={disabled || (maxStock == itemCount)}
-                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-200 
-                ${disabled || (maxStock == itemCount) ? "bg-gray-400 cursor-not-allowed" : "bg-[--warna-green] hover:bg-[--warna-green]"}`}
+                <button onClick={() => addItem(product, userId as string, 1)} disabled={disabled || (maxStock == itemCount)}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-200 text-white
+                    ${disabled || (maxStock == itemCount) ? "bg-gray-400 cursor-not-allowed" : "bg-[--warna-green] hover:bg-[--warna-green]"}`}
                 >
-                    <span className={`font-bold text-white`}>+</span>
+                    <span className={`text-md font-bold`}>+</span>
                 </button>
             </div>
             <div className="flex justify-center gap-x-2">
@@ -75,4 +75,4 @@ function AddToBasketButton({ product, disabled }: AddToBasketButtonProps) {
     )
 }
 
-export default AddToBasketButton
+export default AddToBasketCart

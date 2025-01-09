@@ -68,9 +68,9 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type Sale = {
+export type Promo = {
   _id: string;
-  _type: "sale";
+  _type: "promo";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -275,7 +275,7 @@ export type Slug = {
   source?: string;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Sale | Order | Category | Product | Seller | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Promo | Order | Category | Product | Seller | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/products/getAllCategories.ts
 // Variable: ALL_CATEGORIES_QUERY
@@ -636,20 +636,7 @@ export type PRODUCT_SEARCH_QUERYResult = Array<{
 // Source: ./sanity/lib/sales/getActiveSaleByCoupon.ts
 // Variable: ACTIVE_SALE_BY_COUPON_CODE
 // Query: *[_type == "sale"         && isActive == true         && couponCode == $couponCode        ] | order(validFrom desc)[0]
-export type ACTIVE_SALE_BY_COUPON_CODEResult = {
-  _id: string;
-  _type: "sale";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  description?: string;
-  discountAmount?: number;
-  couponCode?: string;
-  validFrom?: string;
-  validUntil?: string;
-  isActive?: boolean;
-} | null;
+export type ACTIVE_SALE_BY_COUPON_CODEResult = null;
 
 // Query TypeMap
 import "@sanity/client";

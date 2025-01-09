@@ -8,6 +8,7 @@ import { Input } from './ui/input';
 import { Separator } from './ui/separator';
 import { useBasketStore } from '@/store/store';
 import { toast } from 'sonner';
+import { useAuth } from '@clerk/nextjs';
 
 interface AddToBasketProps {
     product: Product;
@@ -17,6 +18,7 @@ interface AddToBasketProps {
 function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
     const { addItem } = useBasketStore()
     const [isClient, setIsClient] = useState(false)
+    const { userId } = useAuth()
     const minQty = 1
     const maxQty = product.stock
     const form = useForm({
@@ -31,7 +33,7 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
     if (!isClient) return null
 
     const handleAddToCart = (product: Product) => {
-        addItem(product, watchQty)
+        addItem(product, userId as string, watchQty)
         toast.success("Product added to cart")
     }
 
@@ -43,7 +45,7 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
             fixed flex flex-col justify-center items-center bottom-0 left-0 p-2 border-t-[2px]
             lg:flex-col lg:items-start lg:self-start lg:sticky lg:top-[--tinggi11] lg:right-0 lg:p-3 lg:border lg:min-w-[15rem] lg:w-[15rem] lg:rounded-lg lg:mt-0">
                 <span className='hidden lg:block self-start font-bold'>Checkout</span>
-                <div className="flex self-center items-center gap-x-2 h-10 font-urbanist">
+                <div className="flex self-center items-center gap-x-2 font-urbanist">
                     <button disabled={value === minQty || disabled} onClick={() => onChange(Number(value) - 1)}
                         className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-200 text-white
                     ${value == minQty ? "bg-red-200 cursor-not-allowed" : "bg-red-500 hover:bg-red-400"}`}>

@@ -68,9 +68,9 @@ export default function Header() {
                                 <FaSearch />
                             </Button>
                         </div>
-                        <div className="hidden sm:flex p-1 gap-8 text-[.75rem] font-roboto">
+                        <div className="hidden sm:flex p-1 gap-6 text-[.75rem] font-urbanist">
                             {data.map((v) => (
-                                <Link className="" href={v.link} key={v.title}>{v.title}</Link>
+                                <Link className="font-semibold" href={v.link} key={v.title}>{v.title}</Link>
                             ))}
                         </div>
                     </Form>

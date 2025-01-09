@@ -12,9 +12,7 @@ import { Category } from '@/sanity.types';
 import Link from 'next/link';
 import { GetProductBySlug } from '@/sanity/lib/products/GetProductBySlug';
 
-export const metadata: Metadata = {
-    title: ""
-}
+export const metadata: Metadata = { title: "" }
 
 export default async function page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
@@ -24,11 +22,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
     if (!product) return notFound()
 
     const isOutOfStock = product.stock != null && product.stock <= 0
-    metadata.title = `Product Detail | ${product.name}`
-
-    const imageStyle = {
-        border: '1px solid #fff',
-    }
+    metadata.title = `Sell ${product.name}`
 
     return (
         <div className="container mx-auto py-8 px-8 md:px-0">

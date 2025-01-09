@@ -326,7 +326,7 @@
     }
   },
   {
-    "name": "sale",
+    "name": "promo",
     "type": "document",
     "attributes": {
       "_id": {
@@ -339,7 +339,7 @@
         "type": "objectAttribute",
         "value": {
           "type": "string",
-          "value": "sale"
+          "value": "promo"
         }
       },
       "_createdAt": {
