@@ -3,7 +3,7 @@
 import { useAuth } from '@clerk/nextjs'
 import React, { useEffect, useState } from 'react'
 
-function CheckoutButton() {
+function CheckoutButton({ disabled }: { disabled: boolean }) {
     const { isSignedIn, userId } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
     const [isClient, setIsClient] = useState(false)
@@ -36,7 +36,8 @@ function CheckoutButton() {
     }
 
     return (
-        <button onClick={handleCheckout} disabled={isLoading} className='mt-4 w-full min-w-[4rem] text-ellipsis bg-[--warna-green] text-white px-4 py-2 rounded hover:bg-[--warna-green] disabled:bg-gray-400'>
+        <button onClick={handleCheckout} disabled={!disabled || isLoading}
+            className={`${!disabled && "cursor-not-allowed"} mt-4 w-full min-w-[4rem] text-ellipsis bg-[--warna-green] text-white px-4 py-2 rounded hover:bg-[--warna-green] disabled:bg-gray-400`}>
             {isLoading ? "Processing" : "Checkout"}
         </button>
     )
