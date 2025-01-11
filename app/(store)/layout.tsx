@@ -17,7 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     return (
         <LayoutProvider>
             <html lang="en">
-                <body>
+                <body className="bg-slate-100">
                     <Toaster />
                     <Header />
                     {children}

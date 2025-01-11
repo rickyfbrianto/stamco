@@ -5,36 +5,50 @@ import { persist } from 'zustand/middleware'
 export interface BasketItem {
     product: Product;
     quantity: number;
+    user: string;
+    tgl: Date;
 }
 
 interface BasketState {
     items: BasketItem[],
     // addItemFromProduct: (product: Product, qty: number) => void;
-    addItem: (product: Product, qty: number) => void;
+    addItem: (product: Product, user: string, qty: number) => void;
     removeItem: (productId: string) => void;
     clearBasket: () => void;
     getTotalPrice: () => number;
     getItemCount: (productId: string) => number;
     getGroupedItems: () => BasketItem[];
-    removeFromCart: (product: Product) => void
+    removeFromCart: (product: string) => void
 }
 
 const useBasketStore = create<BasketState>()(
     persist((set, get) => ({
         items: [],
-        addItem: (product, qty) => set((state) => {
+        // addItem: (product, qty) => set((state) => {
+        //     const existingItem = state.items.find((item) => item.product._id === product._id)
+        //     if (existingItem) {
+        //         return {
+        //             items: state.items.map(item =>
+        //                 item.product._id === product._id
+        //                     ? { ...item, quantity: item.quantity + qty }
+        //                     : item
+        //             )
+        //         }
+        //     } else return { items: [...state.items, { product, quantity: qty }] }
+        // }),
+        addItem: (product, user, qty) => set((state) => {
             const existingItem = state.items.find((item) => item.product._id === product._id)
+            let temp = null
             if (existingItem) {
-                return {
+                temp = {
                     items: state.items.map(item =>
                         item.product._id === product._id
-                            ? { ...item, quantity: item.quantity + qty }
+                            ? { ...item, quantity: item.quantity + qty, user, tgl: new Date() }
                             : item
                     )
                 }
-            } else {
-                return { items: [...state.items, { product, quantity: qty }] }
-            }
+            } else temp = { items: [...state.items, { product, quantity: qty, user, tgl: new Date() }] }
+            return temp
         }),
         removeItem: productId => set((state) => ({
             items: state.items.reduce((acc, item) => {
@@ -57,10 +71,9 @@ const useBasketStore = create<BasketState>()(
             return item ? item.quantity : 0
         },
         getGroupedItems: () => get().items,
-        removeFromCart: (product) => set((state) => {
-            const baru = state.items.filter((item) => item.product._id !== product._id)
-            return { items: [...baru] }
-        })
+        removeFromCart: (id: string) => set((state) =>
+            ({ items: state.items.filter((item) => item.product._id !== id) })
+        )
     }),
         {
             name: "basket-store"

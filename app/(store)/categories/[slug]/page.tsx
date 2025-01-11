@@ -10,12 +10,12 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
     metadata.title = "Categories " + slug.charAt(0).toUpperCase() + slug.slice(1)
 
-    const products = await getProductsByCategory(slug)
+    const products = await getProductsByCategory(slug.toLowerCase())
     const categories = await getAllCategories()
 
     return (
-        <div className='flex flex-col items-center min-h-screen bg-gray-100 p-4'>
-            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
+        <div className="flex flex-col">
+            <div className="container mx-auto flex flex-col items-center justify-top h-screen mt-4">
                 <h1 className="text-3xl font-bold mb-6 text-center">
                     {slug.split("-").map((word) => word.at(0)?.toUpperCase() + word.slice(1)).join(" ")}{" "}
                     Collection

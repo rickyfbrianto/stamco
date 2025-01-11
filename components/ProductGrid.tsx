@@ -1,10 +1,16 @@
 import { Product } from '@/sanity.types'
 import React from 'react'
 import ProductThumbnail from './ProductThumbnail'
+import { cn } from '@/lib/utils'
 
-function ProductGrid({ products }: { products: Product[] }) {
+interface ProductGridProps {
+    className?: string;
+    products: Product[];
+}
+
+function ProductGrid({ className, products }: ProductGridProps) {
     return (
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4'>
+        <div className={cn('grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-4', className)}>
             {products.map(product => (
                 <ProductThumbnail product={product} key={product._id} />
                 // <AnimatePresence key={product._id}>

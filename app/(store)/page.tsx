@@ -9,7 +9,6 @@ import React from 'react'
 
 export default async function page() {
     const products = await getAllProducts()
-    const categories = await getAllCategories()
     const featured_product = await getAllFeaturedProducts()
 
     return (
@@ -21,7 +20,7 @@ export default async function page() {
                 {/* <Banner /> */}
 
                 <div className="flex flex-col items-center justify-top h-screen mt-4">
-                    <ProductsView products={products} categories={categories} />
+                    <ProductsView products={products} />
                 </div>
             </div>
         </div>

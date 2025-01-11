@@ -23,6 +23,8 @@ export async function createCheckoutSession(
         if (itemWithoutPrice.length > 0) {
             throw new Error("Some items do not have a price")
         }
+
+        // const customers = await stripe
     } catch (error) {
         console.error("Error creating checkout session ", error)
         throw error

@@ -1,10 +1,9 @@
 import { defineField, defineType } from "sanity";
 import { TagIcon } from '@sanity/icons'
-import { title } from "process";
 
-export const salesType = defineType({
-    name: "sale",
-    title: "Sale",
+export const promoType = defineType({
+    name: "promo",
+    title: "Promo",
     type: "document",
     icon: TagIcon,
     fields: [

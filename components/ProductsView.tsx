@@ -4,21 +4,24 @@ import ProductGrid from './ProductGrid'
 import { CategorySelector } from './ui/CategorySelector'
 
 interface ProductsViewProps {
-    products: Product[],
-    categories: Category[]
+    className?: string;
+    products: Product[];
+    categories?: Category[] | undefined
 }
 
-function ProductsView({ products, categories }: ProductsViewProps) {
+function ProductsView({ className, products, categories }: ProductsViewProps) {
     return (
         <div className='flex flex-col'>
             {/* categories */}
-            <div className='w-full sm:w-[200px]'>
-                <CategorySelector categories={categories} />
-            </div>
+            {categories && categories.length > 0 && (
+                <div className='w-full sm:w-[200px]'>
+                    <CategorySelector categories={categories} />
+                </div>
+            )}
 
             {/* Products */}
             <div className='flex-1'>
-                <ProductGrid products={products} />
+                <ProductGrid products={products} className={className} />
             </div>
         </div>
     )

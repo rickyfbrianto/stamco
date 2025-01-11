@@ -7,6 +7,8 @@ import React from 'react'
 function ProductThumbnail({ product }: { product: Product }) {
     const isOutOfStock = product.stock != null && product.stock <= 0
 
+    console.log(product.description)
+
     return (
         <Link href={`/product/${product.slug?.current}`}
             className={`group flex flex-col bg-white rounded-lg border border-gray-200 shadow-sm 
@@ -26,7 +28,7 @@ function ProductThumbnail({ product }: { product: Product }) {
                 )}
             </div>
 
-            <div className='p-4'>
+            <div className='p-4 flex flex-col bg-slate-300'>
                 <h2 className="text-lg font-semibold text-gray-800 truncate">
                     {product.name}
                 </h2>
@@ -36,6 +38,7 @@ function ProductThumbnail({ product }: { product: Product }) {
                             ? block.children?.map(child => child.text).join("")
                             : ""
                     ))}
+                    {/* {product.description} */}
                 </p>
                 <p className="mt-2 text-lg font-bold text-gray-900">
                     {product.price?.toFixed(2)}

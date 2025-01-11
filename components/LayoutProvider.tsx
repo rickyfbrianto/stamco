@@ -9,7 +9,7 @@ const queryClient = new QueryClient()
 export default function LayoutProvider({ children }: { children: React.ReactNode }) {
     return (
         <QueryClientProvider client={queryClient}>
-            <ClerkProvider dynamic>
+            <ClerkProvider dynamic publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
                 {children}
             </ClerkProvider>
         </QueryClientProvider>
