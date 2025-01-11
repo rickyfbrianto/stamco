@@ -18,7 +18,7 @@ interface BasketState {
     getTotalPrice: () => number;
     getItemCount: (productId: string) => number;
     getGroupedItems: () => BasketItem[];
-    removeFromCart: (product: Product) => void
+    removeFromCart: (product: string) => void
 }
 
 const useBasketStore = create<BasketState>()(
@@ -71,10 +71,9 @@ const useBasketStore = create<BasketState>()(
             return item ? item.quantity : 0
         },
         getGroupedItems: () => get().items,
-        removeFromCart: (product) => set((state) => {
-            const baru = state.items.filter((item) => item.product._id !== product._id)
-            return { items: [...baru] }
-        })
+        removeFromCart: (id: string) => set((state) =>
+            ({ items: state.items.filter((item) => item.product._id !== id) })
+        )
     }),
         {
             name: "basket-store"

@@ -1,8 +1,7 @@
 'use client'
 
-import { ClerkLoaded, ClerkLoading, SignInButton, useAuth, UserButton, useUser } from "@clerk/nextjs";
+import { ClerkLoaded, ClerkLoading, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import Form from "next/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FaSearch } from "react-icons/fa";
@@ -10,17 +9,39 @@ import { FaOilWell } from "react-icons/fa6";
 import { useBasketStore } from "@/store/store";
 import { Box, ShoppingCart } from "lucide-react";
 import { LoaderBounce } from "./Loader";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useEffect } from "react";
 
 export default function Header() {
     const { user } = useUser();
     const item = useBasketStore(state => state.items)
-    const itemCount = useBasketStore((state) => state.items.reduce((total, item) => total + item.quantity, 0))
+    const searchParams = useSearchParams()
+    const path = usePathname()
+    const router = useRouter()
+    const nextSearchParams = new URLSearchParams(searchParams.toString())
+
+    const { control, handleSubmit, setValue } = useForm({
+        defaultValues: { query: searchParams.get("query") ?? "" }
+    })
 
     const data = [
         { id: "1", title: "Product", link: "/product" },
         { id: "2", title: "Sepatu", link: "/categories/sepatu" },
         { id: "3", title: "Short", link: "/categories/shorts" },
     ]
+
+    useEffect(() => {
+        if (searchParams.get("query")?.trim() && path.split("/")[1] !== "product") {
+            nextSearchParams.delete('query')
+            router.replace(`${path}/${nextSearchParams}`)
+        }
+        setValue("query", searchParams.get("query") ?? "")
+    }, [searchParams.get("query")])
+
+    const submitForm: SubmitHandler<{ query: string }> = async (data) => {
+        router.push(`/product?query=${data.query}`)
+    }
 
     return (
         <div className='w-full min-h-[--tinggi10] bg-[--warna-mint] border-b sticky top-0 z-[10] py-2 px-8'>
@@ -61,9 +82,11 @@ export default function Header() {
                         </div>
                     </Link>
 
-                    <Form action={'/search'} className="flex flex-col flex-1 col-span-2 md:col-span-1 order-2">
+                    <form onSubmit={handleSubmit(submitForm)} className="flex flex-col flex-1 col-span-2 md:col-span-1 order-2">
                         <div className="flex border rounded-lg">
-                            <Input className="border-none focus-visible:ring-0" name="query" type="search" placeholder="Search..." />
+                            <Controller name="query" control={control} render={({ field: { value, onChange } }) => (
+                                <Input value={value} onChange={(e) => onChange(e.target.value)} className="border-none focus-visible:ring-0" type="search" placeholder="Search..." />
+                            )} />
                             <Button variant={"outline"} className="ring-0 border-none">
                                 <FaSearch />
                             </Button>
@@ -73,7 +96,7 @@ export default function Header() {
                                 <Link className="font-semibold" href={v.link} key={v.title}>{v.title}</Link>
                             ))}
                         </div>
-                    </Form>
+                    </form>
 
                     <div className="flex justify-end order-1 md:order-3 mt-1">
                         <Link href={`/cart`} className="relative text-center flex justify-center items-center transition-colors duration-500 self-center md:self-start

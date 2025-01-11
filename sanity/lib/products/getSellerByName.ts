@@ -5,9 +5,9 @@ export const GetSellerByName = async (slug: string) => {
     const SELLER_BY_NAME = defineQuery(`
         *[_type == "seller" && name == $slug]{
             ...,
-            products[]->{
-                _id, slug, name, image, price, stock,
-            }
+            "products": products[]->{
+                _id, _type, slug, name, image, price, description
+            } | order(name asc)
         } | order(name asc)[0]
     `)
 

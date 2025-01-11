@@ -8,7 +8,7 @@ export const GetProductBySlug = async (slug: string) => {
             categories[]->{
                 title, _id
             },
-            seller->{name, image}
+            seller->{ name, image}
         } | order(name asc)[0]
     `)
 

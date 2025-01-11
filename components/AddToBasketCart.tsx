@@ -62,7 +62,7 @@ function AddToBasketCart({ product, disabled }: AddToBasketCartProps) {
                         </DialogDescription>
                         <DialogFooter>
                             <div className="flex justify-end w-full gap-2">
-                                <Button type='button' variant={'destructive'} onClick={() => removeFromCart(product)}>Delete</Button>
+                                <Button type='button' variant={'destructive'} onClick={() => removeFromCart(product._id)}>Delete</Button>
                                 <DialogClose asChild>
                                     <Button type='button'>Cancel</Button>
                                 </DialogClose>

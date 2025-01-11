@@ -5,36 +5,34 @@ import { Separator } from '@/components/ui/separator'
 import { urlFor } from '@/sanity/lib/image'
 import { GetSellerByName } from '@/sanity/lib/products/getSellerByName'
 import { Diff, Star } from 'lucide-react'
-import { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import React from 'react'
 
 import 'react-tabs/style/react-tabs.css';
 import TabSeller from './tab'
-import Head from 'next/head'
+import { Seller } from '@/sanity.types'
 
-export const metadata: Metadata = {
-    title: ""
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params
+    const seller: Seller = await GetSellerByName(slug)
+
+    return {
+        title: `Seller | ${seller.name}`,
+        description: `Seller ${seller?.name}`,
+    };
 }
 
 async function page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
-    const seller = await GetSellerByName(slug)
-
-    metadata.title = `Seller ${seller.name}`
+    const seller: Seller = await GetSellerByName(slug)
 
     if (!seller) return notFound()
-    console.log(seller)
 
     return (
-        <div className="container mx-auto p-8 md:px-0 min-h-[60vh]">
-            <Head>
-                <title>{metadata.title}</title>
-            </Head>
-            {/* <div className="flex flex-col md:flex-row gap-x-8 gap-y-10"> */}
-            <div className="flex flex-col gap-y-10">
-                <div className="flex flex-col lg:flex-row lg:items-center gap-4 border px-4 py-2 rounded-xl overflow-hidden">
+        <div className="container mx-auto md:px-0 min-h-[60vh] p-8 ">
+            <div className="flex flex-col gap-y-5">
+                <div className="flex flex-col lg:flex-row lg:items-center border rounded-xl overflow-hidden bg-white gap-4 p-4">
                     <div className="flex flex-col sm:flex-row w-full gap-x-5">
                         {seller.image && <Image className='w-[150px] h-[150px] rounded-2xl' height={150} width={150} src={urlFor(seller.image).url()} alt='Seller Image' />}
                         <div className="flex min-h-max w-full flex-wrap justify-between items-center md:flex-col md:justify-start md:items-start gap-2">
@@ -76,6 +74,7 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
                         </div>
                     </div>
                 </div>
+
                 <TabSeller seller={seller} />
             </div>
         </div>

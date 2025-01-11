@@ -13,6 +13,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useFieldArray, useForm, Controller } from 'react-hook-form'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface ItemsProps {
     items: {
@@ -29,6 +30,7 @@ interface ItemsProps {
 function CartPage() {
     const groupedItems = useBasketStore((state) => state.getGroupedItems())
     const totalPrice = useBasketStore((state) => state.getTotalPrice())
+    const removeFromCart = useBasketStore((state) => state.removeFromCart)
     const { isSignedIn, userId } = useAuth()
 
     const [isClient, setIsClient] = useState(false)
@@ -94,28 +96,57 @@ function CartPage() {
         itemWatch.map((item, index) => form.setValue(`items.${index}.check`, event))
     }
 
+    const removeSelectedItem = () => {
+        itemWatch.filter((item) => item.check)
+            .map((item) => item.id)
+            .forEach((selected: string) => removeFromCart(selected))
+    }
+
     return (
         <div className="w-full">
-            <div className="flex items-center">
-                <div className="container h-[--tinggi6] flex flex-col justify-center xs:flex-row xs:justify-between items-center mx-auto gap-4 border-b-[1px] px-4 ">
-                    <div className="flex items-center gap-x-2">
-                        <ShoppingCart size={20} color="#2d4e3d" strokeWidth={1.5} />
-                        <h1 className="text-[1.2rem] font-bold">Your Cart</h1>
-                    </div>
-                    <span className='font-bold'>{groupedItems.length} Product{groupedItems.length > 1 && "s"}</span>
+            <div className="flex items-center container h-[--tinggi6] flex-col justify-center xs:flex-row xs:justify-between mx-auto gap-4 border-b-[1px] px-4 ">
+                <div className="flex items-center gap-x-2">
+                    <ShoppingCart size={20} color="#2d4e3d" strokeWidth={1.5} />
+                    <h1 className="text-[1.2rem] font-bold">Your Cart</h1>
                 </div>
+                <span className='font-bold'>{groupedItems.length} Product{groupedItems.length > 1 && "s"}</span>
             </div>
             <div className="container mx-auto p-4 flex flex-col lg:flex-row gap-4 min-h-[50vh]">
                 <div className="flex flex-col lg:flex-row gap-8 w-full">
                     <div className="flex flex-col gap-y-4 flex-grow font-urbanist">
-                        <Controller name='checkAll' control={form.control} render={({ field: { value } }) => (
-                            <div className="flex items-center rounded-t-3xl h-14 bg-[--warna-primary] overflow-hidden">
-                                <div className="flex min-w-[5rem] justify-center items-center">
-                                    <Checkbox id='checkAll' checked={value} onCheckedChange={(value) => handleCheckAll(value as boolean)} />
+                        <div className="flex flex-col justify-center items-center xxs:flex-row xxs:justify-between rounded-t-2xl min-h-14 py-2 gap-2 bg-[--warna-primary] overflow-hidden px-4">
+                            <Controller name='checkAll' control={form.control} render={({ field: { value } }) => (
+                                <div className="flex items-center gap-x-6">
+                                    <div className='flex justify-center items-center'>
+                                        <Checkbox id='checkAll' className='' checked={value} onCheckedChange={(value) => handleCheckAll(value as boolean)} />
+                                    </div>
+                                    <label htmlFor="checkAll" className="font-bold">{value ? "Unselect" : "Select"} All</label>
                                 </div>
-                                <label htmlFor="checkAll" className="py-4 font-bold">Select All</label>
-                            </div>
-                        )} />
+                            )} />
+                            {itemWatch.some((item) => item.check) && (
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <button className='font-bold'>Remove</button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Delete item</DialogTitle>
+                                        </DialogHeader>
+                                        <DialogDescription>
+                                            Are you sure you want to delete this selected item from your basket?
+                                        </DialogDescription>
+                                        <DialogFooter>
+                                            <div className="flex justify-end w-full gap-2">
+                                                <Button type='button' variant={'destructive'} onClick={removeSelectedItem}>Delete</Button>
+                                                <DialogClose asChild>
+                                                    <Button type='button'>Cancel</Button>
+                                                </DialogClose>
+                                            </div>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
+                            )}
+                        </div>
                         {/* List item */}
                         {groupedItems.map((item, index) => (
                             <div key={item.product._id} className='border flex flex-col overflow-hidden'>
@@ -148,7 +179,7 @@ function CartPage() {
                                         <AddToBasketCart product={item.product} />
                                     </div>
                                 </div>
-                                <div className="hidden xs:flex px-4 py-2 gap-4 bg-gradient-to-r from-slate-100 to-white">
+                                <div className="hidden xs:flex px-4 py-2 gap-4 bg-gradient-to-r from-slate-100 to-white font-sans">
                                     <Truck size={20} color="#2d4e3d" strokeWidth={1.5} />
                                     <span className='text-[.9rem] italic'>Get your best price by checkout now!</span>
                                 </div>

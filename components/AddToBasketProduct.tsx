@@ -5,15 +5,17 @@ import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Separator } from './ui/separator';
 import { useBasketStore } from '@/store/store';
 import { toast } from 'sonner';
 import { useAuth } from '@clerk/nextjs';
+import { Clerk } from "@clerk/clerk-js";
 
 interface AddToBasketProps {
     product: Product;
     disabled?: boolean;
 }
+
+const clerk = new Clerk(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string)
 
 function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
     const { addItem } = useBasketStore()
@@ -32,9 +34,14 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
 
     if (!isClient) return null
 
-    const handleAddToCart = (product: Product) => {
-        addItem(product, userId as string, watchQty)
-        toast.success("Product added to cart")
+    const handleAddToCart = async (product: Product) => {
+        if (userId) {
+            addItem(product, userId as string, watchQty)
+            toast.success("Product added to cart")
+        } else {
+            await clerk.load()
+            clerk.openSignIn()
+        }
     }
 
     return (
