@@ -7,8 +7,6 @@ import React from 'react'
 function ProductThumbnail({ product }: { product: Product }) {
     const isOutOfStock = product.stock != null && product.stock <= 0
 
-    console.log(product.description)
-
     return (
         <Link href={`/product/${product.slug?.current}`}
             className={`group flex flex-col bg-white rounded-lg border border-gray-200 shadow-sm 

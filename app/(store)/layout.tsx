@@ -7,6 +7,7 @@ import LayoutProvider from "@/components/LayoutProvider";
 import Navbar from "@/components/Navbar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Stamco",
@@ -19,7 +20,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <html lang="en">
                 <body className="bg-slate-100">
                     <Toaster />
-                    <Header />
+                    <Suspense>
+                        <Header />
+                    </Suspense>
                     {children}
                     <Footer />
                     <SanityLive />

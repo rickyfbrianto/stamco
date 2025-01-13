@@ -2,16 +2,10 @@ import ProductsView from '@/components/ProductsView'
 import { getAllCategories } from '@/sanity/lib/products/getAllCategories'
 import { getAllProducts } from '@/sanity/lib/products/getAllProducts'
 import React from 'react'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { useForm } from 'react-hook-form'
 import { searchProductsByName } from '@/sanity/lib/products/searchProductsByName'
 import Image from 'next/image'
 import imgNotFound from '@/public/notfound.png'
-
-interface FormProps {
-    minPrice: number;
-    maxPrice: number;
-}
+import ProductFilter from './filter'
 
 interface ParamsProps {
     query: string;
@@ -27,56 +21,22 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 }
 
 async function page({ searchParams }: { searchParams: Promise<ParamsProps> }) {
-    const { query } = await searchParams
+    const searchParam = await searchParams
+    const { query } = searchParam
     const products = await (query?.trim() ? searchProductsByName(query) : getAllProducts())
     const categories = await getAllCategories()
 
-    // const form = useForm<FormProps>({
-    //     defaultValues: {
-    //         minPrice: 0,
-    //         maxPrice: 0
-    //     }
-    // })
-
     return (
-        <div className="flex p-6">
-            <div className="container mx-auto flex min-h-[50vh] gap-x-4">
+        <div className="py-4">
+            <div className="relative container mx-auto sm:flex min-h-[50vh] gap-4">
                 {/* <div className="flex gap-x-4"> */}
-                <div className="flex flex-col h-full bg-white rounded-lg min-w-[15rem] px-3">
-                    <Accordion type="multiple" >
-                        <AccordionItem value="price">
-                            <AccordionTrigger className='hover:no-underline'>Price</AccordionTrigger>
-                            <AccordionContent>
-                                <div className="flex flex-col">
-                                    <input type="number" min={1} placeholder="Min Price" className="border border-gray-300 rounded-md p-2 w-full" />
-                                    {/* <Controller name='minPrice' control={form.control} render={({ field, fieldState }) => (
-                                    )} />
-                                    <Controller name='maxPrice' control={form.control} render={({ field, fieldState }) => (
-                                        <input type="number" {...field} placeholder="Max Price" className="border border-gray-300 rounded-md p-2 w-full" />
-                                    )} /> */}
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="condition">
-                            <AccordionTrigger className='hover:no-underline'>Condition</AccordionTrigger>
-                            <AccordionContent>
-                                <div className="flex flex-col">
-
-                                    <input type="number" min={1} placeholder="Min Price" className="border border-gray-300 rounded-md p-2 w-full" />
-                                    {/* <Controller name='minPrice' control={form.control} render={({ field, fieldState }) => (
-                                    )} />
-                                    <Controller name='maxPrice' control={form.control} render={({ field, fieldState }) => (
-                                        <input type="number" {...field} placeholder="Max Price" className="border border-gray-300 rounded-md p-2 w-full" />
-                                    )} /> */}
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
+                <div className="sticky top-[--tinggi10] self-start sm:top-[--tinggi12] flex flex-col bg-white rounded-lg min-w-[15rem] px-3 pb-4 z-10">
+                    <ProductFilter />
                 </div>
-                <div className="flex flex-1 flex-col font-urbanist items-center ">
+                <div className="flex flex-1 flex-col font-urbanist mt-4 sm:mt-0">
                     {query && (
                         <div className="flex w-full py-2 px-4 bg-white rounded-lg mb-4">
-                            <span className='text-gray-500 text-[1rem]'>Search result for "{query}"</span>
+                            <span className='text-gray-500 text-[1rem]'>Search result for &quot;{query}&quot;</span>
                         </div>
                     )}
                     {products.length == 0
@@ -103,7 +63,7 @@ const NoFound = ({ query }: { query: string }) => (
             />
         </div>
         <h1 className="text-xl md:text-3xl font-bold mb-2 text-center">
-            No product found for "{query}"
+            No product found for &quot;{query}&quot;
         </h1>
         <p className="text-gray-500 text-center">
             Try searching with different keywords
