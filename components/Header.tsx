@@ -12,6 +12,7 @@ import { LoaderBounce } from "./Loader";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useEffect } from "react";
+import { useProductFilterStore } from "@/store/productStore";
 
 export default function Header() {
     const { user } = useUser();
@@ -44,7 +45,7 @@ export default function Header() {
     }
 
     return (
-        <div className='w-full min-h-[--tinggi10] bg-[--warna-mint] border-b sticky top-0 z-[10] py-2 px-8'>
+        <div className='w-full min-h-[--tinggi10] bg-[--warna-mint] border-b sticky top-0 z-[10] py-2 px-4 sm:px-8'>
             <div className="container mx-auto flex flex-col justify-center gap-2 w-full h-full">
                 {/* part atas etc: seller center dan nama akun */}
                 <div className="flex items-center justify-between">
@@ -73,7 +74,7 @@ export default function Header() {
                     </ClerkLoading>
                 </div>
 
-                <div className="grid gap-4 mt-1 grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto]">
+                {/* <div className="grid gap-4 mt-1 grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto]">
                     <Link href={'/'} className="font-urbanist relative order-1 ">
                         <h1 className='font-bold text-xl'>Stamco</h1>
                         <div className="flex gap-2 items-center mt-[-10px]">
@@ -103,6 +104,42 @@ export default function Header() {
                                     font-bold h-8 w-8 rounded-full border hover:bg-gray-300 ">
                             <ShoppingCart size={16} color="#2d4e3d" strokeWidth={1.5} />
                             <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                                {item.length}
+                            </span>
+                        </Link>
+                    </div>
+                </div> */}
+
+                <div className="flex gap-4 ">
+                    <Link href={'/'} className="relative font-urbanist">
+                        <h1 className='font-bold text-xl'>Stamco</h1>
+                        <div className="flex gap-2 items-center mt-[-10px]">
+                            <FaOilWell size={20} className="hover:text-green-500" />
+                            <span className="font-bold text-3xl">oil</span>
+                        </div>
+                    </Link>
+
+                    <form onSubmit={handleSubmit(submitForm)} className="flex flex-col min-w-40 w-full">
+                        <div className="flex border rounded-lg">
+                            <Controller name="query" control={control} render={({ field: { value, onChange } }) => (
+                                <Input value={value} onChange={(e) => onChange(e.target.value)} className="border-none focus-visible:ring-0" type="search" placeholder="Search..." />
+                            )} />
+                            <Button variant={"outline"} className="ring-0 border-none">
+                                <FaSearch />
+                            </Button>
+                        </div>
+                        <div className="hidden sm:flex p-1 gap-6 text-[.75rem] font-urbanist">
+                            {data.map((v) => (
+                                <Link className="font-semibold" href={v.link} key={v.title}>{v.title}</Link>
+                            ))}
+                        </div>
+                    </form>
+
+                    <div className="flex">
+                        <Link href={`/cart`} className="relative text-center flex justify-center items-center transition-colors duration-500
+                                    font-bold h-8 w-8 mt-1 rounded-full border hover:bg-gray-300 ">
+                            <ShoppingCart size={16} color="#2d4e3d" strokeWidth={1.5} />
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
                                 {item.length}
                             </span>
                         </Link>

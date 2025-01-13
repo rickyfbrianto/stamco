@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import { SanityLive } from "@/sanity/lib/live";
 import LayoutProvider from "@/components/LayoutProvider";
-import Navbar from "@/components/Navbar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Suspense } from "react";

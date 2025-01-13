@@ -7,9 +7,9 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Category, Seller } from "@/sanity.types";
 import Link from "next/link";
-import { GetProductBySlug } from "@/sanity/lib/products/getProductBySlug";
+import { GetProductBySlug } from "@/sanity/lib/products/GetProductBySlug";
+import { Product } from "@/sanity.types";
 
 export async function generateMetadata({
 	params,
@@ -30,17 +30,11 @@ export async function generateMetadata({
 export default async function page({
 	params,
 }: {
-	params: Promise<{
-		slug: string;
-	}>;
+	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
 	const product = await GetProductBySlug(slug);
-	const {
-		seller,
-	}: {
-		seller: Seller;
-	} = product || {};
+	const { seller } = product || {};
 
 	if (!product) return notFound();
 
@@ -67,8 +61,6 @@ export default async function page({
 								sizes="100%"
 								className="object-contain transition-transform duration-300 hover:scale-105"
 							/>
-							// <div className="relative">
-							// </div>
 						)}
 						{isOutOfStock && (
 							<div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -108,15 +100,15 @@ export default async function page({
 							<Separator className="my-4" />
 							<div className="flex gap-x-2">
 								<Image
-									src={urlFor(seller.image as any).url()}
+									src={urlFor(seller?.image as any).url()}
 									width={50}
 									height={50}
 									alt="Seller Image"
 									className="rounded-full p-[2px] bg-slate-500 min-w-[50px] min-h-[50px]"
 								/>
 								<div className="flex flex-col justify-center">
-									<Link href={`/seller/${seller.name}`}>
-										<p className="font-bold text-[1rem]">{seller.name}</p>
+									<Link href={`/seller/${seller?.name}`}>
+										<p className="font-bold text-[1rem]">{seller?.name}</p>
 									</Link>
 									<p className="text-[.9rem] text-gray-500">Indonesia</p>
 								</div>
@@ -138,9 +130,12 @@ export default async function page({
 									<div className="flex">
 										<span className="w-[6em]">Category</span>
 										<div className="flex gap-x-2">
-											{product.categories?.map((v: Category) => (
-												<Link key={v._id} href={`/categories/${v.title}`}>
-													<Badge variant="secondary">{v.title}</Badge>
+											{product.categories?.map((value) => (
+												<Link
+													key={value._id}
+													href={`/categories/${value.title}`}
+												>
+													<Badge variant="secondary">{value.title}</Badge>
 												</Link>
 											))}
 										</div>
@@ -160,7 +155,10 @@ export default async function page({
 						</Tabs>
 					</div>
 
-					<AddToBasketProduct product={product} disabled={isOutOfStock} />
+					<AddToBasketProduct
+						product={product as unknown as Product}
+						disabled={isOutOfStock}
+					/>
 				</div>
 			</div>
 		</div>

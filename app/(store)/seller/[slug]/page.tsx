@@ -15,22 +15,22 @@ import { Seller } from '@/sanity.types'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
-    const seller: Seller = await GetSellerByName(slug)
+    const seller = await GetSellerByName(slug)
 
     return {
-        title: `Seller | ${seller.name}`,
+        title: `Seller | ${seller?.name}`,
         description: `Seller ${seller?.name}`,
     };
 }
 
 async function page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
-    const seller: Seller = await GetSellerByName(slug)
+    const seller = await GetSellerByName(slug)
 
     if (!seller) return notFound()
 
     return (
-        <div className="container mx-auto md:px-0 min-h-[60vh] p-8 ">
+        <div className="container mx-auto p-4 min-h-[60vh]">
             <div className="flex flex-col gap-y-5">
                 <div className="flex flex-col lg:flex-row lg:items-center border rounded-xl overflow-hidden bg-white gap-4 p-4">
                     <div className="flex flex-col sm:flex-row w-full gap-x-5">
@@ -75,7 +75,7 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
                     </div>
                 </div>
 
-                <TabSeller seller={seller} />
+                <TabSeller seller={seller as unknown as Seller} />
             </div>
         </div>
     )

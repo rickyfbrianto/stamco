@@ -1,8 +1,8 @@
-import getActiveSaleByCoupon from '@/sanity/lib/sales/getActiveSaleByCoupon'
+import getActivePromoByCoupon from '@/sanity/lib/sales/getActivePromoByCoupon'
 import React from 'react'
 
 async function Banner() {
-    const sale = await getActiveSaleByCoupon("BFRIDAY")
+    const sale = await getActivePromoByCoupon("BFRIDAY")
 
     if (!sale?.isActive) {
         return null

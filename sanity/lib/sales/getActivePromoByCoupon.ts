@@ -1,8 +1,9 @@
+import React from "react";
 import { CouponCode } from "./couponCode";
 import { defineQuery } from "next-sanity";
 import { sanityFetch } from "../live";
 
-async function getActiveSaleByCoupon(couponCode: CouponCode) {
+async function getActivePromoByCoupon(couponCode: CouponCode) {
 	const ACTIVE_SALE_BY_COUPON_CODE = defineQuery(`*[_type == "promo" 
         && isActive == true 
         && couponCode == $couponCode
@@ -22,4 +23,4 @@ async function getActiveSaleByCoupon(couponCode: CouponCode) {
 	}
 }
 
-export default getActiveSaleByCoupon;
+export default getActivePromoByCoupon;
