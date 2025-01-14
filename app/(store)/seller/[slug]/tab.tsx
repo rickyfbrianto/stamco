@@ -12,6 +12,7 @@ import { urlFor } from '@/sanity/lib/image';
 import Link from 'next/link';
 import ProductsView from '@/components/ProductsView';
 import { Separator } from '@/components/ui/separator';
+import ProductFilter from '../../product/filter';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -23,14 +24,10 @@ function CustomTabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
     return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
+        <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+            {...other}>
+            {value === index && <Box>{children}</Box>}
         </div>
     );
 }
@@ -53,50 +50,28 @@ function TabSeller({ seller }: { seller: Seller }) {
     return (
         <div className="flex bg-white p-4 rounded-xl">
             <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'white' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'white', padding: 0 }}>
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                         <Tab label="Product" />
                         <Tab label="About Seller" />
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
-                    <div className="container mx-auto flex gap-x-4">
-                        <div className="flex flex-col h-full rounded-lg min-w-[15rem]">
-                            <Accordion type="multiple" >
-                                <AccordionItem value="price">
-                                    <AccordionTrigger className='hover:no-underline'>Price</AccordionTrigger>
-                                    <AccordionContent>
-                                        <div className="flex flex-col">
-                                            <input type="number" min={1} placeholder="Min Price" className="border border-gray-300 rounded-md p-2 w-full" />
-                                            {/* <Controller name='minPrice' control={form.control} render={({ field, fieldState }) => (
-                                    )} />
-                                    <Controller name='maxPrice' control={form.control} render={({ field, fieldState }) => (
-                                        <input type="number" {...field} placeholder="Max Price" className="border border-gray-300 rounded-md p-2 w-full" />
-                                    )} /> */}
-                                        </div>
-                                    </AccordionContent>
-                                </AccordionItem>
-                                <AccordionItem value="condition">
-                                    <AccordionTrigger className='hover:no-underline'>Condition</AccordionTrigger>
-                                    <AccordionContent>
-                                        <div className="flex flex-col">
+                    {/* <div className="container mx-auto flex gap-x-4"> */}
+                    <div className="p-4">
+                        <div className="relative container mx-auto sm:flex min-h-[50vh] gap-4">
+                            <div className="sticky top-[--tinggi10] self-start sm:top-[--tinggi12] flex flex-col bg-white border rounded-lg min-w-[15rem] px-4 pb-4">
+                                <ProductFilter />
+                            </div>
 
-                                            <input type="number" min={1} placeholder="Min Price" className="border border-gray-300 rounded-md p-2 w-full" />
-                                            {/* <Controller name='minPrice' control={form.control} render={({ field, fieldState }) => (
-                                    )} />
-                                    <Controller name='maxPrice' control={form.control} render={({ field, fieldState }) => (
-                                        <input type="number" {...field} placeholder="Max Price" className="border border-gray-300 rounded-md p-2 w-full" />
-                                    )} /> */}
-                                        </div>
-                                    </AccordionContent>
-                                </AccordionItem>
-                            </Accordion>
+                            <Separator orientation='vertical' className='h-[75%]' />
 
+                            <div className="flex flex-1 flex-col font-urbanist gap-2 ">
+                                <span className='font-bold text-xl'>{seller.name}'s Product</span>
+                                <Separator />
+                                <ProductsView products={products as unknown as Product[]} className='font-urbanist' />
+                            </div>
                         </div>
-
-                        <Separator orientation='vertical' className='border-black' />
-
-                        <ProductsView products={products as unknown as Product[]} className='font-urbanist' />
                     </div>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>

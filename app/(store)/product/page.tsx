@@ -22,16 +22,17 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 
 async function page({ searchParams }: { searchParams: Promise<ParamsProps> }) {
     const searchParam = await searchParams
+    const filterCheck = Object.values(searchParam).filter(v => v)
     const { query } = searchParam
-    const products = await (query?.trim() ? searchProductsByName(query) : getAllProducts())
+    const products = await (filterCheck.length > 0 ? searchProductsByName(searchParam) : getAllProducts())
     const categories = await getAllCategories()
 
     return (
-        <div className="py-4">
+        <div className="p-4 pb-10">
             <div className="relative container mx-auto sm:flex min-h-[50vh] gap-4">
                 {/* <div className="flex gap-x-4"> */}
-                <div className="sticky top-[--tinggi10] self-start sm:top-[--tinggi12] flex flex-col bg-white rounded-lg min-w-[15rem] px-3 pb-4 z-10">
-                    <ProductFilter />
+                <div className="sticky top-[--tinggi10] self-start sm:top-[--tinggi12] flex flex-col bg-white rounded-lg min-w-[15rem] px-3 pb-4">
+                    <ProductFilter categories={categories} />
                 </div>
                 <div className="flex flex-1 flex-col font-urbanist mt-4 sm:mt-0">
                     {query && (
@@ -42,8 +43,8 @@ async function page({ searchParams }: { searchParams: Promise<ParamsProps> }) {
                     {products.length == 0
                         ? <NoFound query={query} />
                         : <div className="flex flex-col bg-white rounded-lg p-5">
-                            <span className='font-bold text-xl mb-4'>Product</span>
-                            <ProductsView products={products} categories={categories} />
+                            <span className='font-bold text-xl'>Product</span>
+                            <ProductsView products={products} />
                         </div>
                     }
                 </div>
@@ -55,7 +56,7 @@ async function page({ searchParams }: { searchParams: Promise<ParamsProps> }) {
 
 const NoFound = ({ query }: { query: string }) => (
     <div className="flex flex-col gap-y-4 bg-white rounded-lg shadow-md w-full pb-8">
-        <div className="flex container mx-auto bg-[--warna-orange] rounded-lg">
+        <div className="flex container mx-auto bg-[--warna-primary] rounded-lg">
             <Image className='w-full max-h-[60vh] object-contain transition-transform duration-300 group-hover:scale-105'
                 src={imgNotFound} alt='Product Not Found'
                 sizes="(max-width: 768px) 50%, (max-width: 1200px) 100%, 100%"
@@ -63,10 +64,10 @@ const NoFound = ({ query }: { query: string }) => (
             />
         </div>
         <h1 className="text-xl md:text-3xl font-bold mb-2 text-center">
-            No product found for &quot;{query}&quot;
+            No product found {query ? `for "${query}"` : ""}
         </h1>
         <p className="text-gray-500 text-center">
-            Try searching with different keywords
+            Try searching with different keywords and filters
         </p>
     </div>
 )

@@ -1,29 +1,43 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export interface FilterProductProps {
+export interface ProductFilterProps {
     minPrice: number;
     maxPrice: number;
     condition: string;
     query: string;
+    category: string;
 };
 
-interface ProductFilterProps {
-    filter: FilterProductProps;
-    setFilter: (data: Partial<ProductFilterProps["filter"]>) => void;
-    getFilter: () => FilterProductProps;
+const ProductFilterData = {
+    minPrice: 0,
+    maxPrice: 0,
+    condition: "",
+    category: "",
+    query: "",
 }
 
-const useProductFilterStore = create<ProductFilterProps>()(
+interface ProductFilterStoreProps {
+    filter: ProductFilterProps;
+    setFilter: (data: Partial<ProductFilterStoreProps["filter"]>) => void;
+    getFilter: () => ProductFilterProps;
+    generateSearchParams: () => string;
+    clearFilter: () => void;
+}
+
+const useProductFilterStore = create<ProductFilterStoreProps>()(
     persist((set, get) => ({
-        filter: {
-            minPrice: 0,
-            maxPrice: 0,
-            condition: "",
-            query: "tesda",
+        filter: { ...ProductFilterData },
+        setFilter: (data) => set((state) => ({ filter: { ...state.filter, ...data } })),
+        getFilter: () => get().filter,
+        generateSearchParams: () => {
+            const temp = Object.entries(get().filter)
+                .filter(val => val[1])
+                .map(v => { return `${v[0]}=${v[1]}` })
+                .join("&")
+            return temp
         },
-        setFilter: (data) => set((state) => ({ ...state, ...data })),
-        getFilter: () => get().filter
+        clearFilter: () => set(() => ({ filter: { ...ProductFilterData } }))
     }),
         {
             name: "product-filter-store"
