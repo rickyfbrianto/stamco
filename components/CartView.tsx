@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { urlFor } from '@/sanity/lib/image';
 import { useBasketStore } from '@/store/store';
-import { SignInButton, useAuth, useUser } from '@clerk/nextjs';
+import { SignInButton, useAuth } from '@clerk/nextjs';
 import { MoveLeft, ShoppingCart, Truck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -30,6 +30,7 @@ interface ItemsProps {
 
 export default function CartView({ cart }: { cart: ALL_CARTS_QUERYResult }) {
     const { isSignedIn } = useAuth();
+    // const { user } = useUser();
     // const groupedItems = useBasketStore((state) => state.getGroupedItems);
     // const totalPrice = useBasketStore((state) => state.getTotalPrice())
     const removeFromCart = useBasketStore((state) => state.removeFromCart);
