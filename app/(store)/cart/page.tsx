@@ -14,6 +14,7 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useFieldArray, useForm, Controller } from 'react-hook-form'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import SaveTes from '@/components/SaveTes'
 
 interface ItemsProps {
     items: {
@@ -28,10 +29,12 @@ interface ItemsProps {
 }
 
 function CartPage() {
-    const groupedItems = useBasketStore((state) => state.getGroupedItems())
-    const totalPrice = useBasketStore((state) => state.getTotalPrice())
+    const groupedItems = useBasketStore((state) => state.getGroupedItems)
+    // const totalPrice = useBasketStore((state) => state.getTotalPrice())
     const removeFromCart = useBasketStore((state) => state.removeFromCart)
     const { isSignedIn, userId } = useAuth()
+
+    console.log(groupedItems())
 
     const [isClient, setIsClient] = useState(false)
 
@@ -54,7 +57,7 @@ function CartPage() {
     }, [])
 
     useEffect(() => {
-        const tempItems = groupedItems.map((item, index) => ({
+        const tempItems = groupedItems().map((item, index) => ({
             check: form.getValues(`items.${index}.check`),
             id: item.product._id,
             qty: item.quantity,
@@ -104,6 +107,7 @@ function CartPage() {
 
     return (
         <div className="w-full">
+            <SaveTes />
             <div className="flex items-center container h-[--tinggi6] flex-col justify-center xs:flex-row xs:justify-between mx-auto gap-4 border-b-[1px] px-4 ">
                 <div className="flex items-center gap-x-2">
                     <ShoppingCart size={20} color="#2d4e3d" strokeWidth={1.5} />
@@ -112,83 +116,83 @@ function CartPage() {
                 <span className='font-bold'>{groupedItems.length} Product{groupedItems.length > 1 && "s"}</span>
             </div>
             <div className="container mx-auto p-4 flex flex-col lg:flex-row gap-4 min-h-[50vh]">
-                <div className="flex flex-col lg:flex-row gap-8 w-full">
-                    <div className="flex flex-col gap-y-4 flex-grow font-urbanist">
-                        <div className="flex flex-col justify-center items-center xxs:flex-row xxs:justify-between rounded-t-2xl min-h-14 py-2 gap-2 bg-[--warna-primary] overflow-hidden px-4">
-                            <Controller name='checkAll' control={form.control} render={({ field: { value } }) => (
-                                <div className="flex items-center gap-x-6">
-                                    <div className='flex justify-center items-center'>
-                                        <Checkbox id='checkAll' className='' checked={value} onCheckedChange={(value) => handleCheckAll(value as boolean)} />
-                                    </div>
-                                    <label htmlFor="checkAll" className="font-bold">{value ? "Unselect" : "Select"} All</label>
+                <div className="flex flex-col gap-4 w-full font-open-sans">
+                    {/* <div className="flex flex-col gap-y-4 flex-grow"> */}
+                    <div className="flex flex-col justify-center items-center xxs:flex-row xxs:justify-between rounded-t-2xl min-h-14 py-2 gap-2 bg-[--warna-primary] overflow-hidden px-4">
+                        <Controller name='checkAll' control={form.control} render={({ field: { value } }) => (
+                            <div className="flex items-center gap-x-6">
+                                <div className='flex justify-center items-center'>
+                                    <Checkbox id='checkAll' className='' checked={value} onCheckedChange={(value) => handleCheckAll(value as boolean)} />
                                 </div>
-                            )} />
-                            {itemWatch.some((item) => item.check) && (
-                                <Dialog>
-                                    <DialogTrigger asChild>
-                                        <button className='font-bold'>Remove</button>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            <DialogTitle>Delete item</DialogTitle>
-                                        </DialogHeader>
-                                        <DialogDescription>
-                                            Are you sure you want to delete this selected item from your basket?
-                                        </DialogDescription>
-                                        <DialogFooter>
-                                            <div className="flex justify-end w-full gap-2">
-                                                <Button type='button' variant={'destructive'} onClick={removeSelectedItem}>Delete</Button>
-                                                <DialogClose asChild>
-                                                    <Button type='button'>Cancel</Button>
-                                                </DialogClose>
-                                            </div>
-                                        </DialogFooter>
-                                    </DialogContent>
-                                </Dialog>
-                            )}
-                        </div>
-                        {/* List item */}
-                        {groupedItems.map((item, index) => (
-                            <div key={item.product._id} className='border flex flex-col overflow-hidden'>
-                                <div key={item.product._id} className='flex flex-col-reverse xxs:flex-row'>
-                                    <Controller name={`items.${index}.check`} control={form.control} render={({ field: { value, onChange } }) => (
-                                        <div className="flex min-w-[3rem] min-h-[2rem] justify-center items-center bg-slate-50">
-                                            <Checkbox checked={value} onCheckedChange={(e) => onChange(e)} />
+                                <label htmlFor="checkAll" className="font-bold">{value ? "Unselect" : "Select"} All</label>
+                            </div>
+                        )} />
+                        {itemWatch.some((item) => item.check) && (
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <button className='font-bold'>Remove</button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Delete item</DialogTitle>
+                                    </DialogHeader>
+                                    <DialogDescription>
+                                        Are you sure you want to delete this selected item from your basket?
+                                    </DialogDescription>
+                                    <DialogFooter>
+                                        <div className="flex justify-end w-full gap-2">
+                                            <Button type='button' variant={'destructive'} onClick={removeSelectedItem}>Delete</Button>
+                                            <DialogClose asChild>
+                                                <Button type='button'>Cancel</Button>
+                                            </DialogClose>
                                         </div>
-                                    )} />
-                                    <div className="flex-grow flex flex-col xs:flex-row xs:items-center justify-between transition-colors duration-500 p-2 pe-4 gap-x-4 gap-y-2">
-                                        <Link className="flex flex-col xs:flex-row cursor-pointer flex-1 gap-2" href={`/product/${item.product.slug?.current}`}>
-                                            <div className="flex justify-center w-auto h-auto sm:w-24 sm:h-24 flex-shrink-0">
-                                                {item.product.image && (
-                                                    <Image src={urlFor(item.product.image).url()}
-                                                        alt={item.product.name ?? "Product image"}
-                                                        className='object-cover rounded select-none'
-                                                        width={100} height={100} />
-                                                )}
-                                            </div>
-                                            <div className="flex flex-col items-center xs:items-start min-w-[4rem]">
-                                                <h2 className="text-center xs:text-start text-lg sm:text-xl font-semibold line-clamp-2">{item.product.name}</h2>
-                                                <p className="text-sm sm:text-base">${(item.product.price ?? 0)}</p>
-                                                <div className="flex gap-2 px-2 py-1 border-b-[2px] border-blue-100">
-                                                    <span className='text-[.8rem] font-extrabold'>Sub Total</span>
-                                                    <p className="text-sm sm:text-base">${((item.product.price ?? 0) * item.quantity)}</p>
-                                                </div>
-                                            </div>
-                                        </Link>
-
-                                        <AddToBasketCart product={item.product} />
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        )}
+                    </div>
+                    {/* List item */}
+                    {groupedItems.map((item, index) => (
+                        <div key={item.product._id} className='border flex flex-col overflow-hidden bg-white'>
+                            <div key={item.product._id} className='flex flex-col-reverse xxs:flex-row'>
+                                <Controller name={`items.${index}.check`} control={form.control} render={({ field: { value, onChange } }) => (
+                                    <div className="flex min-w-[3rem] min-h-[2rem] justify-center items-center">
+                                        <Checkbox checked={value} onCheckedChange={(e) => onChange(e)} />
                                     </div>
-                                </div>
-                                <div className="hidden xs:flex px-4 py-2 gap-4 bg-gradient-to-r from-slate-100 to-white font-sans">
-                                    <Truck size={20} color="#2d4e3d" strokeWidth={1.5} />
-                                    <span className='text-[.9rem] italic'>Get your best price by checkout now!</span>
+                                )} />
+                                <div className="flex-grow flex flex-col xs:flex-row xs:items-center justify-between transition-colors duration-500 p-2 pe-4 gap-x-4 gap-y-2">
+                                    <Link className="flex flex-col xs:flex-row cursor-pointer flex-1 gap-2" href={`/product/${item.product.slug?.current}`}>
+                                        <div className="flex justify-center w-auto h-auto sm:w-24 sm:h-24 flex-shrink-0">
+                                            {item.product.image && (
+                                                <Image src={urlFor(item.product.image).url()}
+                                                    alt={item.product.name ?? "Product image"}
+                                                    className='object-cover rounded select-none'
+                                                    width={100} height={100} />
+                                            )}
+                                        </div>
+                                        <div className="flex flex-col items-center xs:items-start min-w-[4rem]">
+                                            <h2 className="text-center xs:text-start text-lg sm:text-xl font-semibold line-clamp-2">{item.product.name}</h2>
+                                            <p className="text-sm sm:text-base">${(item.product.price ?? 0).toLocaleString("id-ID")}</p>
+                                            <div className="flex gap-2 px-2 py-1 border-b-[2px] border-blue-100">
+                                                <span className='text-[.8rem] font-extrabold'>Sub Total</span>
+                                                <p className="text-sm sm:text-base">${((item.product.price ?? 0) * item.quantity).toLocaleString("id-ID")}</p>
+                                            </div>
+                                        </div>
+                                    </Link>
+
+                                    <AddToBasketCart product={item.product} />
                                 </div>
                             </div>
-                        ))}
-                        <Button className='self-start mt-2' variant={'outline'} asChild>
-                            <Link href={`/product`}><MoveLeft /> Continue Shopping</Link>
-                        </Button>
-                    </div>
+                            <div className="hidden xs:flex px-4 py-2 gap-4 bg-gradient-to-r from-white to-slate-100 border-t font-sans">
+                                <Truck size={20} color="#2d4e3d" strokeWidth={1.5} />
+                                <span className='text-[.9rem] italic'>Get your best price by checkout now!</span>
+                            </div>
+                        </div>
+                    ))}
+                    <Button className='self-start mt-2' variant={'outline'} asChild>
+                        <Link href={`/product`}><MoveLeft /> Continue Shopping</Link>
+                    </Button>
+                    {/* </div> */}
                 </div>
 
                 <div className="w-full lg:w-[25rem] lg:sticky lg:top-[--tinggi11] h-fit bg-white p-6 border rounded-lg order-first lg:order-last fixed bottom-0 left-0">
@@ -201,7 +205,7 @@ function CartPage() {
                         <hr />
                         <p className="flex flex-wrap justify-between text-2xl font-bold">
                             <span>Total:</span>
-                            <span>${hargaAllWatch}</span>
+                            <span>${hargaAllWatch.toLocaleString("id-ID")}</span>
                         </p>
                     </div>
 

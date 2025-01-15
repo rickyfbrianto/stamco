@@ -26,11 +26,11 @@ function ProductThumbnail({ product }: { product: Product }) {
                 )}
             </div>
 
-            <div className='p-4 flex flex-col bg-slate-300'>
+            <div className='p-4 flex flex-col bg-slate-50'>
                 <h2 className="text-lg font-semibold text-gray-800 truncate">
                     {product.name}
                 </h2>
-                <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+                <p className="mt-2 text-sm text-gray-600 line-clamp-2 min-h-[2.5rem]">
                     {product.description?.map(block => (
                         block._type === "block"
                             ? block.children?.map(child => child.text).join("")
@@ -39,7 +39,7 @@ function ProductThumbnail({ product }: { product: Product }) {
                     {/* {product.description} */}
                 </p>
                 <p className="mt-2 text-lg font-bold text-gray-900">
-                    {product.price?.toFixed(2)}
+                    {product.price?.toLocaleString('id-ID')}
                 </p>
             </div>
         </Link>

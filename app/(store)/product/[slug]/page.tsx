@@ -54,7 +54,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
                     <div className="flex flex-col min-h-[70vh] w-full">
                         <div>
                             <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
-                            <p className="text-xl font-semibold mb-4">{product.price?.toFixed(2)}</p>
+                            <p className="text-xl font-semibold mb-4">{product.price?.toLocaleString('id-ID')}</p>
                             {(product?.stock ?? 0) > 10
                                 ? (product?.stock ?? 0) <= 50 && <p className='text-[.9rem] text-gray-500'>Stok {product.stock}</p>
                                 : <div className='text-[.8rem] mb-4'>

@@ -12,8 +12,10 @@ import { LoaderBounce } from "./Loader";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useProductFilterStore } from "@/store/productStore";
+import { ALL_CARTS_QUERYResult, ALL_CATEGORIES_QUERYResult, Cart } from "@/sanity.types";
 
-export default function Header() {
+export default function Header({ cart, categories }:
+    { cart: ALL_CARTS_QUERYResult, categories: ALL_CATEGORIES_QUERYResult }) {
     const { user } = useUser();
     const item = useBasketStore(state => state.items)
 
@@ -28,19 +30,25 @@ export default function Header() {
     const nextSearchParams = new URLSearchParams(searchParams.toString())
 
     const data = [
-        { id: "1", title: "Product", link: "/product" },
-        { id: "2", title: "Sepatu", link: "/categories/sepatu" },
-        { id: "3", title: "Short", link: "/categories/shorts" },
+        { id: "1", title: "Product", link: "" },
+        ...Object.values(categories).map(v => (
+            { id: v._id, title: v.title, link: v._id }
+        ))
     ]
 
     useEffect(() => {
-        if (searchParams.get("query")?.trim() && !["product", "seller"].includes(path.split("/")[1])) {
-            nextSearchParams.delete('query')
-            router.replace(`${path}/${nextSearchParams}`)
+        const { query } = filter
+        if (!["product", "seller"].includes(path.split("/")[1])) {
             clearFilter()
+            router.replace(`${path}/?${generateSearchParams()}`)
         }
-        setFilter({ query: searchParams.get("query") ?? "" })
-    }, [searchParams.get("query")])
+        setFilter({ query })
+    }, [path, searchParams])
+
+    const handleCategory = (link: string) => {
+        setFilter({ category: link })
+        router.push(`/product${link ? `?category=${link}` : ""}`)
+    }
 
     const formSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -96,7 +104,8 @@ export default function Header() {
                         </form>
                         <div className="hidden sm:flex p-1 gap-6 text-[.75rem] font-urbanist">
                             {data.map((v) => (
-                                <Link className="font-semibold" href={v.link} key={v.title}>{v.title}</Link>
+                                <button className="font-semibold" key={v.title} onClick={() => handleCategory(v.link)}>{v.title}</button>
+                                // <Link className="font-semibold" href={v.link} key={v.title}>{v.title}</Link>
                             ))}
                         </div>
                     </div>
@@ -106,7 +115,7 @@ export default function Header() {
                         font-bold h-8 w-8 mt-1 rounded-full border hover:bg-gray-300 ">
                             <ShoppingCart size={16} color="#2d4e3d" strokeWidth={1.5} />
                             <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
-                                {item.length}
+                                {cart.length}
                             </span>
                         </Link>
                     </div>

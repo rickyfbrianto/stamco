@@ -1,6 +1,7 @@
 import { Product } from '@/sanity.types'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { client } from '@/sanity/lib/client';
 
 export interface BasketItem {
     product: Product;
@@ -12,13 +13,13 @@ export interface BasketItem {
 interface BasketState {
     items: BasketItem[],
     // addItemFromProduct: (product: Product, qty: number) => void;
-    addItem: (product: Product, user: string, qty: number) => void;
+    addItem: (product: Product, user: string, quantity: number) => void;
     removeItem: (productId: string) => void;
     clearBasket: () => void;
-    getTotalPrice: () => number;
+    // getTotalPrice: () => number;
     getItemCount: (productId: string) => number;
     getGroupedItems: () => BasketItem[];
-    removeFromCart: (product: string) => void
+    removeFromCart: (product: string) => void,
 }
 
 const useBasketStore = create<BasketState>()(
@@ -36,18 +37,18 @@ const useBasketStore = create<BasketState>()(
         //         }
         //     } else return { items: [...state.items, { product, quantity: qty }] }
         // }),
-        addItem: (product, user, qty) => set((state) => {
+        addItem: (product, user, quantity) => set((state) => {
             const existingItem = state.items.find((item) => item.product._id === product._id)
             let temp = null
             if (existingItem) {
                 temp = {
                     items: state.items.map(item =>
                         item.product._id === product._id
-                            ? { ...item, quantity: item.quantity + qty, user, tgl: new Date() }
+                            ? { ...item, quantity: item.quantity + quantity, user, tgl: new Date() }
                             : item
                     )
                 }
-            } else temp = { items: [...state.items, { product, quantity: qty, user, tgl: new Date() }] }
+            } else temp = { items: [...state.items, { product, quantity, user, tgl: new Date() }] }
             return temp
         }),
         removeItem: productId => set((state) => ({
@@ -63,9 +64,7 @@ const useBasketStore = create<BasketState>()(
             }, [] as BasketItem[])
         })),
         clearBasket: () => set({ items: [] }),
-        getTotalPrice: () => {
-            return get().items.reduce((total, item) => total + (item.product.price ?? 0) * item.quantity, 0)
-        },
+        // getTotalPrice: () => get().items.reduce((total, item) => total + (item.product.price ?? 0) * item.quantity, 0),
         getItemCount: (productId) => {
             const item = get().items.find(item => item.product._id === productId)
             return item ? item.quantity : 0
@@ -73,7 +72,7 @@ const useBasketStore = create<BasketState>()(
         getGroupedItems: () => get().items,
         removeFromCart: (id: string) => set((state) =>
             ({ items: state.items.filter((item) => item.product._id !== id) })
-        )
+        ),
     }),
         {
             name: "basket-store"

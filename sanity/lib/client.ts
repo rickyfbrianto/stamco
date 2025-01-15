@@ -5,11 +5,11 @@ export const client = createClient({
     projectId,
     dataset,
     apiVersion,
-    useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
+    useCdn: false, // Set to false if statically generating pages, using ISR or tag-based revalidation
     stega: {
         studioUrl: process.env.VERCEL_URL
             ? `https://${process.env.VERCEL_URL}/studio`
             : `${process.env.NEXT_PUBLIC_BASE_URL}/studio`
     },
-    token: process.env.NEXT_PUBLIC_SANITY_API_TOKEN
+    token: process.env.NEXT_PUBLIC_SANITY_API_TOKEN,
 })

@@ -8,11 +8,11 @@ function SaveTes() {
     const save = async () => {
         try {
             // post
-            client.patch('7efe32a0-34e2-4852-8327-e63f7577d807')
-                .set({
-                    name: "Short Black!"
-                })
-                .commit()
+            client.createOrReplace({
+                _type: "cart",
+                _id: "500",
+                quantity: 34
+            })
                 .then(val => {
                     console.log("status", val)
                 })
