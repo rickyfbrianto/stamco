@@ -30,7 +30,6 @@ interface ItemsProps {
 
 export default function CartView({ cart }: { cart: ALL_CARTS_QUERYResult }) {
     const { isSignedIn } = useAuth();
-    const { user } = useUser();
     // const groupedItems = useBasketStore((state) => state.getGroupedItems);
     // const totalPrice = useBasketStore((state) => state.getTotalPrice())
     const removeFromCart = useBasketStore((state) => state.removeFromCart);
