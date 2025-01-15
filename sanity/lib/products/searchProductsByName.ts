@@ -1,17 +1,22 @@
-import { defineQuery } from "next-sanity"
-import { sanityFetch } from "../live"
-import { ProductFilterProps } from "@/store/productStore"
+import { defineQuery } from 'next-sanity';
+import { sanityFetch } from '../live';
+import { ProductFilterProps } from '@/store/productStore';
 
 export const searchProductsByName = async (search: Partial<ProductFilterProps>) => {
-    const { query: name, minPrice, maxPrice, category } = search
-    const nameFilter = name ? ` && name match $name` : ""
-    const priceFilter = (minPrice || maxPrice
-        ? (minPrice ? ` && $minPrice <= price` : "") + (maxPrice ? ` && $maxPrice >= price` : "")
-        : ""
-    )
-    const categoryFilter = category ? ` && $category in categories[]._ref`:""
+    const { query: name, minPrice, maxPrice, category } = search;
 
-    const PRODUCT_SEARCH_QUERY = defineQuery(`*[_type == "product" ${nameFilter} ${priceFilter} ${categoryFilter}] | order(name asc)`)
+    const filters = [];
+    let query = '*[_type == "product"';
+    if (name) filters.push(`name match $name`);
+    if (minPrice) filters.push(`$minPrice <= price`);
+    if (maxPrice) filters.push(`$maxPrice >= price`);
+    if (category) filters.push(`$category in categories[]._ref`);
+
+    if (filters.length > 0) query += ` && ${filters.join(' && ')}`;
+    query += '] | order(name asc)';
+    console.log(query);
+
+    const PRODUCT_SEARCH_QUERY = defineQuery(query);
 
     try {
         const products = await sanityFetch({
@@ -22,10 +27,10 @@ export const searchProductsByName = async (search: Partial<ProductFilterProps>) 
                 maxPrice: Number(maxPrice),
                 category: `${category}`,
             },
-        })
-        return products.data || []
+        });
+        return products.data || [];
     } catch (error) {
-        console.log(error)
-        return []
+        console.log(error);
+        return [];
     }
-}
+};

@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 // import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -12,7 +12,7 @@ import { urlFor } from '@/sanity/lib/image';
 import Link from 'next/link';
 import ProductsView from '@/components/ProductsView';
 import { Separator } from '@/components/ui/separator';
-import ProductFilter from '../../product/filter';
+import ProductFilter from '../../../../components/ProductFilter';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -24,9 +24,7 @@ function CustomTabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
     return (
-        <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}>
+        <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
             {value === index && <Box>{children}</Box>}
         </div>
     );
@@ -34,14 +32,14 @@ function CustomTabPanel(props: TabPanelProps) {
 
 function TabSeller({ seller }: { seller: Seller }) {
     const [value, setValue] = useState(0);
-    const [isClient, setIsClient] = useState(false)
-    const { products } = seller
+    const [isClient, setIsClient] = useState(false);
+    const { products } = seller;
 
     useEffect(() => {
-        setIsClient(true)
-    }, [])
+        setIsClient(true);
+    }, []);
 
-    if (!isClient) return null
+    if (!isClient) return null;
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -64,12 +62,12 @@ function TabSeller({ seller }: { seller: Seller }) {
                                 <ProductFilter />
                             </div>
 
-                            <Separator orientation='vertical' className='h-[75%]' />
+                            <Separator orientation="vertical" className="h-[75%]" />
 
                             <div className="flex flex-1 flex-col font-urbanist gap-2 ">
-                                <span className='font-bold text-xl'>{seller.name}'s Product</span>
+                                <span className="font-bold text-xl">{seller.name}'s Product</span>
                                 <Separator />
-                                <ProductsView products={products as unknown as Product[]} className='font-urbanist' />
+                                <ProductsView products={products as unknown as Product[]} className="font-urbanist" />
                             </div>
                         </div>
                     </div>
@@ -79,7 +77,7 @@ function TabSeller({ seller }: { seller: Seller }) {
                 </CustomTabPanel>
             </Box>
         </div>
-    )
+    );
 }
 
-export default TabSeller
+export default TabSeller;

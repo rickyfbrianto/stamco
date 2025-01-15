@@ -14,622 +14,697 @@
 
 // Source: schema.json
 export type SanityImagePaletteSwatch = {
-  _type: 'sanity.imagePaletteSwatch';
-  background?: string;
-  foreground?: string;
-  population?: number;
-  title?: string;
+    _type: 'sanity.imagePaletteSwatch';
+    background?: string;
+    foreground?: string;
+    population?: number;
+    title?: string;
 };
 
 export type SanityImagePalette = {
-  _type: 'sanity.imagePalette';
-  darkMuted?: SanityImagePaletteSwatch;
-  lightVibrant?: SanityImagePaletteSwatch;
-  darkVibrant?: SanityImagePaletteSwatch;
-  vibrant?: SanityImagePaletteSwatch;
-  dominant?: SanityImagePaletteSwatch;
-  lightMuted?: SanityImagePaletteSwatch;
-  muted?: SanityImagePaletteSwatch;
+    _type: 'sanity.imagePalette';
+    darkMuted?: SanityImagePaletteSwatch;
+    lightVibrant?: SanityImagePaletteSwatch;
+    darkVibrant?: SanityImagePaletteSwatch;
+    vibrant?: SanityImagePaletteSwatch;
+    dominant?: SanityImagePaletteSwatch;
+    lightMuted?: SanityImagePaletteSwatch;
+    muted?: SanityImagePaletteSwatch;
 };
 
 export type SanityImageDimensions = {
-  _type: 'sanity.imageDimensions';
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
+    _type: 'sanity.imageDimensions';
+    height?: number;
+    width?: number;
+    aspectRatio?: number;
 };
 
 export type SanityFileAsset = {
-  _id: string;
-  _type: 'sanity.fileAsset';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  originalFilename?: string;
-  label?: string;
-  title?: string;
-  description?: string;
-  altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
-  uploadId?: string;
-  path?: string;
-  url?: string;
-  source?: SanityAssetSourceData;
+    _id: string;
+    _type: 'sanity.fileAsset';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    originalFilename?: string;
+    label?: string;
+    title?: string;
+    description?: string;
+    altText?: string;
+    sha1hash?: string;
+    extension?: string;
+    mimeType?: string;
+    size?: number;
+    assetId?: string;
+    uploadId?: string;
+    path?: string;
+    url?: string;
+    source?: SanityAssetSourceData;
 };
 
 export type Geopoint = {
-  _type: 'geopoint';
-  lat?: number;
-  lng?: number;
-  alt?: number;
+    _type: 'geopoint';
+    lat?: number;
+    lng?: number;
+    alt?: number;
 };
 
 export type Promo = {
-  _id: string;
-  _type: 'promo';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  description?: string;
-  discountAmount?: number;
-  couponCode?: string;
-  validFrom?: string;
-  validUntil?: string;
-  isActive?: boolean;
+    _id: string;
+    _type: 'promo';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: string;
+    discountAmount?: number;
+    couponCode?: string;
+    validFrom?: string;
+    validUntil?: string;
+    isActive?: boolean;
 };
 
 export type Order = {
-  _id: string;
-  _type: 'order';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  orderNumber?: string;
-  stripeCheckoutSessionId?: string;
-  stripeCustomerId?: string;
-  clerkUserId?: string;
-  customerName?: string;
-  email?: string;
-  stripePaymentIntentId?: string;
-  products?: Array<{
-    product?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'product';
-    };
-    quantity?: number;
-    _key: string;
-  }>;
-  totalPrice?: number;
-  currency?: string;
-  amountDiscount?: number;
-  status?: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
-  orderDate?: string;
-};
-
-export type Product = {
-  _id: string;
-  _type: 'product';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name?: string;
-  slug?: Slug;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-  };
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: 'span';
-      _key: string;
+    _id: string;
+    _type: 'order';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    orderNumber?: string;
+    stripeCheckoutSessionId?: string;
+    stripeCustomerId?: string;
+    clerkUserId?: string;
+    customerName?: string;
+    email?: string;
+    stripePaymentIntentId?: string;
+    products?: Array<{
+        product?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'product';
+        };
+        quantity?: number;
+        _key: string;
     }>;
-    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
-    listItem?: 'bullet' | 'number';
-    markDefs?: Array<{
-      href?: string;
-      _type: 'link';
-      _key: string;
-    }>;
-    level?: number;
-    _type: 'block';
-    _key: string;
-  }>;
-  price?: number;
-  stock?: number;
-  categories?: Array<{
-    _ref: string;
-    _type: 'reference';
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: 'category';
-  }>;
-  seller?: {
-    _ref: string;
-    _type: 'reference';
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: 'seller';
-  };
-  featured?: boolean;
-};
-
-export type Seller = {
-  _id: string;
-  _type: 'seller';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name?: string;
-  slug?: Slug;
-  email?: string;
-  city?: string;
-  province?: string;
-  country?: string;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-  };
-  description?: string;
-  products?: Array<{
-    _ref: string;
-    _type: 'reference';
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: 'product';
-  }>;
-};
-
-export type SanityImageCrop = {
-  _type: 'sanity.imageCrop';
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
-};
-
-export type SanityImageHotspot = {
-  _type: 'sanity.imageHotspot';
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-};
-
-export type SanityImageAsset = {
-  _id: string;
-  _type: 'sanity.imageAsset';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  originalFilename?: string;
-  label?: string;
-  title?: string;
-  description?: string;
-  altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
-  uploadId?: string;
-  path?: string;
-  url?: string;
-  metadata?: SanityImageMetadata;
-  source?: SanityAssetSourceData;
-};
-
-export type SanityAssetSourceData = {
-  _type: 'sanity.assetSourceData';
-  name?: string;
-  id?: string;
-  url?: string;
-};
-
-export type SanityImageMetadata = {
-  _type: 'sanity.imageMetadata';
-  location?: Geopoint;
-  dimensions?: SanityImageDimensions;
-  palette?: SanityImagePalette;
-  lqip?: string;
-  blurHash?: string;
-  hasAlpha?: boolean;
-  isOpaque?: boolean;
+    totalPrice?: number;
+    currency?: string;
+    amountDiscount?: number;
+    status?: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
+    orderDate?: string;
 };
 
 export type Category = {
-  _id: string;
-  _type: 'category';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-  description?: string;
-};
-
-export type Slug = {
-  _type: 'slug';
-  current?: string;
-  source?: string;
+    _id: string;
+    _type: 'category';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    slug?: Slug;
+    description?: string;
 };
 
 export type Cart = {
-  _id: string;
-  _type: 'cart';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  Qty?: number;
+    _id: string;
+    _type: 'cart';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    product?: {
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: 'product';
+    };
+    quantity?: number;
+    user?: string;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Promo | Order | Product | Seller | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Category | Slug | Cart;
+export type Product = {
+    _id: string;
+    _type: 'product';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: string;
+    slug?: Slug;
+    image?: {
+        asset?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
+    };
+    description?: Array<{
+        children?: Array<{
+            marks?: Array<string>;
+            text?: string;
+            _type: 'span';
+            _key: string;
+        }>;
+        style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+        listItem?: 'bullet' | 'number';
+        markDefs?: Array<{
+            href?: string;
+            _type: 'link';
+            _key: string;
+        }>;
+        level?: number;
+        _type: 'block';
+        _key: string;
+    }>;
+    price?: number;
+    stock?: number;
+    categories?: Array<{
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        _key: string;
+        [internalGroqTypeReferenceTo]?: 'category';
+    }>;
+    seller?: {
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: 'seller';
+    };
+    featured?: boolean;
+};
+
+export type Seller = {
+    _id: string;
+    _type: 'seller';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: string;
+    slug?: Slug;
+    email?: string;
+    city?: string;
+    province?: string;
+    country?: string;
+    image?: {
+        asset?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
+    };
+    description?: string;
+    products?: Array<{
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        _key: string;
+        [internalGroqTypeReferenceTo]?: 'product';
+    }>;
+};
+
+export type SanityImageCrop = {
+    _type: 'sanity.imageCrop';
+    top?: number;
+    bottom?: number;
+    left?: number;
+    right?: number;
+};
+
+export type SanityImageHotspot = {
+    _type: 'sanity.imageHotspot';
+    x?: number;
+    y?: number;
+    height?: number;
+    width?: number;
+};
+
+export type SanityImageAsset = {
+    _id: string;
+    _type: 'sanity.imageAsset';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    originalFilename?: string;
+    label?: string;
+    title?: string;
+    description?: string;
+    altText?: string;
+    sha1hash?: string;
+    extension?: string;
+    mimeType?: string;
+    size?: number;
+    assetId?: string;
+    uploadId?: string;
+    path?: string;
+    url?: string;
+    metadata?: SanityImageMetadata;
+    source?: SanityAssetSourceData;
+};
+
+export type SanityAssetSourceData = {
+    _type: 'sanity.assetSourceData';
+    name?: string;
+    id?: string;
+    url?: string;
+};
+
+export type SanityImageMetadata = {
+    _type: 'sanity.imageMetadata';
+    location?: Geopoint;
+    dimensions?: SanityImageDimensions;
+    palette?: SanityImagePalette;
+    lqip?: string;
+    blurHash?: string;
+    hasAlpha?: boolean;
+    isOpaque?: boolean;
+};
+
+export type Slug = {
+    _type: 'slug';
+    current?: string;
+    source?: string;
+};
+
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Promo | Order | Category | Cart | Product | Seller | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug;
 export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ./sanity/lib/sales/getActivePromoByCoupon.ts
-// Variable: ACTIVE_SALE_BY_COUPON_CODE
-// Query: *[_type == "promo"         && isActive == true         && couponCode == $couponCode        ] | order(validFrom desc)[0]
-export type ACTIVE_SALE_BY_COUPON_CODEResult = {
-  _id: string;
-  _type: 'promo';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  description?: string;
-  discountAmount?: number;
-  couponCode?: string;
-  validFrom?: string;
-  validUntil?: string;
-  isActive?: boolean;
-} | null;
+// Source: ./sanity/lib/cart/getAllCarts.ts
+// Variable: ALL_CARTS_QUERY
+// Query: *[_type == "cart"]{        ...,        product->{...}    } | order(product.name asc)
+export type ALL_CARTS_QUERYResult = Array<{
+    _id: string;
+    _type: 'cart';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    product: {
+        _id: string;
+        _type: 'product';
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        name?: string;
+        slug?: Slug;
+        image?: {
+            asset?: {
+                _ref: string;
+                _type: 'reference';
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: 'image';
+        };
+        description?: Array<{
+            children?: Array<{
+                marks?: Array<string>;
+                text?: string;
+                _type: 'span';
+                _key: string;
+            }>;
+            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
+            listItem?: 'bullet' | 'number';
+            markDefs?: Array<{
+                href?: string;
+                _type: 'link';
+                _key: string;
+            }>;
+            level?: number;
+            _type: 'block';
+            _key: string;
+        }>;
+        price?: number;
+        stock?: number;
+        categories?: Array<{
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            _key: string;
+            [internalGroqTypeReferenceTo]?: 'category';
+        }>;
+        seller?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'seller';
+        };
+        featured?: boolean;
+    } | null;
+    quantity?: number;
+    user?: string;
+}>;
 
 // Source: ./sanity/lib/products/getAllCategories.ts
 // Variable: ALL_CATEGORIES_QUERY
 // Query: *[_type == "category"] | order(name asc)
 export type ALL_CATEGORIES_QUERYResult = Array<{
-  _id: string;
-  _type: 'category';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-  description?: string;
+    _id: string;
+    _type: 'category';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    slug?: Slug;
+    description?: string;
 }>;
 
 // Source: ./sanity/lib/products/getAllFeaturedProducts.ts
 // Variable: ALL_FEATURE_PRODUCTS_QUERY
 // Query: *[_type == "product" && featured == true] | order(name asc)
 export type ALL_FEATURE_PRODUCTS_QUERYResult = Array<{
-  _id: string;
-  _type: 'product';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name?: string;
-  slug?: Slug;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    _id: string;
+    _type: 'product';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: string;
+    slug?: Slug;
+    image?: {
+        asset?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
     };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-  };
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: 'span';
-      _key: string;
+    description?: Array<{
+        children?: Array<{
+            marks?: Array<string>;
+            text?: string;
+            _type: 'span';
+            _key: string;
+        }>;
+        style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
+        listItem?: 'bullet' | 'number';
+        markDefs?: Array<{
+            href?: string;
+            _type: 'link';
+            _key: string;
+        }>;
+        level?: number;
+        _type: 'block';
+        _key: string;
     }>;
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
-    listItem?: 'bullet' | 'number';
-    markDefs?: Array<{
-      href?: string;
-      _type: 'link';
-      _key: string;
+    price?: number;
+    stock?: number;
+    categories?: Array<{
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        _key: string;
+        [internalGroqTypeReferenceTo]?: 'category';
     }>;
-    level?: number;
-    _type: 'block';
-    _key: string;
-  }>;
-  price?: number;
-  stock?: number;
-  categories?: Array<{
-    _ref: string;
-    _type: 'reference';
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: 'category';
-  }>;
-  seller?: {
-    _ref: string;
-    _type: 'reference';
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: 'seller';
-  };
-  featured?: boolean;
+    seller?: {
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: 'seller';
+    };
+    featured?: boolean;
 }>;
 
 // Source: ./sanity/lib/products/getAllProducts.ts
 // Variable: ALL_PRODUCTS_QUERY
 // Query: *[_type == "product"] | order(name asc)
 export type ALL_PRODUCTS_QUERYResult = Array<{
-  _id: string;
-  _type: 'product';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name?: string;
-  slug?: Slug;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-  };
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: 'span';
-      _key: string;
-    }>;
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
-    listItem?: 'bullet' | 'number';
-    markDefs?: Array<{
-      href?: string;
-      _type: 'link';
-      _key: string;
-    }>;
-    level?: number;
-    _type: 'block';
-    _key: string;
-  }>;
-  price?: number;
-  stock?: number;
-  categories?: Array<{
-    _ref: string;
-    _type: 'reference';
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: 'category';
-  }>;
-  seller?: {
-    _ref: string;
-    _type: 'reference';
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: 'seller';
-  };
-  featured?: boolean;
-}>;
-
-// Source: ./sanity/lib/products/GetProductBySlug.ts
-// Variable: PRODUCTS_BY_SLUG
-// Query: *[_type == "product" && slug.current == $slug]{            ...,             categories[]->{                title, _id            },            seller->{ name, image}        } | order(name asc)[0]
-export type PRODUCTS_BY_SLUGResult = {
-  _id: string;
-  _type: 'product';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name?: string;
-  slug?: Slug;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-  };
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: 'span';
-      _key: string;
-    }>;
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
-    listItem?: 'bullet' | 'number';
-    markDefs?: Array<{
-      href?: string;
-      _type: 'link';
-      _key: string;
-    }>;
-    level?: number;
-    _type: 'block';
-    _key: string;
-  }>;
-  price?: number;
-  stock?: number;
-  categories: Array<{
-    title: string | null;
     _id: string;
-  }> | null;
-  seller: {
-    name: string | null;
-    image: {
-      asset?: {
+    _type: 'product';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: string;
+    slug?: Slug;
+    image?: {
+        asset?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
+    };
+    description?: Array<{
+        children?: Array<{
+            marks?: Array<string>;
+            text?: string;
+            _type: 'span';
+            _key: string;
+        }>;
+        style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
+        listItem?: 'bullet' | 'number';
+        markDefs?: Array<{
+            href?: string;
+            _type: 'link';
+            _key: string;
+        }>;
+        level?: number;
+        _type: 'block';
+        _key: string;
+    }>;
+    price?: number;
+    stock?: number;
+    categories?: Array<{
         _ref: string;
         _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: 'image';
+        _key: string;
+        [internalGroqTypeReferenceTo]?: 'category';
+    }>;
+    seller?: {
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: 'seller';
+    };
+    featured?: boolean;
+}>;
+
+// Source: ./sanity/lib/products/getProductBySlug.ts
+// Variable: PRODUCTS_BY_SLUG
+// Query: *[_type == "product" && slug.current == $slug]{            ...,             categories[]->{                title, _id            },            seller->{ name, image}        } | order(name asc)[0]
+export type PRODUCTS_BY_SLUGResult = {
+    _id: string;
+    _type: 'product';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: string;
+    slug?: Slug;
+    image?: {
+        asset?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
+    };
+    description?: Array<{
+        children?: Array<{
+            marks?: Array<string>;
+            text?: string;
+            _type: 'span';
+            _key: string;
+        }>;
+        style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
+        listItem?: 'bullet' | 'number';
+        markDefs?: Array<{
+            href?: string;
+            _type: 'link';
+            _key: string;
+        }>;
+        level?: number;
+        _type: 'block';
+        _key: string;
+    }>;
+    price?: number;
+    stock?: number;
+    categories: Array<{
+        title: string | null;
+        _id: string;
+    }> | null;
+    seller: {
+        name: string | null;
+        image: {
+            asset?: {
+                _ref: string;
+                _type: 'reference';
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: 'image';
+        } | null;
     } | null;
-  } | null;
-  featured?: boolean;
+    featured?: boolean;
 } | null;
 
 // Source: ./sanity/lib/products/getProductsByCategory.ts
 // Variable: PRODUCTS_BY_CATEGORY_QUERY
 // Query: *[_type == "product"         && references(*[_type == 'category' && slug.current == $categorySlug]._id)        ] | order(name asc)
 export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
-  _id: string;
-  _type: 'product';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name?: string;
-  slug?: Slug;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    _id: string;
+    _type: 'product';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: string;
+    slug?: Slug;
+    image?: {
+        asset?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
     };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-  };
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: 'span';
-      _key: string;
+    description?: Array<{
+        children?: Array<{
+            marks?: Array<string>;
+            text?: string;
+            _type: 'span';
+            _key: string;
+        }>;
+        style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
+        listItem?: 'bullet' | 'number';
+        markDefs?: Array<{
+            href?: string;
+            _type: 'link';
+            _key: string;
+        }>;
+        level?: number;
+        _type: 'block';
+        _key: string;
     }>;
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
-    listItem?: 'bullet' | 'number';
-    markDefs?: Array<{
-      href?: string;
-      _type: 'link';
-      _key: string;
+    price?: number;
+    stock?: number;
+    categories?: Array<{
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        _key: string;
+        [internalGroqTypeReferenceTo]?: 'category';
     }>;
-    level?: number;
-    _type: 'block';
-    _key: string;
-  }>;
-  price?: number;
-  stock?: number;
-  categories?: Array<{
-    _ref: string;
-    _type: 'reference';
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: 'category';
-  }>;
-  seller?: {
-    _ref: string;
-    _type: 'reference';
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: 'seller';
-  };
-  featured?: boolean;
+    seller?: {
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: 'seller';
+    };
+    featured?: boolean;
 }>;
 
 // Source: ./sanity/lib/products/getSellerByName.ts
 // Variable: SELLER_BY_NAME
 // Query: *[_type == "seller" && name == $slug]{            ...,            "products": products[]->{                _id, _type, slug, name, image, price, description            } | order(name asc)        } | order(name asc)[0]
 export type SELLER_BY_NAMEResult = {
-  _id: string;
-  _type: 'seller';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name?: string;
-  slug?: Slug;
-  email?: string;
-  city?: string;
-  province?: string;
-  country?: string;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-  };
-  description?: string;
-  products: Array<{
     _id: string;
-    _type: 'product';
-    slug: Slug | null;
-    name: string | null;
-    image: {
-      asset?: {
-        _ref: string;
-        _type: 'reference';
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: 'image';
-    } | null;
-    price: number | null;
-    description: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: 'span';
-        _key: string;
-      }>;
-      style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
-      listItem?: 'bullet' | 'number';
-      markDefs?: Array<{
-        href?: string;
-        _type: 'link';
-        _key: string;
-      }>;
-      level?: number;
-      _type: 'block';
-      _key: string;
+    _type: 'seller';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: string;
+    slug?: Slug;
+    email?: string;
+    city?: string;
+    province?: string;
+    country?: string;
+    image?: {
+        asset?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
+    };
+    description?: string;
+    products: Array<{
+        _id: string;
+        _type: 'product';
+        slug: Slug | null;
+        name: string | null;
+        image: {
+            asset?: {
+                _ref: string;
+                _type: 'reference';
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: 'image';
+        } | null;
+        price: number | null;
+        description: Array<{
+            children?: Array<{
+                marks?: Array<string>;
+                text?: string;
+                _type: 'span';
+                _key: string;
+            }>;
+            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
+            listItem?: 'bullet' | 'number';
+            markDefs?: Array<{
+                href?: string;
+                _type: 'link';
+                _key: string;
+            }>;
+            level?: number;
+            _type: 'block';
+            _key: string;
+        }> | null;
     }> | null;
-  }> | null;
+} | null;
+
+// Source: ./sanity/lib/sales/getActivePromoByCoupon.ts
+// Variable: ACTIVE_SALE_BY_COUPON_CODE
+// Query: *[_type == "promo"         && isActive == true         && couponCode == $couponCode        ] | order(validFrom desc)[0]
+export type ACTIVE_SALE_BY_COUPON_CODEResult = {
+    _id: string;
+    _type: 'promo';
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: string;
+    discountAmount?: number;
+    couponCode?: string;
+    validFrom?: string;
+    validUntil?: string;
+    isActive?: boolean;
 } | null;
 
 // Query TypeMap
 import '@sanity/client';
 declare module '@sanity/client' {
-  interface SanityQueries {
-    '*[_type == "promo" \n        && isActive == true \n        && couponCode == $couponCode\n        ] | order(validFrom desc)[0]\n    ': ACTIVE_SALE_BY_COUPON_CODEResult;
-    '*[_type == "category"] | order(name asc)': ALL_CATEGORIES_QUERYResult;
-    '*[_type == "product" && featured == true] | order(name asc)': ALL_FEATURE_PRODUCTS_QUERYResult;
-    '*[_type == "product"] | order(name asc)': ALL_PRODUCTS_QUERYResult;
-    '\n        *[_type == "product" && slug.current == $slug]{\n            ..., \n            categories[]->{\n                title, _id\n            },\n            seller->{ name, image}\n        } | order(name asc)[0]\n    ': PRODUCTS_BY_SLUGResult;
-    '\n        *[_type == "product" \n        && references(*[_type == \'category\' && slug.current == $categorySlug]._id)\n        ] | order(name asc)\n    ': PRODUCTS_BY_CATEGORY_QUERYResult;
-    '\n        *[_type == "seller" && name == $slug]{\n            ...,\n            "products": products[]->{\n                _id, _type, slug, name, image, price, description\n            } | order(name asc)\n        } | order(name asc)[0]\n    ': SELLER_BY_NAMEResult;
-  }
+    interface SanityQueries {
+        '*[_type == "cart"]{\n        ...,\n        product->{...}\n    } | order(product.name asc)': ALL_CARTS_QUERYResult;
+        '*[_type == "category"] | order(name asc)': ALL_CATEGORIES_QUERYResult;
+        '*[_type == "product" && featured == true] | order(name asc)': ALL_FEATURE_PRODUCTS_QUERYResult;
+        '*[_type == "product"] | order(name asc)': ALL_PRODUCTS_QUERYResult;
+        '\n        *[_type == "product" && slug.current == $slug]{\n            ..., \n            categories[]->{\n                title, _id\n            },\n            seller->{ name, image}\n        } | order(name asc)[0]\n    ': PRODUCTS_BY_SLUGResult;
+        '\n        *[_type == "product" \n        && references(*[_type == \'category\' && slug.current == $categorySlug]._id)\n        ] | order(name asc)\n    ': PRODUCTS_BY_CATEGORY_QUERYResult;
+        '\n        *[_type == "seller" && name == $slug]{\n            ...,\n            "products": products[]->{\n                _id, _type, slug, name, image, price, description\n            } | order(name asc)\n        } | order(name asc)[0]\n    ': SELLER_BY_NAMEResult;
+        '*[_type == "promo" \n        && isActive == true \n        && couponCode == $couponCode\n        ] | order(validFrom desc)[0]\n    ': ACTIVE_SALE_BY_COUPON_CODEResult;
+    }
 }

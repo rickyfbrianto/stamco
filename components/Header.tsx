@@ -12,11 +12,12 @@ import { LoaderBounce } from './Loader';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useProductFilterStore } from '@/store/productStore';
-import { ALL_CATEGORIES_QUERYResult } from '@/sanity.types';
+import { ALL_CARTS_QUERYResult, ALL_CATEGORIES_QUERYResult } from '@/sanity.types';
 
-export default function Header({ categories }: { categories: ALL_CATEGORIES_QUERYResult }) {
+export default function Header({ cart, categories }: { cart: ALL_CARTS_QUERYResult; categories: ALL_CATEGORIES_QUERYResult }) {
     const { user } = useUser();
-    const item = useBasketStore((state) => state.items);
+    const items = useBasketStore((state) => state.items);
+    const ambilData = useBasketStore((state) => state.ambilData);
 
     const filter = useProductFilterStore((state) => state.filter);
     const setFilter = useProductFilterStore((state) => state.setFilter);
@@ -26,26 +27,27 @@ export default function Header({ categories }: { categories: ALL_CATEGORIES_QUER
     const searchParams = useSearchParams();
     const path = usePathname();
     const router = useRouter();
-    const nextSearchParams = new URLSearchParams(searchParams.toString());
+    // const nextSearchParams = new URLSearchParams(searchParams.toString());
 
-    const data = [
-        { id: '1', title: 'Product', link: '/product' },
-        ...Object.values(categories).map((v) => ({
-            id: v._id,
-            title: v.title,
-            link: `/product?category=${v._id}`,
-        })),
-    ];
+    const data = [{ id: '1', title: 'Product', link: '' }, ...Object.values(categories).map((v) => ({ id: v._id, title: v.title, link: v._id }))];
 
     useEffect(() => {
-        const tempFilter = filter.query;
-        if (searchParams.get('query')?.trim() && !['product', 'seller'].includes(path.split('/')[1])) {
-            nextSearchParams.delete('query');
-            router.replace(`${path}/${nextSearchParams}`);
+        ambilData(cart);
+    }, [JSON.stringify(cart)]);
+
+    useEffect(() => {
+        const { query } = filter;
+        if (!['product', 'seller'].includes(path.split('/')[1])) {
             clearFilter();
+            router.replace(`${path}/?${generateSearchParams()}`);
         }
-        setFilter({ query: tempFilter });
-    }, [searchParams.get('query')]);
+        setFilter({ query });
+    }, [path, searchParams]);
+
+    const handleCategory = (link: string) => {
+        setFilter({ category: link });
+        router.push(`/product${link ? `?category=${link}` : ''}`);
+    };
 
     const formSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -106,9 +108,10 @@ export default function Header({ categories }: { categories: ALL_CATEGORIES_QUER
                         </form>
                         <div className="hidden sm:flex p-1 gap-6 text-[.75rem] font-urbanist">
                             {data.map((v) => (
-                                <Link className="font-semibold" href={v.link} key={v.title}>
+                                <button className="font-semibold" key={v.title} onClick={() => handleCategory(v.link)}>
                                     {v.title}
-                                </Link>
+                                </button>
+                                // <Link className="font-semibold" href={v.link} key={v.title}>{v.title}</Link>
                             ))}
                         </div>
                     </div>
@@ -119,7 +122,7 @@ export default function Header({ categories }: { categories: ALL_CATEGORIES_QUER
                             className="relative text-center flex justify-center items-center transition-colors duration-500 
                         font-bold h-8 w-8 mt-1 rounded-full border hover:bg-gray-300 ">
                             <ShoppingCart size={16} color="#2d4e3d" strokeWidth={1.5} />
-                            <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">{item.length}</span>
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">{items.length}</span>
                         </Link>
                     </div>
                 </div>
