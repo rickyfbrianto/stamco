@@ -1,27 +1,28 @@
-import type { Metadata } from "next";
-import "../globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Toaster } from "sonner";
-import { SanityLive } from "@/sanity/lib/live";
-import LayoutProvider from "@/components/LayoutProvider";
-import Navbar from "@/components/Navbar";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { Suspense } from "react";
+import type { Metadata } from 'next';
+import '../globals.css';
+import { Toaster } from 'sonner';
+import { SanityLive } from '@/sanity/lib/live';
+import LayoutProvider from '@/components/LayoutProvider';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { Suspense } from 'react';
+import { getAllCategories } from '@/sanity/lib/products/getAllCategories';
 
 export const metadata: Metadata = {
-    title: "Stamco",
-    description: "E Commerce gratis by Ricky",
+    title: 'Stamco',
+    description: 'E Commerce gratis by Ricky',
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+    const categories = await getAllCategories();
+
     return (
         <LayoutProvider>
             <html lang="en">
                 <body className="bg-slate-100">
                     <Toaster />
                     <Suspense>
-                        <Header />
+                        <Header categories={categories} />
                     </Suspense>
                     {children}
                     <Footer />
@@ -29,5 +30,5 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 </body>
             </html>
         </LayoutProvider>
-    )
+    );
 }
