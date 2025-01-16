@@ -3,7 +3,7 @@ import { sanityFetch } from '../live';
 
 export const getAllCarts = async () => {
     const ALL_CARTS_QUERY = defineQuery(`*[_type == "cart"]{
-        ...,
+        _id, quantity, user, ..., 
         product->{...}
     } | order(product.name asc)`);
 

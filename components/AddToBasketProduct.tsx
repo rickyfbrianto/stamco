@@ -1,7 +1,7 @@
 'use client';
 
 import { Product } from '@/sanity.types';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -9,6 +9,7 @@ import { useBasketStore } from '@/store/store';
 import { toast } from 'sonner';
 import { useAuth } from '@clerk/nextjs';
 import { Clerk } from '@clerk/clerk-js';
+import { debounce } from 'lodash';
 
 interface AddToBasketProps {
     product: Product;
@@ -19,6 +20,7 @@ const clerk = new Clerk(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string)
 
 function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
     // const { addItem } = useBasketStore();
+    const [loading, setLoading] = useState(false)
     const [isClient, setIsClient] = useState(false);
     const { userId } = useAuth();
     const minQty = 1;
@@ -28,8 +30,9 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
     });
     const watchQty = form.watch('quantity');
 
+    const items = useBasketStore((state) => state.items);
     const clearBasket = useBasketStore((state) => state.clearBasket);
-    const tambahData = useBasketStore((state) => state.tambahData);
+    const addCart = useBasketStore((state) => state.addCart);
 
     useEffect(() => {
         // clearBasket();
@@ -38,19 +41,20 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
 
     if (!isClient) return null;
 
+    const handleDebounceCart = debounce((product, userId, watchQty) => {
+        addCart(product, userId as string, watchQty);
+        setLoading(false)
+    }, 750)
+
     const handleAddToCart = async (product: Product) => {
         if (userId) {
-            // addItem(product, userId as string, watchQty);
-            tambahData(product, userId as string, watchQty);
-
-            toast.success('Product added to cart');
+            handleDebounceCart(product, userId as string, watchQty)
+            setLoading(true)
         } else {
             await clerk.load();
             clerk.openSignIn();
         }
-    };
-
-    const handleReset = () => clearBasket();
+    }
 
     return (
         <Controller
@@ -86,15 +90,15 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
                         <span className="text-[1rem] font-urbanist">${((product.price ?? 0) * value).toLocaleString('id-ID')}</span>
                     </div>
                     <div className="flex flex-row w-auto lg:flex-col lg:w-full gap-2">
-                        <Button variant={'green'} onClick={() => handleAddToCart(product)} className="w-full">
+                        <Button variant={'green'} disabled={loading} onClick={() => handleAddToCart(product)} className="w-full">
                             Add to Cart
                         </Button>
                         <Button variant={'outline'} onClick={() => handleAddToCart(product)} className="w-full">
                             Buy Now !
                         </Button>
-                        <Button variant={'destructive'} onClick={handleReset} className="w-full">
+                        {/* <Button variant={'destructive'} onClick={handleReset} className="w-full">
                             Reset
-                        </Button>
+                        </Button> */}
                     </div>
                 </div>
             )}

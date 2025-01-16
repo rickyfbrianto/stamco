@@ -14,7 +14,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ALL_CARTS_QUERYResult, Product } from '@/sanity.types';
+import { ALL_CARTS_QUERYResult, Cart, Product } from '@/sanity.types';
 
 interface ItemsProps {
     items: {
@@ -28,14 +28,15 @@ interface ItemsProps {
     checkAll: boolean;
 }
 
-export default function CartView({ cart }: { cart: ALL_CARTS_QUERYResult }) {
+export default function CartView() {
     const { isSignedIn } = useAuth();
     // const { user } = useUser();
-    // const groupedItems = useBasketStore((state) => state.getGroupedItems);
-    // const totalPrice = useBasketStore((state) => state.getTotalPrice())
-    const removeFromCart = useBasketStore((state) => state.removeFromCart);
-
     const [isClient, setIsClient] = useState(false);
+    const removeFromCart = useBasketStore((state) => state.removeFromCart);
+    const getCarts = useBasketStore((state) => state.getCarts);
+    const items = useBasketStore((state) => state.items)
+    const clearBasket = useBasketStore((state) => state.clearBasket);
+    // clearBasket()
 
     const form = useForm<ItemsProps>({
         defaultValues: {
@@ -54,19 +55,22 @@ export default function CartView({ cart }: { cart: ALL_CARTS_QUERYResult }) {
     const hargaAllWatch = form.watch('hargaAll');
 
     useEffect(() => {
-        document.title = 'Cart';
-        setIsClient(true);
+        getCarts()
+        setIsClient(true)
     }, []);
 
     useEffect(() => {
-        const tempItems = cart.map((item, index) => ({
-            check: form.getValues(`items.${index}.check`),
-            id: item.product?._id,
-            qty: item.quantity,
-            harga: item.product?.price ?? 0,
-        }));
+        const tempItems = items.map((item, index) => {
+            const product = item.product as unknown as Product
+            return {
+                check: form.getValues(`items.${index}.check`),
+                id: product?._id,
+                qty: item.quantity,
+                harga: product?.price ?? 0,
+            }
+        })
         form.reset({ ...form.getValues(), items: tempItems });
-    }, [JSON.stringify(cart)]);
+    }, [JSON.stringify(items)]);
 
     useEffect(() => {
         let itemCheck = 0;
@@ -74,20 +78,24 @@ export default function CartView({ cart }: { cart: ALL_CARTS_QUERYResult }) {
         let harga = 0;
         itemWatch.map((item) => {
             if (item.check) {
-                const selected = cart.find((group) => group.product?._id === item.id);
-                harga += (selected?.product?.price ?? 0) * (selected?.quantity ?? 0);
+                const selected = items.find((group) => {
+                    const product = group.product as unknown as Product
+                    return product?._id === item.id
+                });
+                const product = selected?.product as unknown as Product
+                harga += (product?.price ?? 0) * (selected?.quantity ?? 0);
                 qtyCheck += selected?.quantity ?? 0;
                 itemCheck++;
             }
         });
         form.setValue('hargaAll', harga);
         form.setValue('itemAll', qtyCheck);
-        form.setValue('checkAll', itemCheck === cart.length);
+        form.setValue('checkAll', itemCheck === items.length);
     }, [JSON.stringify(itemWatch)]);
 
     if (!isClient) return <Loader />;
 
-    if (cart.length === 0) {
+    if (items.length === 0) {
         return (
             <div className="container mx-auto p-4 flex flex-col items-center justify-center min-h-[50vh]">
                 <h1 className="text-2xl font-bold mb-6 text-gray-800">Your cart</h1>
@@ -116,7 +124,7 @@ export default function CartView({ cart }: { cart: ALL_CARTS_QUERYResult }) {
                     <h1 className="text-[1.2rem] font-bold">Your Cart</h1>
                 </div>
                 <span className="font-bold">
-                    {cart.length} Product{cart.length > 1 && 's'}
+                    {items.length} Product{items.length > 1 && 's'}
                 </span>
             </div>
             <div className="container mx-auto p-4 flex flex-col lg:flex-row gap-4 min-h-[50vh]">
@@ -161,41 +169,42 @@ export default function CartView({ cart }: { cart: ALL_CARTS_QUERYResult }) {
                             </Dialog>
                         )}
                     </div>
+
                     {/* List item */}
-                    {cart.map((item, index) => (
-                        <div key={item.product?._id} className="border flex flex-col overflow-hidden bg-white">
-                            <div className="flex flex-col-reverse xxs:flex-row">
-                                <Controller
-                                    name={`items.${index}.check`}
-                                    control={form.control}
-                                    render={({ field: { value, onChange } }) => (
+                    {items.map((item, index) => {
+                        const product = item.product as unknown as Product
+                        console.log("product", product)
+                        return (
+                            <div key={product?._id || product.name} className="border flex flex-col overflow-hidden bg-white">
+                                <div className="flex flex-col-reverse xxs:flex-row">
+                                    <Controller name={`items.${index}.check`} control={form.control} render={({ field: { value, onChange } }) => (
                                         <div className="flex min-w-[3rem] min-h-[2rem] justify-center items-center">
                                             <Checkbox checked={value} onCheckedChange={(e) => onChange(e)} />
                                         </div>
-                                    )}
-                                />
-                                <div className="flex-grow flex flex-col xs:flex-row xs:items-center justify-between transition-colors duration-500 p-2 pe-4 gap-x-4 gap-y-2">
-                                    <Link className="flex flex-col xs:flex-row cursor-pointer flex-1 gap-2 font-urbanist" href={`/product/${item.product?.slug?.current}`}>
-                                        <div className="flex justify-center w-auto h-auto sm:w-24 sm:h-24 flex-shrink-0">{item.product?.image && <Image src={urlFor(item.product.image).url()} alt={item.product.name ?? 'Product image'} className="object-cover rounded select-none" width={100} height={100} />}</div>
-                                        <div className="flex flex-col items-center xs:items-start min-w-[4rem]">
-                                            <h2 className="text-center xs:text-start text-lg sm:text-xl font-semibold line-clamp-2">{item.product?.name}</h2>
-                                            <p className="text-sm sm:text-base">${(item.product?.price ?? 0).toLocaleString('id-ID')}</p>
-                                            <div className="flex gap-2 px-2 py-1 border-b-[2px] border-blue-100">
-                                                <span className="text-[.7rem] font-extrabold">Sub Total</span>
-                                                <p className="text-sm sm:text-base font-bold">${((item.product?.price ?? 0) * (item.quantity ?? 1)).toLocaleString('id-ID')}</p>
+                                    )} />
+                                    <div className="flex-grow flex flex-col xs:flex-row xs:items-center justify-between transition-colors duration-500 p-2 pe-4 gap-x-4 gap-y-2">
+                                        <Link className="flex flex-col xs:flex-row cursor-pointer flex-1 gap-2 font-urbanist" href={`/product/${product?.slug?.current}`}>
+                                            <div className="flex justify-center w-auto h-auto sm:w-24 sm:h-24 flex-shrink-0">{product?.image && <Image src={urlFor(product.image).url()} alt={product.name ?? 'Product image'} className="object-cover rounded select-none" width={100} height={100} />}</div>
+                                            <div className="flex flex-col items-center xs:items-start min-w-[4rem]">
+                                                <h2 className="text-center xs:text-start text-lg sm:text-xl font-semibold line-clamp-2">{product?.name}</h2>
+                                                <p className="text-sm sm:text-base">${(product?.price ?? 0).toLocaleString('id-ID')}</p>
+                                                <div className="flex gap-2 px-2 py-1 border-b-[2px] border-blue-100">
+                                                    <span className="text-[.7rem] font-extrabold">Sub Total</span>
+                                                    <p className="text-sm sm:text-base font-bold">${((product?.price ?? 0) * (item.quantity ?? 1)).toLocaleString('id-ID')}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Link>
+                                        </Link>
 
-                                    <AddToBasketCart product={item.product as Product} />
+                                        <AddToBasketCart item={item as unknown as Cart} />
+                                    </div>
+                                </div>
+                                <div className="hidden xs:flex px-4 py-2 gap-4 bg-gradient-to-r from-white to-slate-100 border-t font-sans">
+                                    <Truck size={20} color="#2d4e3d" strokeWidth={1.5} />
+                                    <span className="text-[.9rem] italic">Get your best price by checkout now!</span>
                                 </div>
                             </div>
-                            <div className="hidden xs:flex px-4 py-2 gap-4 bg-gradient-to-r from-white to-slate-100 border-t font-sans">
-                                <Truck size={20} color="#2d4e3d" strokeWidth={1.5} />
-                                <span className="text-[.9rem] italic">Get your best price by checkout now!</span>
-                            </div>
-                        </div>
-                    ))}
+                        )
+                    })}
                     <Button className="self-start mt-2" variant={'outline'} asChild>
                         <Link href={`/product`}>
                             <MoveLeft /> Continue Shopping

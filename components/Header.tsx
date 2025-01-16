@@ -12,12 +12,11 @@ import { LoaderBounce } from './Loader';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useProductFilterStore } from '@/store/productStore';
-import { ALL_CARTS_QUERYResult, ALL_CATEGORIES_QUERYResult } from '@/sanity.types';
+import { ALL_CATEGORIES_QUERYResult, Cart } from '@/sanity.types';
 
-export default function Header({ cart, categories }: { cart: ALL_CARTS_QUERYResult; categories: ALL_CATEGORIES_QUERYResult }) {
+export default function Header({ cart, categories }: { cart: Cart[]; categories: ALL_CATEGORIES_QUERYResult }) {
     const { user } = useUser();
     const items = useBasketStore((state) => state.items);
-    const ambilData = useBasketStore((state) => state.ambilData);
 
     const filter = useProductFilterStore((state) => state.filter);
     const setFilter = useProductFilterStore((state) => state.setFilter);
@@ -30,10 +29,6 @@ export default function Header({ cart, categories }: { cart: ALL_CARTS_QUERYResu
     // const nextSearchParams = new URLSearchParams(searchParams.toString());
 
     const data = [{ id: '1', title: 'Product', link: '' }, ...Object.values(categories).map((v) => ({ id: v._id, title: v.title, link: v._id }))];
-
-    useEffect(() => {
-        ambilData(cart);
-    }, [JSON.stringify(cart)]);
 
     useEffect(() => {
         const { query } = filter;

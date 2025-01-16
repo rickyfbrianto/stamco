@@ -1,10 +1,14 @@
 import CartView from '@/components/CartView';
-import { getAllCarts } from '@/sanity/lib/cart/getAllCarts';
+
+export async function generateMetadata() {
+    return {
+        title: "Cart",
+        description: "Cart Stamco"
+    }
+}
 
 async function CartPage() {
-    const cart = await getAllCarts();
-
-    return <CartView cart={cart} />;
+    return <CartView />;
 }
 
 export default CartPage;
