@@ -7,7 +7,6 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Suspense } from 'react';
 import { getAllCategories } from '@/sanity/lib/products/getAllCategories';
-import { getAllCarts } from '@/sanity/lib/cart/getAllCarts';
 
 export const metadata: Metadata = {
     title: 'Stamco',
@@ -17,7 +16,6 @@ export const metadata: Metadata = {
 // revisi baru
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     const categories = await getAllCategories();
-    const cart = await getAllCarts();
 
     return (
         <LayoutProvider>
@@ -25,7 +23,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 <body className="bg-slate-100">
                     <Toaster />
                     <Suspense>
-                        <Header cart={cart} categories={categories} />
+                        <Header categories={categories} />
                     </Suspense>
                     {children}
                     <Footer />

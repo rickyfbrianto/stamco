@@ -1,7 +1,7 @@
 'use client';
 
 import { Product } from '@/sanity.types';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -19,7 +19,6 @@ interface AddToBasketProps {
 const clerk = new Clerk(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string);
 
 function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
-    // const { addItem } = useBasketStore();
     const [loading, setLoading] = useState(false)
     const [isClient, setIsClient] = useState(false);
     const { userId } = useAuth();
@@ -30,20 +29,16 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
     });
     const watchQty = form.watch('quantity');
 
-    const items = useBasketStore((state) => state.items);
-    const clearBasket = useBasketStore((state) => state.clearBasket);
     const addCart = useBasketStore((state) => state.addCart);
 
-    useEffect(() => {
-        // clearBasket();
-        setIsClient(true);
-    }, []);
+    useEffect(() => setIsClient(true), []);
 
     if (!isClient) return null;
 
     const handleDebounceCart = debounce((product, userId, watchQty) => {
         addCart(product, userId as string, watchQty);
         setLoading(false)
+        toast.success("Product added to cart")
     }, 750)
 
     const handleAddToCart = async (product: Product) => {

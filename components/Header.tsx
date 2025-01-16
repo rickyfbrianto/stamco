@@ -12,9 +12,9 @@ import { LoaderBounce } from './Loader';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useProductFilterStore } from '@/store/productStore';
-import { ALL_CATEGORIES_QUERYResult, Cart } from '@/sanity.types';
+import { ALL_CATEGORIES_QUERYResult } from '@/sanity.types';
 
-export default function Header({ cart, categories }: { cart: Cart[]; categories: ALL_CATEGORIES_QUERYResult }) {
+export default function Header({ categories }: { categories: ALL_CATEGORIES_QUERYResult }) {
     const { user } = useUser();
     const items = useBasketStore((state) => state.items);
 

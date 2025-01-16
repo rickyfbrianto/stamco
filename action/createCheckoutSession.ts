@@ -1,6 +1,6 @@
 'use server'
 
-import { BasketItem } from "@/store/store";
+import { Cart } from "@/sanity.types";
 
 export type Metadata = {
     orderNumber: string;
@@ -10,7 +10,7 @@ export type Metadata = {
 }
 
 export type GroupedBasketItem = {
-    product: BasketItem['product'],
+    product: Cart['product'],
     quantity: number
 }
 

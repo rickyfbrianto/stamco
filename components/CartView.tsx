@@ -14,7 +14,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ALL_CARTS_QUERYResult, Cart, Product } from '@/sanity.types';
+import { Cart, Product } from '@/sanity.types';
 
 interface ItemsProps {
     items: {
@@ -28,14 +28,14 @@ interface ItemsProps {
     checkAll: boolean;
 }
 
-export default function CartView() {
+function CartView() {
     const { isSignedIn } = useAuth();
     // const { user } = useUser();
     const [isClient, setIsClient] = useState(false);
     const removeFromCart = useBasketStore((state) => state.removeFromCart);
     const getCarts = useBasketStore((state) => state.getCarts);
     const items = useBasketStore((state) => state.items)
-    const clearBasket = useBasketStore((state) => state.clearBasket);
+    // const clearBasket = useBasketStore((state) => state.clearBasket);
     // clearBasket()
 
     const form = useForm<ItemsProps>({
@@ -173,7 +173,6 @@ export default function CartView() {
                     {/* List item */}
                     {items.map((item, index) => {
                         const product = item.product as unknown as Product
-                        console.log("product", product)
                         return (
                             <div key={product?._id || product.name} className="border flex flex-col overflow-hidden bg-white">
                                 <div className="flex flex-col-reverse xxs:flex-row">
@@ -239,3 +238,5 @@ export default function CartView() {
         </div>
     );
 }
+
+export default CartView
