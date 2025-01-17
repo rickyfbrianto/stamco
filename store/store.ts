@@ -1,11 +1,13 @@
 import { Cart, Product } from '@/sanity.types';
 import { client } from '@/sanity/lib/client';
 import { Item } from '@radix-ui/react-accordion';
+import { CloudLightning } from 'lucide-react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface BasketState {
     items: Cart[];
+    isChanged: boolean,
     // addItemFromProduct: (product: Product, qty: number) => void;
     addItem: (product: Product, user: string, quantity: number) => void;
     removeItem: (productId: string) => void;
@@ -18,15 +20,18 @@ interface BasketState {
     getCarts: () => void,
     addCart: (product: Product, user: string, quantity: number) => void;
     minusCart: (id: string) => void
-    getCartCount: () => number;
-    updateQtyCart: (id: string, qty: number) => void;
+    getCartCount: () => Promise<number>;
+    updateIncQtyCart: (product: Product, user: string, quantity: number) => Promise<{success: boolean, msg:string}>;
+    updateSetQtyCart: (id: string, qty: number) => void;
     removeFromCart: (id: string) => Promise<{success: boolean, msg: string}>;
+    tes: ()=> void;
 }
 
 const useBasketStore = create<BasketState>()(
     persist(
         (set, get) => ({
             items: [],
+            isChanged: false,
             addItem: (product, user, quantity) =>
                 set((state) => {
                     const existingItem = state.items.find((item) => item.product?._ref === product._id);
@@ -37,7 +42,7 @@ const useBasketStore = create<BasketState>()(
                         };
                     } else temp = { items: [...state.items, { product, quantity, user }] };
                     return temp;
-                }),
+            }),
             removeItem: (productId) =>
                 set((state) => ({
                     items: state.items.reduce((acc, item) => {
@@ -50,67 +55,49 @@ const useBasketStore = create<BasketState>()(
                         }
                         return acc;
                     }, [] as BasketItem[]),
-                })),
+            })),
             clearBasket: () => set({ items: [] }),
             getItemCount: (productId) => {
                 const item = get().items.find((item) => item.product?._ref === productId);
-                return item ? item.quantity : 0;
+                return item ? item.quantity! : 0;
+                // return 1;
             },
             getGroupedItems: () => get().items,
             refreshServerCart: (cart) => set(() => ({items: [...cart]})),
             
             // new
             getCarts: async () => {
-                const temp = await client.fetch('*[_type == "cart"]{..., product->}')
+                const temp = await client.fetch('*[_type == "cart"]{..., product->} | order(_updatedAt desc)')
                 set(() => ({items: [...temp]}))
             },
             addCart: (product, user, quantity)=> set((state) => {
-                const existingItem = state.items.find(item => {
-                    const v = item?.product as unknown as Product
-                    return (v._id == product._id) ? true : false
-                })
                 let temp = {}
-
+                const _id = user + "-" + product._id
+                const existingItem = state.items.find(item => _id == item._id)
+                
                 if(existingItem){
+                    console.log("sebelum", get().items)
                     temp = { 
                         items: [...state.items.map((item) => {
                             const temp = item?.product as unknown as Product
                             return temp._id === product._id ? { ...item, product, quantity: (item.quantity ?? 0) + quantity, user } : item
-                        })]
+                        })],
                     }
                 } else {
-                    temp = { 
-                        items: [...state.items, { 
-                            _id: user + '-' + product._id, product, quantity, user,
-                            _createdAt: new Date(),
-                            _type:"cart",
-                        }]
-                    }
-                }
-
-                if(existingItem){             
-                    client.patch(user + '-' + product._id)
-                    .inc({quantity: quantity})
-                    .commit()
-                    .then((val) => console.log('status', val))
-                    .catch((err) => console.error('suksess', err));
-                }else{
+                    console.log('tidak ada')
                     client.createOrReplace({
                         _type: 'cart',
-                        _id: user + '-' + product._id,
                         product: { _type:"reference", _ref: product._id },
-                        quantity,
-                        user,
+                        _id, quantity, user,
+                    }).then(() => {
+                        temp = { 
+                            items: [...state.items, { 
+                                _id, product, quantity, user,
+                                _createdAt: new Date(),
+                                _type:"cart",
+                            }]
+                        }
                     })
-                    .then((val) => console.log('status', val))
-                    .catch((err) => console.error('suksess', err));
-                    // client.patch(user + '-' + product._id)
-                    // .set({
-                    //     product: { _type:"reference", _ref: product._id },
-                    //     quantity: quantity + , user,  
-                    // }).commit()
-                    // .then((val) => console.log('status', val))
-                    // .catch((err) => console.error('suksess', err));
                 }
                 return temp
             }),
@@ -119,13 +106,36 @@ const useBasketStore = create<BasketState>()(
                     return {items: [...state.items.map(item => item._id === id ? {...item, quantity: item.quantity! - 1}: item)]}
                 })
             },
-            getCartCount: () => get().items.length,
-            updateQtyCart: (id: string, qty: number) => {
+            getCartCount: async () => await client.fetch('count(*[_type == "cart"])'),
+            updateIncQtyCart: async (product, user, quantity) => {
+                const _id = user + "-" + product._id
+                return new Promise((res, rej)=>{
+                    client.fetch(`count(*[_type == "cart" && _id == "${_id}"])`)
+                    .then((exist)=>{
+                        if(exist){
+                            client.patch(_id)
+                                .inc({quantity})
+                                .commit()
+                                .then(() => res({success:true, msg:"OK"}))
+                                .catch((err) => rej({success:false, msg:err}));
+                        }else{
+                            client.createOrReplace({
+                                    _type: 'cart',
+                                    product: { _type:"reference", _ref: product._id },
+                                    _id, quantity, user,
+                                })
+                                .then(() => res({success:true, msg:"OK"}))
+                                .catch((err) => rej({success:false, msg:err}));
+                        }
+                    })
+                })
+            },
+            updateSetQtyCart: (id: string, qty: number) => {
                 client.patch(id)
                     .set({quantity: qty})
                     .commit()
-                    .then((val) => console.log('status', val))
-                    .catch((err) => console.error('suksess', err));                
+                    .then(() => console.log('sukses'))
+                    .catch((err) => console.error('sukses', err));
             },
             removeFromCart: async (id: string) => {
                 return new Promise((res, rej)=> {
@@ -136,24 +146,8 @@ const useBasketStore = create<BasketState>()(
                         rej({success: false, msg: error})
                     }
                 })
-            }
-
-            //     set((state) => {
-            //     const existingItem = state.items.find(item => {
-            //         const v = item.product as unknown as Product
-            //         return (v._id == product._id) ? true : false
-            //     })
-            //     let temp = null
-            //     if(existingItem){
-            //         return {
-            //             items: [...state.items,]
-            //         }
-            //     }else {
-            //         return {
-            //             items: [...state.items,]
-            //         }
-            //     }
-            // })
+            },
+            tes: () => console.log('tes')
         }),
         {
             name: 'basket-store',

@@ -4,19 +4,11 @@ import { Cart, Product } from '@/sanity.types';
 import { useBasketStore } from '@/store/store';
 import React, { memo, useEffect, useState } from 'react';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
-import { Trash } from 'lucide-react';
+import { Router, Trash } from 'lucide-react';
 import { Button } from './ui/button';
 import { useAuth } from '@clerk/nextjs';
 import { debounce } from 'lodash';
-
-// export type CustomCart = {
-//     _id: string;
-//     _type: 'cart';
-//     product: Product; // Ensure this is a Product object
-//     quantity: number;
-//     user: string;
-
-// };
+import { useRouter } from 'next/navigation';
 
 interface AddToBasketCartProps {
     item: Cart;
@@ -24,38 +16,39 @@ interface AddToBasketCartProps {
 }
 
 function AddToBasketCart({ item, disabled }: AddToBasketCartProps) {
+    const [isClient, setIsClient] = useState(false);
     const [openAlert, setOpenAlert] = useState(false);
     const product = item.product as unknown as Product
     const maxStock = product.stock;
     const { userId } = useAuth();
+    const router = useRouter()
 
     const addCart = useBasketStore((state) => state.addCart);
     const minusCart = useBasketStore((state) => state.minusCart);
-    const updateQtyCart = useBasketStore((state) => state.updateQtyCart);
+    const updateSetQtyCart = useBasketStore((state) => state.updateSetQtyCart);
     const removeFromCart = useBasketStore((state) => state.removeFromCart);
-    const getCarts = useBasketStore((state) => state.getCarts);
-    
-    const handleDebounceCart = React.useMemo(()=> {
-        return debounce((qty) => updateQtyCart(item._id, qty), 1000)
-    }, [])
 
-    useEffect(()=> 
-        handleDebounceCart(item.quantity)
-    , [item.quantity])
-    
+    const handleDelete = () => {
+        removeFromCart(item._id)
+            .then(async () => {
+                setOpenAlert(false)
+                router.refresh()
+            })
+    }
+
+    const handleDebounceCart = React.useMemo(() => debounce((qty) => updateSetQtyCart(item._id, qty), 500), [])
+
     const handleAddToCart = async (product: Product) => {
         if (userId) {
             addCart(product, userId as string, 1);
         }
     }
 
-    const handleDelete = () =>{
-        removeFromCart(item._id)
-        .then(() => {
-            getCarts()
-            setOpenAlert(false)
-        })
-    }
+    useEffect(() => handleDebounceCart(item.quantity), [item.quantity])
+
+    useEffect(() => setIsClient(true), []);
+
+    if (!isClient) return null;
 
     return (
         <div className="flex flex-col self-center gap-y-4">

@@ -33,10 +33,8 @@ function CartView() {
     // const { user } = useUser();
     const [isClient, setIsClient] = useState(false);
     const removeFromCart = useBasketStore((state) => state.removeFromCart);
-    const getCarts = useBasketStore((state) => state.getCarts);
     const items = useBasketStore((state) => state.items)
-    // const clearBasket = useBasketStore((state) => state.clearBasket);
-    // clearBasket()
+    const clearBasket = useBasketStore((state) => state.clearBasket);
 
     const form = useForm<ItemsProps>({
         defaultValues: {
@@ -55,7 +53,6 @@ function CartView() {
     const hargaAllWatch = form.watch('hargaAll');
 
     useEffect(() => {
-        getCarts()
         setIsClient(true)
     }, []);
 
