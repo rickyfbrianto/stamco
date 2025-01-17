@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { useBasketStore } from '@/store/store';
+import { useBasketStore } from '@/store/cartStore';
 import { toast } from 'sonner';
 import { useAuth } from '@clerk/nextjs';
 import { Clerk } from '@clerk/clerk-js';
@@ -28,7 +28,6 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
     });
     const watchQty = form.watch('quantity');
 
-    const clearBasket = useBasketStore((state) => state.clearBasket);
     const updateIncQtyCart = useBasketStore((state) => state.updateIncQtyCart);
 
     const handleAddToCart = async (product: Product) => {
@@ -44,7 +43,7 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
             clerk.openSignIn();
         }
     }
-
+    
     useEffect(() => setIsClient(true), []);
 
     if (!isClient) return null;
@@ -77,9 +76,6 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
                     </Button>
                     <Button variant={'outline'} onClick={() => handleAddToCart(product)} className="w-full">
                         Buy Now !
-                    </Button>
-                    <Button variant={'destructive'} onClick={() => clearBasket()} className="w-full">
-                        Reset
                     </Button>
                 </div>
             </div>

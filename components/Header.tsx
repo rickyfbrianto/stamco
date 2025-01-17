@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FaSearch } from 'react-icons/fa';
 import { FaOilWell } from 'react-icons/fa6';
-import { useBasketStore } from '@/store/store';
+import { useBasketStore } from '@/store/cartStore';
 import { Box, ShoppingCart } from 'lucide-react';
 import { LoaderBounce } from './Loader';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -57,7 +57,6 @@ export default function Header({ categories }: { categories: ALL_CATEGORIES_QUER
     }, [path, searchParams]);
 
     useEffect(() => setIsClient(true), []);
-
 
     return (
         <div className="w-full min-h-[--tinggi10] bg-[--warna-mint] border-b sticky top-0 z-[10] py-2 px-4 sm:px-8">

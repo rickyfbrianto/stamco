@@ -6,15 +6,16 @@ import Loader from '@/components/Loader';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { urlFor } from '@/sanity/lib/image';
-import { useBasketStore } from '@/store/store';
+import { useBasketStore } from '@/store/cartStore';
 import { SignInButton, useAuth } from '@clerk/nextjs';
-import { MoveLeft, ShoppingCart, Truck } from 'lucide-react';
+import { MoveLeft, RotateCw, ShoppingCart, Truck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Cart, Product } from '@/sanity.types';
+import { Separator } from './ui/separator';
 
 interface ItemsProps {
     items: {
@@ -29,12 +30,13 @@ interface ItemsProps {
 }
 
 function CartView() {
-    const { isSignedIn } = useAuth();
-    // const { user } = useUser();
     const [isClient, setIsClient] = useState(false);
-    const removeFromCart = useBasketStore((state) => state.removeFromCart);
+    const [openAlert, setOpenAlert] = useState(false);
+    const { isSignedIn } = useAuth();
+
+    const removeSelectedFromCart = useBasketStore((state) => state.removeSelectedFromCart);
+    const getCarts = useBasketStore((state) => state.getCarts);
     const items = useBasketStore((state) => state.items)
-    const clearBasket = useBasketStore((state) => state.clearBasket);
 
     const form = useForm<ItemsProps>({
         defaultValues: {
@@ -53,20 +55,17 @@ function CartView() {
     const hargaAllWatch = form.watch('hargaAll');
 
     useEffect(() => {
-        setIsClient(true)
-    }, []);
-
-    useEffect(() => {
         const tempItems = items.map((item, index) => {
             const product = item.product as unknown as Product
             return {
                 check: form.getValues(`items.${index}.check`),
-                id: product?._id,
+                id: item._id,
                 qty: item.quantity,
                 harga: product?.price ?? 0,
             }
         })
         form.reset({ ...form.getValues(), items: tempItems });
+        setIsClient(true)
     }, [JSON.stringify(items)]);
 
     useEffect(() => {
@@ -75,10 +74,7 @@ function CartView() {
         let harga = 0;
         itemWatch.map((item) => {
             if (item.check) {
-                const selected = items.find((group) => {
-                    const product = group.product as unknown as Product
-                    return product?._id === item.id
-                });
+                const selected = items.find((group) => group._id === item.id);
                 const product = selected?.product as unknown as Product
                 harga += (product?.price ?? 0) * (selected?.quantity ?? 0);
                 qtyCheck += selected?.quantity ?? 0;
@@ -107,10 +103,18 @@ function CartView() {
     };
 
     const removeSelectedItem = () => {
-        itemWatch
+        const temp = itemWatch
             .filter((item) => item.check)
-            .map((item) => item.id)
-            .forEach((selected: string) => removeFromCart(selected));
+            .map((item) => ({ delete: { id: item.id } }))
+            
+        removeSelectedFromCart(temp)
+        .then(()=>{
+            setOpenAlert(false) 
+            getCarts()
+            items.map((val, index) => {
+                form.setValue(`items.${index}.check`, false)
+            })   
+        })
     };
 
     return (
@@ -127,58 +131,58 @@ function CartView() {
             <div className="container mx-auto p-4 flex flex-col lg:flex-row gap-4 min-h-[50vh]">
                 <div className="flex flex-col gap-4 w-full font-open-sans">
                     {/* <div className="flex flex-col gap-y-4 flex-grow"> */}
-                    <div className="flex flex-col justify-center items-center xxs:flex-row xxs:justify-between rounded-t-2xl min-h-14 py-2 gap-2 bg-[--warna-primary] overflow-hidden px-4">
-                        <Controller
-                            name="checkAll"
-                            control={form.control}
-                            render={({ field: { value } }) => (
-                                <div className="flex items-center gap-x-6">
-                                    <div className="flex justify-center items-center">
-                                        <Checkbox id="checkAll" className="" checked={value} onCheckedChange={(value) => handleCheckAll(value as boolean)} />
-                                    </div>
+                    <div className="flex flex-col justify-center items-center xxs:flex-row xxs:justify-between rounded-t-2xl min-h-14 py-2 gap-2 bg-white overflow-hidden px-4 border">
+                        <Controller name="checkAll" control={form.control} render={({ field: { value } }) => (
+                            <div className="flex items-center ">
+                                <div className="flex justify-center items-center gap-x-6">
+                                    <Checkbox id="checkAll" checked={value} onCheckedChange={(value) => handleCheckAll(value as boolean)} />
                                     <label htmlFor="checkAll" className="font-bold">
                                         {value ? 'Unselect' : 'Select'} All
                                     </label>
                                 </div>
+                            </div>
+                        )}/>
+                        <div className="flex items-center h-full">
+                            <RotateCw onClick={getCarts} className='cursor-pointer ' />
+                            {itemWatch.some((item) => item.check) && <Separator orientation='vertical' className='h-[80%] mx-5'/>}
+                            {itemWatch.some((item) => item.check) && (
+                                <Dialog open={openAlert} onOpenChange={setOpenAlert}>
+                                    <DialogTrigger asChild>
+                                        <button className="font-bold">Remove</button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Delete item</DialogTitle>
+                                        </DialogHeader>
+                                        <DialogDescription>Are you sure you want to delete this selected item from your basket?</DialogDescription>
+                                        <DialogFooter>
+                                            <div className="flex justify-end w-full gap-2">
+                                                <Button type="button" variant={'destructive'} onClick={removeSelectedItem}>
+                                                    Delete
+                                                </Button>
+                                                <DialogClose asChild>
+                                                    <Button type="button">Cancel</Button>
+                                                </DialogClose>
+                                            </div>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
                             )}
-                        />
-                        {itemWatch.some((item) => item.check) && (
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <button className="font-bold">Remove</button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Delete item</DialogTitle>
-                                    </DialogHeader>
-                                    <DialogDescription>Are you sure you want to delete this selected item from your basket?</DialogDescription>
-                                    <DialogFooter>
-                                        <div className="flex justify-end w-full gap-2">
-                                            <Button type="button" variant={'destructive'} onClick={removeSelectedItem}>
-                                                Delete
-                                            </Button>
-                                            <DialogClose asChild>
-                                                <Button type="button">Cancel</Button>
-                                            </DialogClose>
-                                        </div>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
-                        )}
+                        </div>
                     </div>
 
                     {/* List item */}
                     {items.map((item, index) => {
                         const product = item.product as unknown as Product
                         return (
-                            <div key={product?._id || product.name} className="border flex flex-col overflow-hidden bg-white">
+                            <div key={product?._id || product.name} className="border flex flex-col overflow-hidden bg-white rounded-md">
                                 <div className="flex flex-col-reverse xxs:flex-row">
                                     <Controller name={`items.${index}.check`} control={form.control} render={({ field: { value, onChange } }) => (
-                                        <div className="flex min-w-[3rem] min-h-[2rem] justify-center items-center">
+                                        <div className="flex min-w-[3rem] min-h-[2rem] justify-center items-center bg-slate-50">
                                             <Checkbox checked={value} onCheckedChange={(e) => onChange(e)} />
                                         </div>
                                     )} />
-                                    <div className="flex-grow flex flex-col xs:flex-row xs:items-center justify-between transition-colors duration-500 p-2 pe-4 gap-x-4 gap-y-2">
+                                    <div className="flex-grow flex flex-col xs:flex-row xs:items-center justify-between transition-colors duration-500 p-4 gap-x-4 gap-y-2">
                                         <Link className="flex flex-col xs:flex-row cursor-pointer flex-1 gap-2 font-urbanist" href={`/product/${product?.slug?.current}`}>
                                             <div className="flex justify-center w-auto h-auto sm:w-24 sm:h-24 flex-shrink-0">{product?.image && <Image src={urlFor(product.image).url()} alt={product.name ?? 'Product image'} className="object-cover rounded select-none" width={100} height={100} />}</div>
                                             <div className="flex flex-col items-center xs:items-start min-w-[4rem]">
@@ -194,7 +198,7 @@ function CartView() {
                                         <AddToBasketCart item={item as unknown as Cart} />
                                     </div>
                                 </div>
-                                <div className="hidden xs:flex px-4 py-2 gap-4 bg-gradient-to-r from-white to-slate-100 border-t font-sans">
+                                <div className="hidden xs:flex px-4 py-2 gap-4 bg-slate-50 border-t font-sans">
                                     <Truck size={20} color="#2d4e3d" strokeWidth={1.5} />
                                     <span className="text-[.9rem] italic">Get your best price by checkout now!</span>
                                 </div>

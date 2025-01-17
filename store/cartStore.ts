@@ -1,74 +1,28 @@
 import { Cart, Product } from '@/sanity.types';
 import { client } from '@/sanity/lib/client';
-import { Item } from '@radix-ui/react-accordion';
-import { CloudLightning } from 'lucide-react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface BasketState {
     items: Cart[];
-    isChanged: boolean,
-    // addItemFromProduct: (product: Product, qty: number) => void;
-    addItem: (product: Product, user: string, quantity: number) => void;
-    removeItem: (productId: string) => void;
-    clearBasket: () => void;
-    getItemCount: (productId: string) => number;
-    getGroupedItems: () => Cart[];
-    refreshServerCart: (cart: Cart[]) => void;
-
-    // new
+    isCartChanged: boolean,
     getCarts: () => void,
     addCart: (product: Product, user: string, quantity: number) => void;
     minusCart: (id: string) => void
-    getCartCount: () => Promise<number>;
     updateIncQtyCart: (product: Product, user: string, quantity: number) => Promise<{success: boolean, msg:string}>;
     updateSetQtyCart: (id: string, qty: number) => void;
     removeFromCart: (id: string) => Promise<{success: boolean, msg: string}>;
-    tes: ()=> void;
+    removeSelectedFromCart: (val: { delete: { id: string}}[]) => Promise<{success: boolean, msg: string}>
 }
 
 const useBasketStore = create<BasketState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             items: [],
-            isChanged: false,
-            addItem: (product, user, quantity) =>
-                set((state) => {
-                    const existingItem = state.items.find((item) => item.product?._ref === product._id);
-                    let temp = null;
-                    if (existingItem) {
-                        temp = {
-                            items: state.items.map((item) => (item.product?._ref === product._id ? { ...item, quantity: item.quantity + quantity, user } : item)),
-                        };
-                    } else temp = { items: [...state.items, { product, quantity, user }] };
-                    return temp;
-            }),
-            removeItem: (productId) =>
-                set((state) => ({
-                    items: state.items.reduce((acc, item) => {
-                        if (item.product?._ref === productId) {
-                            if (item.quantity > 1) {
-                                acc.push({ ...item, quantity: item.quantity - 1 });
-                            }
-                        } else {
-                            acc.push(item);
-                        }
-                        return acc;
-                    }, [] as BasketItem[]),
-            })),
-            clearBasket: () => set({ items: [] }),
-            getItemCount: (productId) => {
-                const item = get().items.find((item) => item.product?._ref === productId);
-                return item ? item.quantity! : 0;
-                // return 1;
-            },
-            getGroupedItems: () => get().items,
-            refreshServerCart: (cart) => set(() => ({items: [...cart]})),
-            
-            // new
+            isCartChanged: false,
             getCarts: async () => {
                 const temp = await client.fetch('*[_type == "cart"]{..., product->} | order(_updatedAt desc)')
-                set(() => ({items: [...temp]}))
+                set(() => ({items: [...temp], isCartChanged: false}))
             },
             addCart: (product, user, quantity)=> set((state) => {
                 let temp = {}
@@ -76,15 +30,14 @@ const useBasketStore = create<BasketState>()(
                 const existingItem = state.items.find(item => _id == item._id)
                 
                 if(existingItem){
-                    console.log("sebelum", get().items)
                     temp = { 
                         items: [...state.items.map((item) => {
                             const temp = item?.product as unknown as Product
                             return temp._id === product._id ? { ...item, product, quantity: (item.quantity ?? 0) + quantity, user } : item
                         })],
+                        isCartChanged: true
                     }
                 } else {
-                    console.log('tidak ada')
                     client.createOrReplace({
                         _type: 'cart',
                         product: { _type:"reference", _ref: product._id },
@@ -95,18 +48,21 @@ const useBasketStore = create<BasketState>()(
                                 _id, product, quantity, user,
                                 _createdAt: new Date(),
                                 _type:"cart",
-                            }]
+                            }],
+                            isCartChanged: true
                         }
                     })
                 }
                 return temp
             }),
-            minusCart: (id: string) => {
+            minusCart: (id) => {
                 set(state => {
-                    return {items: [...state.items.map(item => item._id === id ? {...item, quantity: item.quantity! - 1}: item)]}
+                    return {
+                        items: [...state.items.map(item => item._id === id ? {...item, quantity: item.quantity! - 1}: item)],
+                        isCartChanged: true
+                    }
                 })
             },
-            getCartCount: async () => await client.fetch('count(*[_type == "cart"])'),
             updateIncQtyCart: async (product, user, quantity) => {
                 const _id = user + "-" + product._id
                 return new Promise((res, rej)=>{
@@ -130,24 +86,26 @@ const useBasketStore = create<BasketState>()(
                     })
                 })
             },
-            updateSetQtyCart: (id: string, qty: number) => {
+            updateSetQtyCart: (id, qty) => {
                 client.patch(id)
                     .set({quantity: qty})
                     .commit()
                     .then(() => console.log('sukses'))
-                    .catch((err) => console.error('sukses', err));
+                    .catch((err) => console.error('sukses', err))
+                set(()=> ({isCartChanged: false}))
             },
-            removeFromCart: async (id: string) => {
-                return new Promise((res, rej)=> {
-                    try {
-                        client.delete(id)
-                        res({success:true, msg: "ok"})
-                    } catch (error) {
-                        rej({success: false, msg: error})
-                    }
+            removeFromCart: (id) => {
+                return new Promise((res)=> {
+                    client.delete(id)
+                    res({success:true, msg: "Ok"})
                 })
             },
-            tes: () => console.log('tes')
+            removeSelectedFromCart: (val) => {
+                return new Promise( async (res)=>{
+                    await client.mutate(val)
+                    res({success: true, msg:"Ok"})
+                })
+            }
         }),
         {
             name: 'basket-store',

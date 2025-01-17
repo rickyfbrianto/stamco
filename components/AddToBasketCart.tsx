@@ -1,14 +1,13 @@
 'use client';
 
 import { Cart, Product } from '@/sanity.types';
-import { useBasketStore } from '@/store/store';
-import React, { memo, useEffect, useState } from 'react';
+import { useBasketStore } from '@/store/cartStore';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
-import { Router, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import { Button } from './ui/button';
 import { useAuth } from '@clerk/nextjs';
 import { debounce } from 'lodash';
-import { useRouter } from 'next/navigation';
 
 interface AddToBasketCartProps {
     item: Cart;
@@ -21,8 +20,9 @@ function AddToBasketCart({ item, disabled }: AddToBasketCartProps) {
     const product = item.product as unknown as Product
     const maxStock = product.stock;
     const { userId } = useAuth();
-    const router = useRouter()
 
+    const getCarts = useBasketStore((state) => state.getCarts);
+    const isCartChanged = useBasketStore((state) => state.isCartChanged);
     const addCart = useBasketStore((state) => state.addCart);
     const minusCart = useBasketStore((state) => state.minusCart);
     const updateSetQtyCart = useBasketStore((state) => state.updateSetQtyCart);
@@ -30,21 +30,27 @@ function AddToBasketCart({ item, disabled }: AddToBasketCartProps) {
 
     const handleDelete = () => {
         removeFromCart(item._id)
-            .then(async () => {
-                setOpenAlert(false)
-                router.refresh()
-            })
+        .then(() => {
+            setOpenAlert(false)
+            getCarts()
+        })
     }
 
-    const handleDebounceCart = React.useMemo(() => debounce((qty) => updateSetQtyCart(item._id, qty), 500), [])
+    const handleDebounceCart = useMemo(()=> {
+        return debounce((qty) => updateSetQtyCart(item._id, qty), 500)
+    }, [])
+    
+    useEffect(()=>{
+        if(isCartChanged) handleDebounceCart(item.quantity)
+            
+        return () => handleDebounceCart.cancel()
+    }, [isCartChanged, handleDebounceCart, item.quantity])
 
-    const handleAddToCart = async (product: Product) => {
-        if (userId) {
-            addCart(product, userId as string, 1);
-        }
-    }
-
-    useEffect(() => handleDebounceCart(item.quantity), [item.quantity])
+    // const handleDebounceCart = React.useMemo(() => {
+    //     return debounce((qty) => updateSetQtyCart(item._id, qty), 500)
+    // }, [])
+    
+    // useEffect(() => handleDebounceCart(item.quantity), [handleDebounceCart, item.quantity])
 
     useEffect(() => setIsClient(true), []);
 
@@ -62,7 +68,7 @@ function AddToBasketCart({ item, disabled }: AddToBasketCartProps) {
                 </button>
                 <span className="min-w-[2rem]  text-center font-semibold">{item.quantity}</span>
                 <button
-                    onClick={() => handleAddToCart(product)}
+                    onClick={() => addCart(product, userId as string, 1)}
                     disabled={disabled || maxStock == item.quantity}
                     className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-200 text-white
                     ${disabled || maxStock == item.quantity ? 'bg-gray-400 cursor-not-allowed' : 'bg-[--warna-green] hover:bg-[--warna-green]'}`}>

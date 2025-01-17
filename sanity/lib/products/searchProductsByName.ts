@@ -14,7 +14,6 @@ export const searchProductsByName = async (search: Partial<ProductFilterProps>) 
 
     if (filters.length > 0) query += ` && ${filters.join(' && ')}`;
     query += '] | order(name asc)';
-    console.log(query);
 
     const PRODUCT_SEARCH_QUERY = defineQuery(query);
 

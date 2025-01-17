@@ -13,18 +13,19 @@ export const cartType = defineType({
             type: "reference",
             description: "Reference of this Product",
             validation: Rule => Rule.required(),
-            // to:[{type:"product"}],
-            to: {type :"product"}
+            to: [{type :"product"}],
         }),
         defineField({
             name: "quantity",
             title: "Quantity",
             type: "number",
+            validation: Rule => Rule.required(),
         }),
         defineField({
             name: "user",
             title: "User",
             type: "string",
+            validation: Rule => Rule.required(),
         }),
     ],
     preview:{
