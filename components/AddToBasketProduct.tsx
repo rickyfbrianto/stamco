@@ -43,7 +43,7 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
             clerk.openSignIn();
         }
     }
-    
+
     useEffect(() => setIsClient(true), []);
 
     if (!isClient) return null;
@@ -66,9 +66,9 @@ function AddToBasketProduct({ product, disabled }: AddToBasketProps) {
                         <span className={`text-md font-bold`}>+</span>
                     </button>
                 </div>
-                <div className="flex items-center lg:w-full lg:justify-between text-gray-500 gap-x-1">
-                    <span className="text-[.9rem] font-urbanist">Sub total</span>
-                    <span className="text-[1rem] font-urbanist">${((product.price ?? 0) * value).toLocaleString('id-ID')}</span>
+                <div className="flex items-center lg:w-full lg:justify-between text-gray-500 gap-x-1 font-urbanist">
+                    <span className="text-[.9rem]">Sub total</span>
+                    <span className="text-[1rem]">${((product.price ?? 0) * value).toLocaleString('id-ID')}</span>
                 </div>
                 <div className="flex flex-row w-auto lg:flex-col lg:w-full gap-2">
                     <Button variant={'green'} disabled={loading} onClick={() => handleAddToCart(product)} className="w-full">

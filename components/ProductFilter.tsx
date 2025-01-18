@@ -28,7 +28,7 @@ function ProductFilter({ categories }: ProductFilterComponentProps) {
     return (
         <form onSubmit={formSubmit}>
             <div className="flex flex-col gap-2">
-                <Accordion type="multiple">
+                <Accordion type="multiple" value={['price', 'category']}>
                     <AccordionItem value="price">
                         <AccordionTrigger className="hover:no-underline font-bold">Price</AccordionTrigger>
                         <AccordionContent>

@@ -11,13 +11,12 @@ interface BasketState {
     minusCart: (id: string) => void
     updateIncQtyCart: (product: Product, user: string, quantity: number) => Promise<{success: boolean, msg:string}>;
     updateSetQtyCart: (id: string, qty: number) => void;
-    removeFromCart: (id: string) => Promise<{success: boolean, msg: string}>;
-    removeSelectedFromCart: (val: { delete: { id: string}}[]) => Promise<{success: boolean, msg: string}>
+    removeFromCart: (val: { delete: { id: string}}[]) => Promise<{success: boolean, msg: string}>
 }
 
 const useBasketStore = create<BasketState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             items: [],
             isCartChanged: false,
             getCarts: async () => {
@@ -70,17 +69,20 @@ const useBasketStore = create<BasketState>()(
                     .then((exist)=>{
                         if(exist){
                             client.patch(_id)
-                                .inc({quantity})
-                                .commit()
-                                .then(() => res({success:true, msg:"OK"}))
-                                .catch((err) => rej({success:false, msg:err}));
+                            .inc({quantity})
+                            .commit()
+                            .then(() => res({success:true, msg:"OK"}))
+                            .catch((err) => rej({success:false, msg:err}));
                         }else{
                             client.createOrReplace({
                                     _type: 'cart',
                                     product: { _type:"reference", _ref: product._id },
                                     _id, quantity, user,
                                 })
-                                .then(() => res({success:true, msg:"OK"}))
+                                .then(() => {
+                                    get().getCarts()
+                                    res({success:true, msg:"OK"})
+                                })
                                 .catch((err) => rej({success:false, msg:err}));
                         }
                     })
@@ -94,13 +96,7 @@ const useBasketStore = create<BasketState>()(
                     .catch((err) => console.error('sukses', err))
                 set(()=> ({isCartChanged: false}))
             },
-            removeFromCart: (id) => {
-                return new Promise((res)=> {
-                    client.delete(id)
-                    res({success:true, msg: "Ok"})
-                })
-            },
-            removeSelectedFromCart: (val) => {
+            removeFromCart: (val) => {
                 return new Promise( async (res)=>{
                     await client.mutate(val)
                     res({success: true, msg:"Ok"})

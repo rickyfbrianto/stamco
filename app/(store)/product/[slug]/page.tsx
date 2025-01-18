@@ -36,7 +36,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
                 <div className="flex flex-col md:flex-row gap-x-8 gap-y-10">
                     {/* section untuk gambar produk */}
                     <div className={`relative min-w-full md:min-w-[20rem] h-[20rem] max-h-[20rem] aspect-square overflow-hidden rounded-lg shadow-lg ${isOutOfStock ? "opacity-50" : ""}
-                    lg:sticky lg:top-[--tinggi11] lg:left-0`}>
+                    lg:sticky lg:top-[--tinggi11] lg:left-0 border`}>
                         {product.image && (
                             // <Image priority src={urlFor(product.image).url()} alt={product?.name ?? "Product Image"} width={300} height={300}
                             //     className='object-contain transition-transform duration-300 hover:scale-105' />
@@ -49,7 +49,6 @@ export default async function page({ params }: { params: Promise<{ slug: string 
                             </div>
                         )}
                     </div>
-
                     {/* section untuk deskripsi dan tambah keranjang */}
                     <div className="flex flex-col min-h-[70vh] w-full">
                         <div>

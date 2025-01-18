@@ -28,14 +28,8 @@ export default function Header({ categories }: { categories: ALL_CATEGORIES_QUER
     const searchParams = useSearchParams();
     const path = usePathname();
     const router = useRouter();
-    // const nextSearchParams = new URLSearchParams(searchParams.toString());
 
     const data = [{ id: '1', title: 'Product', link: '' }, ...Object.values(categories).map((v) => ({ id: v._id, title: v.title, link: v._id }))];
-
-    const handleCategory = (link: string) => {
-        setFilter({ category: link });
-        router.push(`/product${link ? `?category=${link}` : ''}`);
-    };
 
     const formSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,8 +38,11 @@ export default function Header({ categories }: { categories: ALL_CATEGORIES_QUER
     };
 
     useEffect(() => {
+        for (const [key, value] of searchParams) {
+            setFilter({ [key]: value })
+        }
         getCarts()
-    }, [])
+    }, [searchParams])
 
     useEffect(() => {
         const { query } = filter;
@@ -114,10 +111,7 @@ export default function Header({ categories }: { categories: ALL_CATEGORIES_QUER
                         </form>
                         <div className="hidden sm:flex p-1 gap-6 text-[.75rem] font-urbanist">
                             {data.map((v) => (
-                                <button className="font-semibold" key={v.title} onClick={() => handleCategory(v.link)}>
-                                    {v.title}
-                                </button>
-                                // <Link className="font-semibold" href={v.link} key={v.title}>{v.title}</Link>
+                                <Link className="font-semibold" href={`/product?category=${v.link}`} key={v.title}>{v.title}</Link>
                             ))}
                         </div>
                     </div>

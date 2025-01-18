@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Suspense } from 'react';
 import { getAllCategories } from '@/sanity/lib/products/getAllCategories';
+import Head from 'next/head';
 
 export const metadata: Metadata = {
     title: 'Stamco',
@@ -20,6 +21,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     return (
         <LayoutProvider>
             <html lang="en">
+                <Head>
+                    <link rel='icon' href='/icon.png' />
+                </Head>
                 <body className="bg-slate-100">
                     <Toaster />
                     <Suspense>

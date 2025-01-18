@@ -8,6 +8,7 @@ import { Trash } from 'lucide-react';
 import { Button } from './ui/button';
 import { useAuth } from '@clerk/nextjs';
 import { debounce } from 'lodash';
+import { toast } from 'sonner';
 
 interface AddToBasketCartProps {
     item: Cart;
@@ -29,27 +30,29 @@ function AddToBasketCart({ item, disabled }: AddToBasketCartProps) {
     const removeFromCart = useBasketStore((state) => state.removeFromCart);
 
     const handleDelete = () => {
-        removeFromCart(item._id)
-        .then(() => {
-            setOpenAlert(false)
-            getCarts()
-        })
+        const temp = [{ delete: { id: item._id } }]
+        removeFromCart(temp)
+            .then(() => {
+                setOpenAlert(false)
+                getCarts()
+                toast.success("Product deleted from cart")
+            })
     }
 
-    const handleDebounceCart = useMemo(()=> {
+    const handleDebounceCart = useMemo(() => {
         return debounce((qty) => updateSetQtyCart(item._id, qty), 500)
     }, [])
-    
-    useEffect(()=>{
-        if(isCartChanged) handleDebounceCart(item.quantity)
-            
+
+    useEffect(() => {
+        if (isCartChanged) handleDebounceCart(item.quantity)
+
         return () => handleDebounceCart.cancel()
     }, [isCartChanged, handleDebounceCart, item.quantity])
 
     // const handleDebounceCart = React.useMemo(() => {
     //     return debounce((qty) => updateSetQtyCart(item._id, qty), 500)
     // }, [])
-    
+
     // useEffect(() => handleDebounceCart(item.quantity), [handleDebounceCart, item.quantity])
 
     useEffect(() => setIsClient(true), []);

@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { urlFor } from '@/sanity/lib/image';
 import { useBasketStore } from '@/store/cartStore';
 import { SignInButton, useAuth } from '@clerk/nextjs';
-import { MoveLeft, RotateCw, ShoppingCart, Truck } from 'lucide-react';
+import { RotateCw, ShoppingCart, Truck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -16,6 +16,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Cart, Product } from '@/sanity.types';
 import { Separator } from './ui/separator';
+import { toast } from 'sonner';
+import imgNotFound from '@/public/cart_count.png';
 
 interface ItemsProps {
     items: {
@@ -34,7 +36,7 @@ function CartView() {
     const [openAlert, setOpenAlert] = useState(false);
     const { isSignedIn } = useAuth();
 
-    const removeSelectedFromCart = useBasketStore((state) => state.removeSelectedFromCart);
+    const removeFromCart = useBasketStore((state) => state.removeFromCart);
     const getCarts = useBasketStore((state) => state.getCarts);
     const items = useBasketStore((state) => state.items)
 
@@ -88,14 +90,7 @@ function CartView() {
 
     if (!isClient) return <Loader />;
 
-    if (items.length === 0) {
-        return (
-            <div className="container mx-auto p-4 flex flex-col items-center justify-center min-h-[50vh]">
-                <h1 className="text-2xl font-bold mb-6 text-gray-800">Your cart</h1>
-                <p className="text-gray-600 text-lg">Your basket is empty</p>
-            </div>
-        );
-    }
+    if (items.length === 0) return <NoFound />
 
     const handleCheckAll = (event: boolean) => {
         form.setValue('checkAll', event);
@@ -106,29 +101,32 @@ function CartView() {
         const temp = itemWatch
             .filter((item) => item.check)
             .map((item) => ({ delete: { id: item.id } }))
-            
-        removeSelectedFromCart(temp)
-        .then(()=>{
-            setOpenAlert(false) 
-            getCarts()
-            items.map((val, index) => {
-                form.setValue(`items.${index}.check`, false)
-            })   
-        })
+
+        removeFromCart(temp)
+            .then(() => {
+                setOpenAlert(false)
+                getCarts()
+                items.map((val, index) => {
+                    form.setValue(`items.${index}.check`, false)
+                })
+                toast.success(`${temp.length} Product deleted from cart`)
+            })
     };
 
     return (
         <div className="w-full">
-            <div className="flex items-center container h-[--tinggi6] flex-col justify-center xs:flex-row xs:justify-between mx-auto gap-4 border-b-[1px] px-4 ">
-                <div className="flex items-center gap-x-2">
-                    <ShoppingCart size={20} color="#2d4e3d" strokeWidth={1.5} />
-                    <h1 className="text-[1.2rem] font-bold">Your Cart</h1>
+            <div className="flex bg-gradient-to-b from-white to-slate-100 h-[--tinggi6] rounded-b-[75px] border-b font-urbanist">
+                <div className="flex items-center container flex-col justify-center xs:flex-row xs:justify-between mx-auto gap-4 px-4 text-gray-500">
+                    <div className="flex items-center gap-x-4">
+                        <h1 className="text-[1.2rem] font-bold">Your Cart</h1>
+                        <ShoppingCart size={20} strokeWidth={1.5} />
+                    </div>
+                    <span className="font-bold">
+                        {items.length} Product{items.length > 1 && 's'}
+                    </span>
                 </div>
-                <span className="font-bold">
-                    {items.length} Product{items.length > 1 && 's'}
-                </span>
             </div>
-            <div className="container mx-auto p-4 flex flex-col lg:flex-row gap-4 min-h-[50vh]">
+            <div className="container mx-auto p-4 py-6 flex flex-col lg:flex-row gap-4 min-h-[50vh]">
                 <div className="flex flex-col gap-4 w-full font-open-sans">
                     {/* <div className="flex flex-col gap-y-4 flex-grow"> */}
                     <div className="flex flex-col justify-center items-center xxs:flex-row xxs:justify-between rounded-t-2xl min-h-14 py-2 gap-2 bg-white overflow-hidden px-4 border">
@@ -141,10 +139,10 @@ function CartView() {
                                     </label>
                                 </div>
                             </div>
-                        )}/>
+                        )} />
                         <div className="flex items-center h-full">
                             <RotateCw onClick={getCarts} className='cursor-pointer ' />
-                            {itemWatch.some((item) => item.check) && <Separator orientation='vertical' className='h-[80%] mx-5'/>}
+                            {itemWatch.some((item) => item.check) && <Separator orientation='vertical' className='h-[80%] mx-5' />}
                             {itemWatch.some((item) => item.check) && (
                                 <Dialog open={openAlert} onOpenChange={setOpenAlert}>
                                     <DialogTrigger asChild>
@@ -205,18 +203,13 @@ function CartView() {
                             </div>
                         )
                     })}
-                    <Button className="self-start mt-2" variant={'outline'} asChild>
-                        <Link href={`/product`}>
-                            <MoveLeft /> Continue Shopping
-                        </Link>
-                    </Button>
                     {/* </div> */}
                 </div>
 
                 <div className="w-full lg:w-[25rem] lg:sticky lg:top-[--tinggi11] h-fit bg-white p-6 border rounded-lg order-first lg:order-last fixed bottom-0 left-0">
                     <h3 className="text-xl font-semibold">Order Summary</h3>
                     <div className="mt-4 space-y-2">
-                        <p className="flex flex-wrap justify-between">
+                        <p className="flex flex-wrap justify-between text-gray-500 font-urbanist">
                             <span>Items</span>
                             <span>{itemAllWatch}</span>
                         </p>
@@ -239,5 +232,16 @@ function CartView() {
         </div>
     );
 }
+
+const NoFound = () => (
+    <div className="flex flex-col gap-y-4 bg-white rounded-lg shadow-md w-full py-8">
+        <div className="flex flex-col justify-center container mx-auto bg-[--warna-orange] text-white rounded-lg py-14">
+            <Image alt="Product Not Found" sizes="(max-width: 768px) 50%, (max-width: 1200px) 100%, 100%" src={imgNotFound}
+                className="w-full max-h-[60vh] object-contain transition-transform duration-300 group-hover:scale-105"
+            />
+            <h1 className="text-xl md:text-3xl font-bold mb-2 text-center">Your cart is empty</h1>
+        </div>
+    </div>
+);
 
 export default CartView

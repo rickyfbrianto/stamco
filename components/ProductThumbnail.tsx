@@ -2,10 +2,14 @@ import { Product } from '@/sanity.types';
 import { urlFor } from '@/sanity/lib/image';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Skeleton } from "@/components/ui/skeleton"
 
 function ProductThumbnail({ product }: { product: Product }) {
+    const [isClient, setIsClient] = useState(false)
     const isOutOfStock = product.stock != null && product.stock <= 0;
+
+    useEffect(() => setIsClient(true), []);
 
     return (
         <Link
