@@ -234,12 +234,13 @@ function CartView() {
 }
 
 const NoFound = () => (
-    <div className="flex flex-col gap-y-4 bg-white rounded-lg shadow-md w-full py-8">
-        <div className="flex flex-col justify-center container mx-auto bg-[--warna-orange] text-white rounded-lg py-14">
+    <div className="flex flex-col gap-y-4 rounded-lg shadow-md w-full py-8 font-urbanist">
+        <div className="flex flex-col justify-center container mx-auto border rounded-lg py-14 bg-[--warna-vanilla]">
             <Image alt="Product Not Found" sizes="(max-width: 768px) 50%, (max-width: 1200px) 100%, 100%" src={imgNotFound}
                 className="w-full max-h-[60vh] object-contain transition-transform duration-300 group-hover:scale-105"
             />
             <h1 className="text-xl md:text-3xl font-bold mb-2 text-center">Your cart is empty</h1>
+            <p className="text-md md:text-xl mb-2 text-center">Browse your need <Link className='underline' href={'/product'}>now</Link></p>
         </div>
     </div>
 );

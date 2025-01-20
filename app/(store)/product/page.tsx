@@ -34,7 +34,7 @@ async function page({ searchParams }: { searchParams: Promise<ParamsProps> }) {
                 <div className="sticky top-[--tinggi10] self-start sm:top-[--tinggi12] flex flex-col bg-white rounded-lg min-w-[15rem] px-3 pb-4">
                     <ProductFilter categories={categories} />
                 </div>
-                <div className="flex flex-1 flex-col font-urbanist mt-4 sm:mt-0">
+                <div className="flex flex-1 flex-col font-urbanist mt-4 sm:mt-0 overflow-x-hidden">
                     {query && (
                         <div className="flex w-full py-2 px-4 bg-white rounded-lg mb-4">
                             <span className="text-gray-500 text-[1rem]">Search result for &quot;{query}&quot;</span>
@@ -43,7 +43,7 @@ async function page({ searchParams }: { searchParams: Promise<ParamsProps> }) {
                     {products.length == 0 ? (
                         <NoFound query={query} />
                     ) : (
-                        <div className="flex flex-col bg-white rounded-lg p-5">
+                        <div className="container mx-auto py-5">
                             <span className="font-bold text-xl">Product</span>
                             <ProductsView products={products} />
                         </div>
@@ -63,7 +63,7 @@ const NoFound = ({ query }: { query: string }) => (
                 src={imgNotFound}
                 alt="Product Not Found"
                 sizes="(max-width: 768px) 50%, (max-width: 1200px) 100%, 100%"
-                //  width={100} height={100}
+            //  width={100} height={100}
             />
         </div>
         <h1 className="text-xl md:text-3xl font-bold mb-2 text-center">No product found {query ? `for "${query}"` : ''}</h1>

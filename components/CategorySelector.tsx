@@ -1,7 +1,6 @@
 'use client'
 
 import { Category } from "@/sanity.types"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 import {
@@ -27,10 +26,8 @@ interface CategoryProps {
 
 export const CategorySelector = ({ categories }: CategoryProps) => {
     const [open, setOpen] = useState(false)
-    const [value, setValue] = useState("")
     const filter = useProductFilterStore(state => state.filter)
     const setFilter = useProductFilterStore(state => state.setFilter)
-    const router = useRouter()
 
     return (
         <Popover open={open} onOpenChange={setOpen}>

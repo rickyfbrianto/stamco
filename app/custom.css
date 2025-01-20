@@ -1,0 +1,21 @@
+.customSliderButton{
+    display: flex;
+    justify-content: center;    
+    align-items: center;
+    height: 3rem;
+    width: 3rem;
+    transition-property: color;
+    transition-duration: 400ms;
+    background-color: rgb(226 232 240 / .4);
+}
+.customSliderButton:hover{
+    background-color: rgb(51 65 85 / .4);
+}
+.customSliderButton:hover .customSliderIcon{
+    color: rgb(226 232 240);
+}
+.customSliderIcon{
+    transition-property: color;
+    transition-duration: 400ms;
+    color: rgb(51 65 85);
+}

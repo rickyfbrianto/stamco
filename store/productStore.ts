@@ -7,6 +7,7 @@ export interface ProductFilterProps {
     condition: string;
     query: string;
     category: string;
+    sort: "asc" | "desc" | string;
 };
 
 const ProductFilterData = {
@@ -15,6 +16,7 @@ const ProductFilterData = {
     condition: "",
     category: "",
     query: "",
+    sort: "asc"
 }
 
 interface ProductFilterStoreProps {

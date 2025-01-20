@@ -1,29 +1,148 @@
-import { Category, Product } from '@/sanity.types'
-import React from 'react'
-import ProductGrid from './ProductGrid'
-import { CategorySelector } from './ui/CategorySelector'
+'use client'
+
+import { Product } from '@/sanity.types'
+import React, { Suspense, useEffect, useState } from 'react'
+import ProductThumbnail from './ProductThumbnail'
+import { cn } from '@/lib/utils'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Skeleton } from './ui/skeleton'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import Loader from './Loader'
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/components/ui/command"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { Category } from "@/sanity.types"
+import { Check, ChevronsUpDown } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { useProductFilterStore } from "@/store/productStore"
+
+
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 interface ProductsViewProps {
+    title?: string;
     className?: string;
     products: Product[];
-    categories?: Category[] | undefined
+    display?: "grid" | "line";
+    start?: number;
+    length?: number;
+    showSortPrice?: boolean;
 }
 
-function ProductsView({ className, products, categories }: ProductsViewProps) {
+function ProductsView({ title = "", className, products, display, start = 0, length = 5, showSortPrice = false }: ProductsViewProps) {
+    const [isClient, setIsClient] = useState(false)
+    useEffect(() => setIsClient(true), []);
+
     return (
         <div className='flex flex-col'>
-            {/* categories */}
-            {categories && categories.length > 0 && (
-                <div className='w-full sm:w-[200px]'>
-                    <CategorySelector categories={categories} />
-                </div>
-            )}
-
-            {/* Products */}
-            <div className='flex-1'>
-                <ProductGrid products={products} className={className} />
+            <div className="flex justify-between items-center">
+                <span className='text-xl '>{title}</span>
+                {showSortPrice &&
+                    <ProductSortPrice />
+                }
             </div>
+            {(display == "grid") ?
+                <div className={cn(`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 mt-4`, className)}>
+                    {products.map(product => (
+                        <AnimatePresence key={product._id}>
+                            <motion.div layout initial={{ opacity: 0.2, translateY: "100px" }} animate={{ opacity: 1, translateY: "0px" }} exit={{ opacity: 0, translateY: "100px" }} className="">
+                                <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
+                                    <ProductThumbnail product={product} key={product._id} />
+                                </Suspense>
+                            </motion.div>
+                        </AnimatePresence>
+                    ))}
+                </div>
+                : <div className={cn(`flex gap-4 mt-4`, className)}>
+                    {!isClient
+                        ? <Loader />
+                        : <Swiper slidesPerView={1} spaceBetween={30} className="mySwiper"
+                            navigation={true} pagination={{ clickable: true }} modules={[Pagination]}
+                            breakpoints={{
+                                768: { slidesPerView: 2 },
+                                1024: { slidesPerView: 3 },
+                                1280: { slidesPerView: 4 },
+                                1536: { slidesPerView: 5 },
+                            }}>
+                            {products.slice(start, length).map((product, index) => (
+                                <SwiperSlide key={product._id} virtualIndex={index}>
+                                    <div className="flex-1">
+                                        <ProductThumbnail product={product} key={product._id} />
+                                    </div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    }
+                </div>
+            }
         </div>
+    )
+}
+
+const ProductSortPrice = () => {
+    const [open, setOpen] = useState(false)
+    const filter = useProductFilterStore(state => state.filter)
+    const setFilter = useProductFilterStore(state => state.setFilter)
+
+    const sort = [
+        { id: "asc", title: "Price to Low" },
+        { id: "desc", title: "Price to High" },
+    ]
+
+    return (
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+                <Button variant="outline" role="combobox" aria-expanded={open} className="self-start">
+                    {filter.sort
+                        ? sort.find((val) => val.id === filter.sort)?.title
+                        : "Filter category"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0">
+                <Command>
+                    <CommandEmpty>No Category Found.</CommandEmpty>
+                    <CommandInput placeholder="Search Category..." className="h-9"
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                const selected = sort.find(val => val.title?.toLowerCase().includes(e.currentTarget.value.toLowerCase()))
+                                if (selected?.title) {
+                                    setFilter({ sort: selected.title })
+                                    setOpen(false)
+                                }
+                            }
+                        }} />
+                    <CommandList>
+                        <CommandEmpty>No category found.</CommandEmpty>
+                        <CommandGroup>
+                            {sort.map((val) => (
+                                <CommandItem key={val.id} value={val.title} onSelect={() => {
+                                    setFilter({ sort: filter.sort === val.id ? "" : val.id })
+                                    setOpen(false)
+                                }}>
+                                    {val.title}
+                                    <Check className={cn("ml-auto h-4 w-4", filter.sort === val.id ? "opacity-100" : "opacity-0")} />
+                                </CommandItem>
+                            ))}
+                        </CommandGroup>
+                    </CommandList>
+                </Command>
+            </PopoverContent>
+        </Popover>
     )
 }
 

@@ -5,8 +5,8 @@ import React from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { CategorySelector } from '@/components/ui/CategorySelector';
 import { Category } from '@/sanity.types';
+import { CategorySelector } from './CategorySelector';
 
 interface ProductFilterComponentProps {
     categories?: Category[];
