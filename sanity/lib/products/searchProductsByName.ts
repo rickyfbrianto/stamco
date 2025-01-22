@@ -3,7 +3,7 @@ import { sanityFetch } from '../live';
 import { ProductFilterProps } from '@/store/productStore';
 
 export const searchProductsByName = async (search: Partial<ProductFilterProps>) => {
-    const { query: name, minPrice, maxPrice, category } = search;
+    const { query: name, minPrice, maxPrice, category, sort = "asc" } = search;
 
     const filters = [];
     let query = '*[_type == "product"';
@@ -13,7 +13,7 @@ export const searchProductsByName = async (search: Partial<ProductFilterProps>) 
     if (category) filters.push(`$category in categories[]._ref`);
 
     if (filters.length > 0) query += ` && ${filters.join(' && ')}`;
-    query += '] | order(name asc)';
+    query += `] | order(price ${sort}) `;
 
     const PRODUCT_SEARCH_QUERY = defineQuery(query);
 

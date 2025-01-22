@@ -43,7 +43,7 @@ export default async function page() {
                 </div>
             </div>
 
-            <div className="container flex flex-col mx-auto mt-14 pt-5 h-[50vh] font-urbanist">
+            <div className="container flex flex-col mx-auto mt-14 pt-5 font-urbanist">
                 <div className="flex mb-4">
                     <span className='text-xl '>Our Category</span>
                 </div>
@@ -62,7 +62,29 @@ export default async function page() {
                 </div>
             </div>
 
-            <div className="container mx-auto py-5 my-20 font-urbanist">
+            <div className="container flex flex-wrap justify-between mx-auto mt-14 font-urbanist p-4 gap-4 bg-white rounded-lg">
+                <div className="flex flex-col flex-1 gap-4 items-stretch h-full">
+                    <div className="">
+                        <span className='text-xl '>Top Up</span>
+                    </div>
+                    <div className="flex gap-4">
+                        <div className="flex flex-1 border p-4 bg-gray-300 rounded-lg">da</div>
+                    </div>
+                </div>
+                <div className="flex flex-col flex-1 gap-4 items-stretch h-full">
+                    <div className="">
+                        <span className='text-xl '>Kategori Pilihan</span>
+                    </div>
+                    <div className="flex gap-4 flex-wrap">
+                        <div className="flex flex-1 border p-4 bg-gray-300 rounded-lg">da</div>
+                        <div className="flex flex-1 border p-4 bg-gray-300 rounded-lg">da</div>
+                        <div className="flex flex-1 border p-4 bg-gray-300 rounded-lg">da</div>
+                        <div className="flex flex-1 border p-4 bg-gray-300 rounded-lg">da</div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="container mx-auto mt-14 font-urbanist">
                 <span className='text-xl'></span>
                 <ProductsView title='Featured Products' showSortPrice={true} products={products} display='line' length={6} />
             </div>

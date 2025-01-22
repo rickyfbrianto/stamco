@@ -21,9 +21,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     return (
         <LayoutProvider>
             <html lang="en">
-                <Head>
-                    <link rel='icon' href='/icon.png' />
-                </Head>
+                <link rel='icon' href='/icon.png' />
+
                 <body className="bg-slate-100">
                     <Toaster />
                     <Suspense>

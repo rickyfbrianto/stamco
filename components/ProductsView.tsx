@@ -32,6 +32,7 @@ import { useProductFilterStore } from "@/store/productStore"
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import { usePathname, useRouter } from 'next/navigation'
 
 interface ProductsViewProps {
     title?: string;
@@ -97,11 +98,19 @@ const ProductSortPrice = () => {
     const [open, setOpen] = useState(false)
     const filter = useProductFilterStore(state => state.filter)
     const setFilter = useProductFilterStore(state => state.setFilter)
+    const generateSearchParams = useProductFilterStore(state => state.generateSearchParams)
+    const router = useRouter();
+    const path = usePathname();
 
     const sort = [
-        { id: "asc", title: "Price to Low" },
-        { id: "desc", title: "Price to High" },
+        { id: "asc", title: "Price Low to High" },
+        { id: "desc", title: "Price High to Low" },
     ]
+
+    const handleSelect = () => {
+        const temp = generateSearchParams()
+        router.push(path + '?' + temp);
+    }
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -121,8 +130,9 @@ const ProductSortPrice = () => {
                             if (e.key === 'Enter') {
                                 const selected = sort.find(val => val.title?.toLowerCase().includes(e.currentTarget.value.toLowerCase()))
                                 if (selected?.title) {
-                                    setFilter({ sort: selected.title })
+                                    setFilter({ sort: selected.id })
                                     setOpen(false)
+                                    handleSelect()
                                 }
                             }
                         }} />
@@ -133,6 +143,7 @@ const ProductSortPrice = () => {
                                 <CommandItem key={val.id} value={val.title} onSelect={() => {
                                     setFilter({ sort: filter.sort === val.id ? "" : val.id })
                                     setOpen(false)
+                                    handleSelect()
                                 }}>
                                     {val.title}
                                     <Check className={cn("ml-auto h-4 w-4", filter.sort === val.id ? "opacity-100" : "opacity-0")} />
