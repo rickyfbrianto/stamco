@@ -44,7 +44,7 @@ interface ProductsViewProps {
     showSortPrice?: boolean;
 }
 
-function ProductsView({ title = "", className, products, display, start = 0, length = 5, showSortPrice = false }: ProductsViewProps) {
+function ProductsView({ title = "", className, products, display = 'grid', start = 0, length = 5, showSortPrice = false }: ProductsViewProps) {
     const [isClient, setIsClient] = useState(false)
     useEffect(() => setIsClient(true), []);
 
@@ -68,20 +68,24 @@ function ProductsView({ title = "", className, products, display, start = 0, len
                         </AnimatePresence>
                     ))}
                 </div>
-                : <div className={cn(`flex gap-4 mt-4`, className)}>
+                : <div className={cn(`flex flex-1 gap-4 mt-4`, className)}>
                     {!isClient
                         ? <Loader />
-                        : <Swiper slidesPerView={1} spaceBetween={30} className="mySwiper"
-                            navigation={true} pagination={{ clickable: true }} modules={[Pagination]}
+                        :
+                        // <div className="flex-1">
+                        //     <ProductThumbnail product={product} key={product._id} />
+                        // </div>
+                        <Swiper slidesPerView={1} spaceBetween={30} className="mySwiper"
+                            navigation={true} pagination={{ clickable: true }} modules={[Pagination, Navigation]}
                             breakpoints={{
-                                768: { slidesPerView: 2 },
-                                1024: { slidesPerView: 3 },
-                                1280: { slidesPerView: 4 },
-                                1536: { slidesPerView: 5 },
+                                768: { slidesPerView: length ?? 2 },
+                                1024: { slidesPerView: length ?? 3 },
+                                1280: { slidesPerView: length ?? 4 },
+                                1536: { slidesPerView: length ?? 5 },
                             }}>
                             {products.slice(start, length).map((product, index) => (
                                 <SwiperSlide key={product._id} virtualIndex={index}>
-                                    <div className="flex-1">
+                                    <div className="">
                                         <ProductThumbnail product={product} key={product._id} />
                                     </div>
                                 </SwiperSlide>
@@ -118,14 +122,14 @@ const ProductSortPrice = () => {
                 <Button variant="outline" role="combobox" aria-expanded={open} className="self-start">
                     {filter.sort
                         ? sort.find((val) => val.id === filter.sort)?.title
-                        : "Filter category"}
+                        : "Filter Price"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0">
                 <Command>
                     <CommandEmpty>No Category Found.</CommandEmpty>
-                    <CommandInput placeholder="Search Category..." className="h-9"
+                    <CommandInput placeholder="Search Sort..." className="h-9"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                                 const selected = sort.find(val => val.title?.toLowerCase().includes(e.currentTarget.value.toLowerCase()))

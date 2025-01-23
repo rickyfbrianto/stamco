@@ -122,6 +122,17 @@ export type Category = {
     title?: string;
     slug?: Slug;
     description?: string;
+    image?: {
+        asset?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
+    };
 };
 
 export type Cart = {
@@ -295,9 +306,11 @@ export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/cart/getAllCarts.ts
 // Variable: ALL_CARTS_QUERY
-// Query: *[_type == "cart"]{        ...,        product->{...}    } | order(product.name asc)
+// Query: *[_type == "cart"]{        _id, quantity, user, ...,         product->{...}    } | order(product.name asc)
 export type ALL_CARTS_QUERYResult = Array<{
     _id: string;
+    quantity?: number;
+    user?: string;
     _type: 'cart';
     _createdAt: string;
     _updatedAt: string;
@@ -356,8 +369,6 @@ export type ALL_CARTS_QUERYResult = Array<{
         };
         featured?: boolean;
     } | null;
-    quantity?: number;
-    user?: string;
 }>;
 
 // Source: ./sanity/lib/products/getAllCategories.ts
@@ -372,6 +383,17 @@ export type ALL_CATEGORIES_QUERYResult = Array<{
     title?: string;
     slug?: Slug;
     description?: string;
+    image?: {
+        asset?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
+    };
 }>;
 
 // Source: ./sanity/lib/products/getAllFeaturedProducts.ts
@@ -490,7 +512,7 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
     featured?: boolean;
 }>;
 
-// Source: ./sanity/lib/products/getProductBySlug.ts
+// Source: ./sanity/lib/products/GetProductBySlug.ts
 // Variable: PRODUCTS_BY_SLUG
 // Query: *[_type == "product" && slug.current == $slug]{            ...,             categories[]->{                title, _id            },            seller->{ name, image}        } | order(name asc)[0]
 export type PRODUCTS_BY_SLUGResult = {
@@ -698,7 +720,7 @@ export type ACTIVE_SALE_BY_COUPON_CODEResult = {
 import '@sanity/client';
 declare module '@sanity/client' {
     interface SanityQueries {
-        '*[_type == "cart"]{\n        ...,\n        product->{...}\n    } | order(product.name asc)': ALL_CARTS_QUERYResult;
+        '*[_type == "cart"]{\n        _id, quantity, user, ..., \n        product->{...}\n    } | order(product.name asc)': ALL_CARTS_QUERYResult;
         '*[_type == "category"] | order(name asc)': ALL_CATEGORIES_QUERYResult;
         '*[_type == "product" && featured == true] | order(name asc)': ALL_FEATURE_PRODUCTS_QUERYResult;
         '*[_type == "product"] | order(name asc)': ALL_PRODUCTS_QUERYResult;

@@ -44,7 +44,7 @@ async function page({ searchParams }: { searchParams: Promise<ParamsProps> }) {
                         <NoFound query={query} />
                     ) : (
                         <div className="container mx-auto p-5 bg-white rounded-lg">
-                            <ProductsView products={products} title='Product' display='grid' showSortPrice={true} />
+                            <ProductsView products={products} display='line' length={2} title='Product' showSortPrice={true} />
                         </div>
                     )}
                 </div>

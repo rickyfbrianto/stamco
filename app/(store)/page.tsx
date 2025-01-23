@@ -13,7 +13,11 @@ import Img4 from '@/public/pic4.jpg'
 import ImageSlider from '@/components/ImageSlider'
 import { Separator } from '@/components/ui/separator'
 import { Truck } from 'lucide-react'
+import { FaUserAstronaut } from "react-icons/fa";
 import { FaFreeCodeCamp } from 'react-icons/fa'
+import Link from 'next/link'
+import { urlFor } from '@/sanity/lib/image'
+import { Category } from '@/sanity.types'
 
 export default async function page() {
     const products = await getAllProducts()
@@ -22,71 +26,54 @@ export default async function page() {
     const ImagesList = [Img1, Img2, Img3, Img4]
 
     return (
-        <div className='flex flex-col relative'>
-            {/* <BannerHome /> */}
+        <div className='flex flex-col pb-20'>
             <div className="relative">
                 <ImageSlider images={ImagesList} />
                 <div className="flex absolute items-center left-[50%] translate-x-[-50%] bottom-[-3rem] h-[6rem] bg-slate-200 px-10 py-2 rounded-lg gap-x-10 font-urbanist">
-                    <div className="flex flex-col text-gray-500 items-center gap-1">
+                    <div className="flex flex-col items-center text-gray-500 gap-1">
                         <span>24 jam</span>
                         <Truck size={16} />
                     </div>
                     <Separator orientation='vertical' className='bg-slate-400 h-[70%]' />
-                    <div className="flex flex-col text-gray-500">
-                        <span>24 jam</span>
+                    <div className="flex flex-col items-center text-gray-500 gap-1">
+                        <span>Cheapest Price</span>
                         <FaFreeCodeCamp />
                     </div>
                     <Separator orientation='vertical' className='bg-slate-400 h-[70%]' />
-                    <div className="flex flex-col text-gray-500">
-                        <span>24 jam</span>
+                    <div className="flex flex-col items-center text-gray-500 gap-1">
+                        <span>Good Looking Admin</span>
+                        <FaUserAstronaut />
                     </div>
                 </div>
             </div>
 
-            <div className="container flex flex-col mx-auto mt-14 pt-5 font-urbanist">
-                <div className="flex mb-4">
-                    <span className='text-xl '>Our Category</span>
-                </div>
-                <div className="grid grid-cols-12 grid-rows-8 gap-4 items-stretch h-full">
-                    <div className="relative flex border col-start-1 col-end-7 row-start-1 row-end-9">
-                        <div className="flex h-full">
-                            <Image src={Img1} className='rounded-lg' alt="Category" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
-                        </div>
-                        <span className='absolute left-[50%] translate-x-[-50%] bottom-[20px] p-2 bg-white rounded-lg'>Sepatu</span>
-                    </div>
-                    <div className="flex border col-start-7 col-end-10 row-start-1 row-end-5 p-4 bg-gray-300 rounded-lg">da</div>
-                    <div className="flex border col-start-10 col-end-13 row-start-1 row-end-5 p-4 bg-gray-300 rounded-lg">da</div>
-                    <div className="flex border col-start-7 col-end-9 row-start-5 row-end-9 p-4 bg-gray-300 rounded-lg">ea</div>
-                    <div className="flex border col-start-9 col-end-11 row-start-5 row-end-9 p-4 bg-gray-300 rounded-lg">ea</div>
-                    <div className="flex border col-start-11 col-end-13 row-start-5 row-end-9 p-4 bg-gray-300 rounded-lg">ea</div>
-                </div>
-            </div>
-
-            <div className="container flex flex-wrap justify-between mx-auto mt-14 font-urbanist p-4 gap-4 bg-white rounded-lg">
-                <div className="flex flex-col flex-1 gap-4 items-stretch h-full">
-                    <div className="">
-                        <span className='text-xl '>Top Up</span>
-                    </div>
-                    <div className="flex gap-4">
-                        <div className="flex flex-1 border p-4 bg-gray-300 rounded-lg">da</div>
+            <div className="container flex flex-col sm:flex-row flex-wrap mx-auto mt-20 font-urbanist gap-5 rounded-lg h-[34rem] sm:h-[24rem] px-4">
+                <div className="flex flex-col flex-1 gap-4">
+                    <span className='text-xl font-bold'>Promo</span>
+                    <div className="relative flex-1">
+                        <Banner />
+                        {/* <div className="relative w-full h-full">
+                        </div> */}
                     </div>
                 </div>
-                <div className="flex flex-col flex-1 gap-4 items-stretch h-full">
-                    <div className="">
-                        <span className='text-xl '>Kategori Pilihan</span>
-                    </div>
-                    <div className="flex gap-4 flex-wrap">
-                        <div className="flex flex-1 border p-4 bg-gray-300 rounded-lg">da</div>
-                        <div className="flex flex-1 border p-4 bg-gray-300 rounded-lg">da</div>
-                        <div className="flex flex-1 border p-4 bg-gray-300 rounded-lg">da</div>
-                        <div className="flex flex-1 border p-4 bg-gray-300 rounded-lg">da</div>
+                <div className="flex flex-col flex-1 gap-4">
+                    <span className='text-xl font-bold'>Kategori Pilihan</span>
+                    <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {categories.slice(0, 4).map((cat: Category) => (
+                            <Link key={cat._id} className="flex flex-col bg-white rounded-lg" href={`/product?category=${cat._id}`}>
+                                <div className="relative w-full h-full p-2">
+                                    {cat.image && <Image src={urlFor(cat.image).url()} fill className="object-contain transition-transform duration-250 hover:scale-125 hover:rotate-[20deg] bg-transparent" alt={cat.title || 'Product Image'} />}
+                                </div>
+                                <span className='m-2 text-center text-sm text-gray-500 font-bold'>{cat.title}</span>
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </div>
 
-            <div className="container mx-auto mt-14 font-urbanist">
+            <div className="container mx-auto mt-14 font-urbanist px-4">
                 <span className='text-xl'></span>
-                <ProductsView title='Featured Products' showSortPrice={true} products={products} display='line' length={6} />
+                <ProductsView title='Featured Products' showSortPrice={true} products={products} display='line' length={4} />
             </div>
         </div>
     )

@@ -128,7 +128,7 @@ function CartView() {
             </div>
             <div className="container mx-auto p-4 py-6 flex flex-col lg:flex-row gap-4 min-h-[50vh]">
                 <div className="flex flex-col gap-4 w-full font-open-sans">
-                    {/* <div className="flex flex-col gap-y-4 flex-grow"> */}
+
                     <div className="flex flex-col justify-center items-center xxs:flex-row xxs:justify-between rounded-t-2xl min-h-14 py-2 gap-2 bg-white overflow-hidden px-4 border">
                         <Controller name="checkAll" control={form.control} render={({ field: { value } }) => (
                             <div className="flex items-center ">
@@ -141,7 +141,7 @@ function CartView() {
                             </div>
                         )} />
                         <div className="flex items-center h-full">
-                            <RotateCw onClick={getCarts} className='cursor-pointer ' />
+                            <RotateCw onClick={getCarts} size={18} className='cursor-pointer ' />
                             {itemWatch.some((item) => item.check) && <Separator orientation='vertical' className='h-[80%] mx-5' />}
                             {itemWatch.some((item) => item.check) && (
                                 <Dialog open={openAlert} onOpenChange={setOpenAlert}>

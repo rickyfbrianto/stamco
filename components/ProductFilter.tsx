@@ -17,12 +17,19 @@ function ProductFilter({ categories }: ProductFilterComponentProps) {
     const path = usePathname();
     const filter = useProductFilterStore((state) => state.filter);
     const setFilter = useProductFilterStore((state) => state.setFilter);
+    const clearFilter = useProductFilterStore((state) => state.clearFilter);
     const generateSearchParams = useProductFilterStore((state) => state.generateSearchParams);
 
     const formSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const temp = generateSearchParams();
-        router.push(path + '?' + temp);
+        router.replace(path + '?' + temp);
+    };
+
+    const formReset = (e: React.FormEvent) => {
+        clearFilter()
+        const temp = generateSearchParams();
+        router.replace(path + '?' + temp);
     };
 
     return (
@@ -53,9 +60,14 @@ function ProductFilter({ categories }: ProductFilterComponentProps) {
                     )}
                 </Accordion>
                 {/* <Button variant={'warning'} onClick={formSubmit}>Filter</Button> */}
-                <Button variant={'warning'} type="submit">
-                    Filter
-                </Button>
+                <div className="flex flex-col md:flex-row gap-2">
+                    <Button variant={'destructive'} className='flex-1 font-urbanist' type="button" onClick={formReset}>
+                        Reset
+                    </Button>
+                    <Button variant={'primary'} className='flex-1 font-urbanist' type="submit">
+                        Filter
+                    </Button>
+                </div>
             </div>
         </form>
     );

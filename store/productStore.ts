@@ -16,7 +16,7 @@ const ProductFilterData = {
     condition: "",
     category: "",
     query: "",
-    sort: "asc"
+    sort: ""
 }
 
 interface ProductFilterStoreProps {

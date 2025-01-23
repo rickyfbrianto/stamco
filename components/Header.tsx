@@ -37,12 +37,12 @@ export default function Header({ categories }: { categories: ALL_CATEGORIES_QUER
         router.push(path + '?' + temp);
     };
 
-    useEffect(() => {
-        for (const [key, value] of searchParams) {
-            setFilter({ [key]: value })
-        }
-        getCarts()
-    }, [searchParams])
+    // useEffect(() => {
+    //     for (const [key, value] of searchParams) {
+    //         setFilter({ [key]: value })
+    //     }
+    //     getCarts()
+    // }, [searchParams])
 
     useEffect(() => {
         const { query } = filter;
@@ -50,7 +50,14 @@ export default function Header({ categories }: { categories: ALL_CATEGORIES_QUER
             clearFilter();
             router.replace(`${path}/?${generateSearchParams()}`);
         }
-        setFilter({ query });
+        // setFilter({ query });
+        else {
+            for (const [key, value] of searchParams) {
+                setFilter({ [key]: value })
+            }
+            router.replace(`${path}/?${generateSearchParams()}`);
+        }
+        getCarts()
     }, [path, searchParams]);
 
     useEffect(() => setIsClient(true), []);
