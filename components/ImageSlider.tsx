@@ -34,7 +34,6 @@ function ImageSlider({ images }: { images: StaticImageData[] }) {
 
     return (
         <div className='relative flex flex-col w-full h-[70vh] select-none'>
-            <span>index : {imageIndex}</span>
             <Image className='w-full object-cover' src={images[imageIndex]} alt={`Slide ${imageIndex}`} fill />
             <div className="flex absolute left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] px-20 py-6 bg-white/[.5] font-urbanist">
                 Expand your style

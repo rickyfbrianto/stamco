@@ -11,9 +11,16 @@ import React from 'react'
 
 import 'react-tabs/style/react-tabs.css';
 import TabSeller from './tab'
-import { Seller } from '@/sanity.types'
+import { Category, Product, Seller } from '@/sanity.types'
+import { searchProductsByFilter } from '@/sanity/lib/products/searchProductsByFilter'
+import { searchCategoryByFilter } from '@/sanity/lib/products/searchCategoryByFilter'
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+interface SellerPageProps {
+    params: Promise<{ slug: string }>;
+    searchParams: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params, searchParams }: SellerPageProps) {
     const { slug } = await params
     const seller = await GetSellerByName(slug)
 
@@ -23,9 +30,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
 }
 
-async function page({ params }: { params: Promise<{ slug: string }> }) {
+async function page({ params, searchParams }: SellerPageProps) {
     const { slug } = await params
+    const searchParam = await searchParams;
     const seller = await GetSellerByName(slug)
+    const products = await searchProductsByFilter({ ...searchParam, seller: seller?._id })
+    const allCategory = await searchCategoryByFilter({ seller: seller?._id })
+
+    const categories = await allCategory.reduce((acc: Category[], item: Category) => {
+        if (!acc.some(obj => obj._id === item._id)) acc.push(item)
+        return acc
+    }, [])
 
     if (!seller) return notFound()
 
@@ -34,7 +49,11 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
             <div className="flex flex-col gap-y-5">
                 <div className="flex flex-col lg:flex-row lg:items-center border rounded-xl overflow-hidden bg-white gap-4 p-4">
                     <div className="flex flex-col sm:flex-row w-full gap-x-5">
-                        {seller.image && <Image className='w-[150px] h-[150px] rounded-2xl' height={150} width={150} src={urlFor(seller.image).url()} alt='Seller Image' />}
+                        {seller.image &&
+                            <div className="relative min-w-[10rem] h-[10rem]">
+                                <Image className='object-cover border rounded-2xl w-full h-full' fill src={urlFor(seller.image).url()} alt='Seller Image' />
+                            </div>
+                        }
                         <div className="flex min-h-max w-full flex-wrap justify-between items-center md:flex-col md:justify-start md:items-start gap-2">
                             <div className="flex flex-col">
                                 <h2 className="text-[1.5rem] font-bold">{seller.name}</h2>
@@ -75,7 +94,14 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
                     </div>
                 </div>
 
-                <TabSeller seller={seller as unknown as Seller} />
+                {products.length > 0 ?
+                    <TabSeller seller={seller as unknown as Seller} products={products} categories={categories} />
+                    : <span>Mengambil data seller</span>
+                }
+
+                {/* <div className="flex bg-white p-4 rounded-xl">
+                    Testimony
+                </div> */}
             </div>
         </div>
     )

@@ -61,13 +61,13 @@ export const sellerType = defineType({
             title: "Description",
             type: "text",
         }),
-        defineField({
-            name: 'products',
-            title: 'Products',
-            type: 'array',
-            of: [{ type: 'reference', to: { type: 'product' } }],
-            description: 'List of products sold by this seller',
-        }),
+        // defineField({
+        //     name: 'products',
+        //     title: 'Products',
+        //     type: 'array',
+        //     of: [{ type: 'reference', to: { type: 'product' } }],
+        //     description: 'List of products sold by this seller',
+        // }),
     ],
     preview: {
         select: {

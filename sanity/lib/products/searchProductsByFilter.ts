@@ -2,8 +2,8 @@ import { defineQuery } from 'next-sanity';
 import { sanityFetch } from '../live';
 import { ProductFilterProps } from '@/store/productStore';
 
-export const searchProductsByName = async (search: Partial<ProductFilterProps>) => {
-    const { query: name, minPrice, maxPrice, category, sort = "asc" } = search;
+export const searchProductsByFilter = async (search: Partial<ProductFilterProps>) => {
+    const { query: name, minPrice, maxPrice, category, sort = "asc", featured, seller } = search;
 
     const filters = [];
     let query = '*[_type == "product"';
@@ -11,6 +11,8 @@ export const searchProductsByName = async (search: Partial<ProductFilterProps>) 
     if (minPrice) filters.push(`$minPrice <= price`);
     if (maxPrice) filters.push(`$maxPrice >= price`);
     if (category) filters.push(`$category in categories[]._ref`);
+    if (featured) filters.push(`featured == $featured`);
+    if (seller) filters.push(`seller._ref == $seller`);
 
     if (filters.length > 0) query += ` && ${filters.join(' && ')}`;
     query += `] | order(price ${sort}) `;
@@ -25,6 +27,8 @@ export const searchProductsByName = async (search: Partial<ProductFilterProps>) 
                 minPrice: Number(minPrice),
                 maxPrice: Number(maxPrice),
                 category: `${category}`,
+                featured: Boolean(featured),
+                seller: `${seller}`,
             },
         });
         return products.data || [];

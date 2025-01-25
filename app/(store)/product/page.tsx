@@ -2,7 +2,7 @@ import ProductsView from '@/components/ProductsView';
 import { getAllCategories } from '@/sanity/lib/products/getAllCategories';
 import { getAllProducts } from '@/sanity/lib/products/getAllProducts';
 import React from 'react';
-import { searchProductsByName } from '@/sanity/lib/products/searchProductsByName';
+import { searchProductsByFilter } from '@/sanity/lib/products/searchProductsByFilter';
 import Image from 'next/image';
 import imgNotFound from '@/public/notfound.png';
 import ProductFilter from '../../../components/ProductFilter';
@@ -24,13 +24,12 @@ async function page({ searchParams }: { searchParams: Promise<ParamsProps> }) {
     const searchParam = await searchParams;
     const filterCheck = Object.values(searchParam).filter((v) => v);
     const { query } = searchParam;
-    const products = await (filterCheck.length > 0 ? searchProductsByName(searchParam) : getAllProducts());
+    const products = await (filterCheck.length > 0 ? searchProductsByFilter(searchParam) : getAllProducts());
     const categories = await getAllCategories();
 
     return (
         <div className="p-4 pb-10">
             <div className="relative container mx-auto sm:flex min-h-[50vh] gap-4">
-                {/* <div className="flex gap-x-4"> */}
                 <div className="sticky top-[--tinggi10] self-start sm:top-[--tinggi12] flex flex-col bg-white rounded-lg min-w-[15rem] px-3 pb-4">
                     <ProductFilter categories={categories} />
                 </div>
@@ -44,7 +43,7 @@ async function page({ searchParams }: { searchParams: Promise<ParamsProps> }) {
                         <NoFound query={query} />
                     ) : (
                         <div className="container mx-auto p-5 bg-white rounded-lg">
-                            <ProductsView products={products} display='line' length={2} title='Product' showSortPrice={true} />
+                            <ProductsView products={products} display='grid' title='Product' showSortPrice={true} />
                         </div>
                     )}
                 </div>

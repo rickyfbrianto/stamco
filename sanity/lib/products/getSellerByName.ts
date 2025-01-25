@@ -3,7 +3,7 @@ import { sanityFetch } from "../live"
 
 export const GetSellerByName = async (slug: string) => {
     const SELLER_BY_NAME = defineQuery(`
-        *[_type == "seller" && name == $slug]{
+        *[_type == "seller" && name match $slug]{
             ...,
             "products": products[]->{
                 _id, _type, slug, name, image, price, description

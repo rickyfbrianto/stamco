@@ -8,6 +8,8 @@ export interface ProductFilterProps {
     query: string;
     category: string;
     sort: "asc" | "desc" | string;
+    featured: boolean;
+    seller: string;
 };
 
 const ProductFilterData = {
@@ -16,7 +18,9 @@ const ProductFilterData = {
     condition: "",
     category: "",
     query: "",
-    sort: ""
+    sort: "",
+    featured: false,
+    seller: "",
 }
 
 interface ProductFilterStoreProps {

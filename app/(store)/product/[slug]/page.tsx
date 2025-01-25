@@ -1,19 +1,19 @@
 import AddToBasketProduct from '@/components/AddToBasketProduct';
 import { Separator } from '@/components/ui/separator';
 import { urlFor } from '@/sanity/lib/image';
-import { TriangleAlert } from 'lucide-react';
+import { TriangleAlert, Truck } from 'lucide-react';
 import { PortableText } from 'next-sanity';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { GetProductBySlug } from '@/sanity/lib/products/GetProductBySlug';
-import { Product } from '@/sanity.types';
+import { getProductBySlug } from '@/sanity/lib/products/getProductBySlug';
+import { Category, Product } from '@/sanity.types';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
-    const product = await GetProductBySlug(slug)
+    const product = await getProductBySlug(slug)
 
     return {
         title: `${product?.name}`,
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
-    const product = await GetProductBySlug(slug)
+    const product = await getProductBySlug(slug)
     const { seller } = product || {}
 
     if (!product) return notFound()
@@ -50,7 +50,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
                         )}
                     </div>
                     {/* section untuk deskripsi dan tambah keranjang */}
-                    <div className="flex flex-col min-h-[70vh] w-full">
+                    <div className="flex flex-col min-h-[70vh] gap-4 w-full">
                         <div>
                             <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
                             <p className="text-xl font-semibold mb-4">{product.price?.toLocaleString('id-ID')}</p>
@@ -68,11 +68,20 @@ export default async function page({ params }: { params: Promise<{ slug: string 
                                     <Link href={`/seller/${seller?.name}`}>
                                         <p className='font-bold text-[1rem]'>{seller?.name}</p>
                                     </Link>
-                                    <p className='text-[.9rem] text-gray-500'>Indonesia</p>
+                                    <p className='text-[.9rem] text-gray-500'>{seller.country}</p>
                                 </div>
                             </div>
                         </div>
-                        <Separator className='my-4' />
+                        {/* <Separator /> */}
+
+                        <div className="flex flex-col gap-2 border rounded-lg self-start p-4 font-urbanist">
+                            <span className='text-lg text-gray-800 font-extrabold'>Shipped</span>
+                            <div className="flex gap-x-2 items-center">
+                                <Truck size={16} />
+                                <span className='text-sm text-gray-500'>Shipped from <span className='font-bold'>{seller.city}</span></span>
+                            </div>
+                        </div>
+                        <Separator />
 
                         <Tabs defaultValue="description" className="">
                             <TabsList className="bg-white border-b-[2px] pb-5 rounded-none">
@@ -88,8 +97,8 @@ export default async function page({ params }: { params: Promise<{ slug: string 
                                     <div className="flex">
                                         <span className='w-[6em]'>Category</span>
                                         <div className="flex gap-x-2">
-                                            {product.categories?.map((value) => (
-                                                <Link key={value._id} href={`/categories/${value.title}`}>
+                                            {product.categories?.map((value: Category) => (
+                                                <Link href={`/product?category=${value._id}`} key={value._id}>
                                                     <Badge variant="secondary">{value.title}</Badge>
                                                 </Link>
                                             ))}

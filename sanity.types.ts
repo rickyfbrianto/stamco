@@ -230,13 +230,6 @@ export type Seller = {
         _type: 'image';
     };
     description?: string;
-    products?: Array<{
-        _ref: string;
-        _type: 'reference';
-        _weak?: boolean;
-        _key: string;
-        [internalGroqTypeReferenceTo]?: 'product';
-    }>;
 };
 
 export type SanityImageCrop = {
@@ -512,7 +505,7 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
     featured?: boolean;
 }>;
 
-// Source: ./sanity/lib/products/GetProductBySlug.ts
+// Source: ./sanity/lib/products/getProductBySlug.ts
 // Variable: PRODUCTS_BY_SLUG
 // Query: *[_type == "product" && slug.current == $slug]{            ...,             categories[]->{                title, _id            },            seller->{ name, image}        } | order(name asc)[0]
 export type PRODUCTS_BY_SLUGResult = {
@@ -635,7 +628,7 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
 
 // Source: ./sanity/lib/products/getSellerByName.ts
 // Variable: SELLER_BY_NAME
-// Query: *[_type == "seller" && name == $slug]{            ...,            "products": products[]->{                _id, _type, slug, name, image, price, description            } | order(name asc)        } | order(name asc)[0]
+// Query: *[_type == "seller" && name match $slug]{            ...,            "products": products[]->{                _id, _type, slug, name, image, price, description            } | order(name asc)        } | order(name asc)[0]
 export type SELLER_BY_NAMEResult = {
     _id: string;
     _type: 'seller';
@@ -660,43 +653,18 @@ export type SELLER_BY_NAMEResult = {
         _type: 'image';
     };
     description?: string;
-    products: Array<{
-        _id: string;
-        _type: 'product';
-        slug: Slug | null;
-        name: string | null;
-        image: {
-            asset?: {
-                _ref: string;
-                _type: 'reference';
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-            };
-            hotspot?: SanityImageHotspot;
-            crop?: SanityImageCrop;
-            _type: 'image';
-        } | null;
-        price: number | null;
-        description: Array<{
-            children?: Array<{
-                marks?: Array<string>;
-                text?: string;
-                _type: 'span';
-                _key: string;
-            }>;
-            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
-            listItem?: 'bullet' | 'number';
-            markDefs?: Array<{
-                href?: string;
-                _type: 'link';
-                _key: string;
-            }>;
-            level?: number;
-            _type: 'block';
-            _key: string;
-        }> | null;
-    }> | null;
+    products: null;
 } | null;
+
+// Source: ./sanity/lib/products/searchCategoryByFilter.ts
+// Variable: CATEGORY_SEARCH_QUERY
+// Query: *[_type == "product" && seller._ref == $seller] {categories[]->{ _id, title }}
+export type CATEGORY_SEARCH_QUERYResult = Array<{
+    categories: Array<{
+        _id: string;
+        title: string | null;
+    }> | null;
+}>;
 
 // Source: ./sanity/lib/sales/getActivePromoByCoupon.ts
 // Variable: ACTIVE_SALE_BY_COUPON_CODE
@@ -726,7 +694,8 @@ declare module '@sanity/client' {
         '*[_type == "product"] | order(name asc)': ALL_PRODUCTS_QUERYResult;
         '\n        *[_type == "product" && slug.current == $slug]{\n            ..., \n            categories[]->{\n                title, _id\n            },\n            seller->{ name, image}\n        } | order(name asc)[0]\n    ': PRODUCTS_BY_SLUGResult;
         '\n        *[_type == "product" \n        && references(*[_type == \'category\' && slug.current == $categorySlug]._id)\n        ] | order(name asc)\n    ': PRODUCTS_BY_CATEGORY_QUERYResult;
-        '\n        *[_type == "seller" && name == $slug]{\n            ...,\n            "products": products[]->{\n                _id, _type, slug, name, image, price, description\n            } | order(name asc)\n        } | order(name asc)[0]\n    ': SELLER_BY_NAMEResult;
+        '\n        *[_type == "seller" && name match $slug]{\n            ...,\n            "products": products[]->{\n                _id, _type, slug, name, image, price, description\n            } | order(name asc)\n        } | order(name asc)[0]\n    ': SELLER_BY_NAMEResult;
+        '*[_type == "product" && seller._ref == $seller] {categories[]->{ _id, title }}': CATEGORY_SEARCH_QUERYResult;
         '*[_type == "promo" \n        && isActive == true \n        && couponCode == $couponCode\n        ] | order(validFrom desc)[0]\n    ': ACTIVE_SALE_BY_COUPON_CODEResult;
     }
 }

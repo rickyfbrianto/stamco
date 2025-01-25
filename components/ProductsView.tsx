@@ -9,30 +9,16 @@ import { Skeleton } from './ui/skeleton'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import Loader from './Loader'
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import { Category } from "@/sanity.types"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Check, ChevronsUpDown } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { useProductFilterStore } from "@/store/productStore"
-
+import { usePathname, useRouter } from 'next/navigation'
 
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { usePathname, useRouter } from 'next/navigation'
 
 interface ProductsViewProps {
     title?: string;
@@ -70,22 +56,22 @@ function ProductsView({ title = "", className, products, display = 'grid', start
                 </div>
                 : <div className={cn(`flex flex-1 gap-4 mt-4`, className)}>
                     {!isClient
-                        ? <Loader />
+                        ? <div className='animate-spin rounded-full border-b-2 border-blue-500'>
+                        </div>
                         :
-                        // <div className="flex-1">
-                        //     <ProductThumbnail product={product} key={product._id} />
-                        // </div>
-                        <Swiper slidesPerView={1} spaceBetween={30} className="mySwiper"
+                        <Swiper spaceBetween={30} className="mySwiper flex flex-1"
                             navigation={true} pagination={{ clickable: true }} modules={[Pagination, Navigation]}
                             breakpoints={{
-                                768: { slidesPerView: length ?? 2 },
-                                1024: { slidesPerView: length ?? 3 },
-                                1280: { slidesPerView: length ?? 4 },
-                                1536: { slidesPerView: length ?? 5 },
+                                0: { slidesPerView: 1 },
+                                512: { slidesPerView: length <= 2 ? length : 2 },
+                                768: { slidesPerView: length <= 3 ? length : 3 },
+                                1024: { slidesPerView: length <= 4 ? length : 4 },
+                                1280: { slidesPerView: length <= 5 ? length : 5 },
+                                1536: { slidesPerView: length <= 6 ? length : 6 },
                             }}>
                             {products.slice(start, length).map((product, index) => (
                                 <SwiperSlide key={product._id} virtualIndex={index}>
-                                    <div className="">
+                                    <div className="flex">
                                         <ProductThumbnail product={product} key={product._id} />
                                     </div>
                                 </SwiperSlide>

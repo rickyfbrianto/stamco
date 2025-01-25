@@ -1,18 +1,17 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-// import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { Product, Seller } from '@/sanity.types';
+import { Category, Product, Seller } from '@/sanity.types';
 import Image from 'next/image';
 import { urlFor } from '@/sanity/lib/image';
 import Link from 'next/link';
 import ProductsView from '@/components/ProductsView';
 import { Separator } from '@/components/ui/separator';
 import ProductFilter from '../../../../components/ProductFilter';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -30,20 +29,19 @@ function CustomTabPanel(props: TabPanelProps) {
     );
 }
 
-function TabSeller({ seller }: { seller: Seller }) {
+interface TabSellerProps { seller: Seller, products: Product, categories: Category[] }
+
+function TabSeller({ seller, products, categories }: TabSellerProps) {
     const [value, setValue] = useState(0);
     const [isClient, setIsClient] = useState(false);
-    const { products } = seller;
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    if (!isClient) return null;
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
+
+    useEffect(() => setIsClient(true), []);
+
+    if (!isClient) return null;
 
     return (
         <div className="flex bg-white p-4 rounded-xl">
@@ -55,25 +53,47 @@ function TabSeller({ seller }: { seller: Seller }) {
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
-                    {/* <div className="container mx-auto flex gap-x-4"> */}
-                    <div className="p-4">
-                        <div className="relative container mx-auto sm:flex min-h-[50vh] gap-4">
-                            <div className="sticky top-[--tinggi10] self-start sm:top-[--tinggi12] flex flex-col bg-white border rounded-lg min-w-[15rem] px-4 pb-4">
-                                <ProductFilter />
-                            </div>
+                    <div className="relative container mx-auto sm:flex min-h-[50vh] gap-5 p-4">
+                        <div className="sticky top-[--tinggi10] self-start sm:top-[--tinggi12] flex flex-col bg-white border rounded-lg min-w-[15rem] px-4 pb-4 z-[1]">
+                            <ProductFilter categories={categories} />
+                        </div>
 
-                            <Separator orientation="vertical" className="h-[75%]" />
-
-                            <div className="flex flex-1 flex-col font-urbanist gap-2 ">
-                                <span className="font-bold text-xl">{seller.name}'s Product</span>
-                                <Separator />
-                                <ProductsView products={products as unknown as Product[]} className="font-urbanist" />
-                            </div>
+                        <div className="flex flex-1 flex-col font-urbanist gap-2 pb-4">
+                            <span className="font-bold text-xl">{seller.name}'s Product</span>
+                            <Separator />
+                            <ProductsView products={products as unknown as Product[]} className="font-urbanist" />
                         </div>
                     </div>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    Item Two
+                    <div className="relative container mx-auto sm:flex flex-col min-h-[50vh] gap-4 p-4">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="w-[100px]">Seller</TableHead>
+                                    <TableHead>{seller.name}</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>Nations</TableCell>
+                                    <TableCell className="font-medium">{seller.country}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Province</TableCell>
+                                    <TableCell className="font-medium">{seller.province}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>City</TableCell>
+                                    <TableCell className="font-medium">{seller.city}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Description</TableCell>
+                                    <TableCell className="font-medium">{seller.description}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </div>
                 </CustomTabPanel>
             </Box>
         </div>
